@@ -1,8 +1,34 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trash2, Minus, Plus } from 'lucide-react'
+import { products } from '@/data/products'
 
-const CartItemList = () => {
+const CartItemList = ({slug}:any) => {
+const [item, setItem]:any = useState(null)
+   useEffect(() => {
+    console.log("👉 Slug from props:", slug)
+
+    if (!slug) {
+      console.log("❌ slug undefined hai")
+      return
+    }
+
+    const found = products.find(
+      p => p.slug === slug
+    )
+setItem(found)
+    console.log("👉 Matched Product:", found)
+
+    if (!found) {
+      console.log("❌ Product match nahi hua")
+    } else {
+      console.log("✅ Product mil gaya 🎉")
+    }
+
+  }, [slug])
+
+  
+
   return (
     <div className="w-full">
       {/* --- DESKTOP VIEW (Isse nahi cheda) --- */}
@@ -16,10 +42,10 @@ const CartItemList = () => {
       <div className="hidden md:grid grid-cols-12 py-8 border-b border-zinc-900 items-center group">
         <div className="col-span-6 flex gap-6">
           <div className="w-24 h-24 bg-zinc-900 rounded-md overflow-hidden shrink-0">
-            <img src="/piecedemo1.png" alt="product" className="w-full h-full object-cover" />
+            <img src={item?.image} alt="product" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col justify-center">
-            <h3 className="text-white text-sm font-medium mb-1 font-montserrat">Robe Hook Double</h3>
+            <h3 className="text-white text-sm font-medium mb-1 font-montserrat">{item?.name}</h3>
             <p className="text-zinc-500 text-xs font-light">Brushed Gold</p>
           </div>
         </div>
@@ -33,7 +59,7 @@ const CartItemList = () => {
         <div className="col-span-2 text-center text-zinc-300 text-sm font-light text-nowrap">₹11,800</div>
         <div className="col-span-2 text-right">
           <div className="flex items-center justify-end gap-4 mb-2">
-            <span className="text-white text-sm font-medium">₹23,600</span>
+            <span className="text-white text-sm font-medium">{item?.price}</span>
             <button className="text-red-500/80 hover:text-red-500 transition-colors">
               <Trash2 size={16} />
             </button>
