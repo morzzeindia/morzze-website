@@ -140,3 +140,31 @@
 html {
   scroll-behavior: smooth;
 }
+
+body {
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+
+/* Global Heading Font */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 700;
+}
+
+
+/* Optional Better Typography */
+p,
+span,
+a,
+button,
+li,
+input,
+textarea {
+  font-family: var(--font-montserrat), sans-serif;
+}
