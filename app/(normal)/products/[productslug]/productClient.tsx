@@ -22,8 +22,13 @@ import ProductComparison from "@/components/product/ProductComparison";
 import CareAndMaintenance from "@/components/product/CareAndMaintenance";
 import AteliersGrid from "@/components/product/AteliersGrid";
 import CommonEnquiries from "@/components/product/CommonEnquiries";
+import { useParams, useRouter } from "next/navigation";
 
 const ProductClient = ({ product }: any) => {
+    const router = useRouter()
+    const params = useParams()
+    const slug = params.productslug
+    console.log("yaar slug ye h sayad ",slug)
   if (!product) return null;
 
   const [selectedImage, setSelectedImage] = useState(0);
@@ -33,6 +38,16 @@ const ProductClient = ({ product }: any) => {
   const [quantity, setQuantity] = useState(1);
 
  const images = [product.image, ...(product.images || [])];
+
+
+ const addInLocal = (slug: any) => {
+
+     if(typeof window !== undefined){
+      localStorage.setItem("cartItemSlug", slug)
+     }
+
+     router.push('/cart')
+ }
 
   return (
     <>
@@ -191,11 +206,12 @@ const ProductClient = ({ product }: any) => {
 
             {/* BUTTONS */}
             <div className="flex gap-3">
-              <Button className="flex-1 py-5 bg-[#FDB813] text-black">
+
+              <Button onClick={() => addInLocal(slug)} className="flex-1 py-5 bg-[#FDB813] text-black">
                 <IconShoppingBag size={16} /> Add to Cart
               </Button>
 
-              <Button className="flex-1 py-5 border border-white/20">
+              <Button className="flx-1 py-5 border border-white/20">
                 <IconBolt size={16} /> Buy Now
               </Button>
 

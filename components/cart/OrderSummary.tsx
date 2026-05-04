@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
 const OrderSummary = () => {
   return (
@@ -47,10 +48,11 @@ const OrderSummary = () => {
       </div>
 
       {/* Checkout Button */}
+      <Link href={"/checkout"}>
       <button className="w-full bg-[#FFB800] hover:bg-[#E6A600] text-black font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-all group">
         Proceed to Checkout
         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-      </button>
+      </button></Link>
     </div>
   )
 }
