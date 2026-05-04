@@ -12,8 +12,8 @@ const companyLinks = [
   { name: "About Us", href: "/about" },
   { name: "Become a Dealer", href: "/dealer" },
   { name: "Catalogue", href: "/catalogue" },
-  { name: "Media", href: "/media" },
-  { name: "Careers", href: "/careers" },
+  { name: "Media", href: "/media-center" },
+  { name: "Careers", href: "/career" },
 ];
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -54,26 +54,53 @@ const Footer = () => {
             </p>
             {/* Social Icons Stacked like Mobile Screenshot */}
             <div className="flex items-center space-x-5 pt-2">
-              <IconBrandInstagram
-                size={22}
-                stroke={1.5}
-                className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
-              />
-              <IconBrandFacebook
-                size={22}
-                stroke={1.5}
-                className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
-              />
-              <IconBrandYoutube
-                size={22}
-                stroke={1.5}
-                className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
-              />
-              <IconBrandLinkedin
-                size={22}
-                stroke={1.5}
-                className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
-              />
+              <a
+                href="http://instagram.com/morzzeindia/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconBrandInstagram
+                  size={22}
+                  stroke={1.5}
+                  className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
+                />
+              </a>
+
+              <a
+                href="https://www.facebook.com/Morzzeindia/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconBrandFacebook
+                  size={22}
+                  stroke={1.5}
+                  className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
+                />
+              </a>
+
+              <a
+                href="https://www.youtube.com/@MorzzeIndia"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconBrandYoutube
+                  size={22}
+                  stroke={1.5}
+                  className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
+                />
+              </a>
+
+              <a
+                href="https://www.linkedin.com/company/anupamretailltd/?originalSubdomain=in"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconBrandLinkedin
+                  size={22}
+                  stroke={1.5}
+                  className="text-white/90 hover:text-[#CBA14D] cursor-pointer transition-colors"
+                />
+              </a>
             </div>
           </div>
 
@@ -95,7 +122,7 @@ const Footer = () => {
                 ].map((item) => (
                   <li key={item}>
                     <Link
-                      href="#"
+                      href="/products"
                       className="text-sm text-white/70 hover:text-[#CBA14D] font-inter transition-colors block"
                     >
                       {item}
@@ -132,18 +159,18 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3">
               {[
-                "Contact Us",
-                "Warranty",
-                "Shipping & Returns",
-                "FAQ",
-                "Track Order",
+                { name: "Contact Us", link: "/contact" },
+                { name: "Warranty", link: "/warranty" },
+                { name: "Shipping & Returns", link: "/shipping-returns" },
+                { name: "FAQ", link: "/faq" },
+                { name: "Track Order", link: "" },
               ].map((item) => (
-                <li key={item}>
+                <li key={item.name}>
                   <Link
-                    href="#"
+                    href={item.link}
                     className="text-sm text-white/70 hover:text-[#CBA14D] font-inter transition-colors block"
                   >
-                    {item}
+                    {item.name}
                   </Link>
                 </li>
               ))}
@@ -161,25 +188,25 @@ const Footer = () => {
 
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[11px] font-inter order-1 md:order-2">
             <Link
-              href="#"
+              href="/privacy-policy"
               className="text-white/80 hover:text-white transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
+              href="terms-of-use"
               className="text-white/80 hover:text-white transition-colors"
             >
               Terms of Service
             </Link>
             <Link
-              href="#"
+              href="return-exchange"
               className="text-white/80 hover:text-white transition-colors"
             >
               Refund
             </Link>
             <Link
-              href="#"
+              href="return-exchange"
               className="text-white/80 hover:text-white transition-colors"
             >
               Return Policy

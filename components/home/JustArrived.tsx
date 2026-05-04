@@ -63,7 +63,7 @@ const JustArrived = () => {
           </div>
           <div className="hidden md:block absolute right-0 bottom-7">
             <Link
-              href="/all-products"
+              href="/products"
               className="flex items-center gap-2 font-montserrat text-[10px] font-bold text-[#EDEBE980] hover:text-[#CBA14D] transition-colors uppercase tracking-widest group"
             >
               VIEW ALL
@@ -128,7 +128,7 @@ const JustArrived = () => {
       </div>
       <div className="md:hidden flex justify-center mt-4">
         <Link
-          href="/all-products"
+          href="/products"
           className="font-montserrat text-[10px] font-bold text-[#CBA14D] uppercase tracking-widest"
         >
           View All Collection →

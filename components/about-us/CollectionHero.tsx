@@ -2,6 +2,8 @@
 import React from "react";
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 // --- MORZZE LUXURY REVEAL VARIANTS ---
 const containerVariants: Variants = {
@@ -84,20 +86,21 @@ const CollectionHero = () => {
           {/* --- BUTTON GROUP (Exact Sizing and Color) --- */}
           <motion.div variants={itemVariants} className="flex gap-4 md:gap-6 items-center pt-2">
             {/* CTA 1: Filled */}
-            <a 
-              href="#" 
-              className="px-10 py-2 md:py-4 bg-[#FDB813] text-[#1C2023] font-bold text-xs md:text-sm  tracking-wider rounded-md border-2 border-[#FFBF3F] hover:bg-transparent hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,191,63,0.3)]"
+            <Link href={"/products"}>
+            <Button 
+              className="px-10 py-2 md:py-6 bg-[#FDB813] text-[#1C2023] font-bold text-xs md:text-sm  tracking-wider rounded-md border-2 border-[#FFBF3F] hover:bg-transparent hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,191,63,0.3)]"
             >
               Explore Products
-            </a>
+            </Button>
+            </Link>
             
             {/* CTA 2: Outlined */}
-            <a 
-              href="#" 
-              className="px-10 py-2 md:py-4 bg-transparent font-bold text-xs md:text-sm  tracking-wider rounded-md border-2 border-[#FDB813] text-[#FDB813] transition-all duration-300 shadow-md"
+            <Link  href="contact" >
+            <Button           
+              className="px-10 py-2 md:py-6 bg-transparent font-bold text-xs md:text-sm  tracking-wider rounded-md border-2 border-[#FDB813] text-[#FDB813] transition-all duration-300 shadow-md"
             >
               Contact Us
-                </a>
+                </Button></Link>
           </motion.div>
         </motion.div>
       </div>

@@ -18,8 +18,8 @@ const Header = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
-    { name: "Kitchen", href: "/kitchen" },
-    { name: "Bathroom", href: "/bathroom" },
+    { name: "Kitchen", href: "/category" },
+    { name: "Bathroom", href: "/category" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -93,9 +93,11 @@ const Header = () => {
             <button className="hidden lg:block hover:text-[#B88E2F] transition-colors">
               <IconHeart size={20} stroke={1.5} />
             </button>
+            <Link href={"/dashboard/profile"}>
             <button className="hidden lg:block hover:text-[#B88E2F] transition-colors">
               <IconUser size={20} stroke={1.5} />
             </button>
+            </Link>
             
             {/* Cart with Badge [From Code 2 Style] */}
             <div className="relative mt-1">

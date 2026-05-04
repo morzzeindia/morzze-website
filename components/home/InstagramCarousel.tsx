@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const images = [
   "/insta1.png", "/insta2.png", "/insta3.png",
@@ -75,12 +76,14 @@ export default function InstagramCarousel() {
 
         {/* Button */}
         <div className="mt-16">
+          <Link  href="https://www.instagram.com/morzzeindia/" >
           <Button 
             variant="outline"
             className="h-14 px-12 rounded-md font-montserrat border-[#CBA14D] text-[#CBA14D] hover:bg-[#CBA14D] hover:text-black font-bold uppercase tracking-[0.2em] transition-all duration-500 bg-transparent border-2"
           >
             FOLLOW @MORZZEINDIA
           </Button>
+          </Link>
         </div>
       </div>
     </div>

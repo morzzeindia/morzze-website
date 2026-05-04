@@ -287,7 +287,7 @@ const page = () => {
               {/* Social Media Icons */}
               <div className="flex gap-4 justify-center lg:justify-start pt-4">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/Morzzeindia/" 
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center  transition"
                 >
                   <IconBrandFacebook className="text-[#4B5563] w-5 h-5" />
@@ -299,19 +299,19 @@ const page = () => {
                   <IconBrandTwitter className="text-[#4B5563] w-5 h-5" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/company/anupamretailltd/?originalSubdomain=in"
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center  transition"
                 >
                   <IconBrandLinkedin className="text-[#4B5563] w-5 h-5" />
                 </a>
                 <a
-                  href="#"
+                  href="http://instagram.com/morzzeindia/"
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center  transition"
                 >
                   <IconBrandInstagram className="text-[#4B5563] w-5 h-5" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.youtube.com/@MorzzeIndia"
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center  transition"
                 >
                   <IconBrandYoutube className="text-[#4B5563] w-5 h-5" />
