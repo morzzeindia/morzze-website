@@ -15,7 +15,7 @@ export default function PromoStepsNewsletter() {
   return (
     <section className="w-full bg-black text-white border-t border-[#141414]">
       {/* How to Use */}
-      <div className="px-4 md:px-8 py-16 md:py-20 bg-[#111111]">
+      <div className="px-4 md:px-8 py-16 md:py-20 bg-[#141414]">
         <div className="max-w-6xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

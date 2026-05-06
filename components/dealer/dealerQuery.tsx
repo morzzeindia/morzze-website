@@ -12,7 +12,7 @@ export default function ContactCTASection() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
         viewport={{ once: true }}
-        className="w-full mx-auto border border-[#1f1f1f] bg-[#111111] py-14 px-6 md:px-10 text-center"
+        className="w-full mx-auto border border-[#1f1f1f] bg-[#141414] py-14 px-6 md:px-10 text-center"
       >
         <motion.h2
           initial={{ opacity: 0, y: 15 }}

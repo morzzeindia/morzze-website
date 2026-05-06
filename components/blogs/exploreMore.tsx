@@ -22,7 +22,7 @@ const explore = [
 
 export default function MoreToExploreSection() {
   return (
-    <section className="w-full bg-[#111111] text-white px-4 md:px-8 lg:px-10 py-12 md:py-14">
+    <section className="w-full bg-[#141414] text-white px-4 md:px-8 lg:px-10 py-12 md:py-14">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <motion.h2

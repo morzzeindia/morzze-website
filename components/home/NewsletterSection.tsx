@@ -45,7 +45,7 @@ const   NewsletterSection = () => {
               <input 
                 type="email" 
                 placeholder="Your email address" 
-                className="w-full h-14 bg-[#111111] border rounded-md border-zinc-800 px-6 text-white font-inter text-sm focus:outline-none focus:border-[#CBA14D]/50 transition-all duration-300 placeholder:text-zinc-600"
+                className="w-full h-14 bg-[#141414] border rounded-md border-zinc-800 px-6 text-white font-inter text-sm focus:outline-none focus:border-[#CBA14D]/50 transition-all duration-300 placeholder:text-zinc-600"
               />
             </div>
 

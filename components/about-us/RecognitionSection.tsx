@@ -99,7 +99,7 @@ const RecognitionSection = () => {
               key={index}
               variants={cardAnimation}
               className={`
-                group relative flex items-center p-4 bg-[#111111] rounded-md border border-white/5 space-x-6
+                group relative flex items-center p-4 bg-[#141414] rounded-md border border-white/5 space-x-6
                 transition-all duration-500 hover:border-[#CBA14D]/30
                 ${index < 3 ? "lg:col-span-2" : "lg:col-span-3 lg:max-w-112.5"} 
                 ${index === 3 ? "lg:justify-self-end" : ""} 

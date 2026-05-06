@@ -66,7 +66,7 @@ export default function FAQSection() {
                   ease: "easeInOut",
                 }}
                 viewport={{ once: true }}
-                className="border border-[#383838] bg-[#111111] overflow-hidden"
+                className="border border-[#383838] bg-[#141414] overflow-hidden"
               >
                 <button
                   onClick={() => setOpen(active ? -1 : i)}

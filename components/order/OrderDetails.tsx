@@ -1,5 +1,6 @@
 "use client"
 import React from 'react'
+import ReturnRequestModal from './ReturnRequestModal'
 
 export default function OrderDetails({ order }:any) {
   if (!order) return null
@@ -9,7 +10,7 @@ export default function OrderDetails({ order }:any) {
       <h1 className="text-2xl font-semibold font-montserrat mb-8">Recent Orders</h1>
 
       {/* Top Summary Card */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#111111] border border-zinc-900 rounded-xl p-6 md:p-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#141414] border border-zinc-900 rounded-xl p-6 md:p-10">
         
         {/* Order Summary */}
         <div className="space-y-4">
@@ -66,7 +67,7 @@ export default function OrderDetails({ order }:any) {
       </div>
 
       {/* Order Item Card */}
-      <div className="bg-[#111111] border border-zinc-900 rounded-xl overflow-hidden">
+      <div className="bg-[#141414] border border-zinc-900 rounded-xl overflow-hidden">
         
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-zinc-800/50">
@@ -119,9 +120,7 @@ export default function OrderDetails({ order }:any) {
 
           {/* Actions */}
           <div className="flex gap-4 w-full md:w-auto justify-end">
-            <button className="flex-1 md:flex-none border border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800]/5 px-8 py-3 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all">
-              Request Return
-            </button>
+           <ReturnRequestModal/>
             <button className="flex-1 md:flex-none bg-[#FFB800] hover:bg-[#e6a600] text-black px-8 py-3 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all">
               Download Invoice
             </button>

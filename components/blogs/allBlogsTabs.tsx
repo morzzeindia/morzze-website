@@ -113,7 +113,7 @@ export default function BlogGridTabs() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search articles..."
-              className="w-full h-11 rounded-full bg-[#111111] border border-[#303030] pl-10 pr-4 text-[13px] outline-none placeholder:text-[#666666]"
+              className="w-full h-11 rounded-full bg-[#141414] border border-[#303030] pl-10 pr-4 text-[13px] outline-none placeholder:text-[#666666]"
             />
           </div>
         </div>

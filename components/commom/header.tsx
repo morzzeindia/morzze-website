@@ -79,7 +79,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="Search Product"
-              className="bg-[#111111] border border-zinc-800 text-[12px] font-inter rounded-md pl-10 pr-4 py-2 w-[200px] lg:w-[280px] focus:outline-none focus:border-[#B88E2F]/50 transition-all placeholder:text-zinc-600"
+              className="bg-[#141414] border border-zinc-800 text-[12px] font-inter rounded-md pl-10 pr-4 py-2 w-[200px] lg:w-[280px] focus:outline-none focus:border-[#B88E2F]/50 transition-all placeholder:text-zinc-600"
             />
           </div>
 

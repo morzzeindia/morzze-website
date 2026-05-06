@@ -47,7 +47,7 @@ const CategoryShowcase = () => {
                     className="overflow-hidden"
                   >
                     <div className="pl-5 mt-4">
-                      <div className="bg-[#111111]/50 p-6 border-l border-[#CBA14D]/20">
+                      <div className="bg-[#141414]/50 p-6 border-l border-[#CBA14D]/20">
                         <span className="block font-montserrat text-[10px] font-bold text-[#CBA14D] tracking-[0.3em] mb-3">{cat.sub}</span>
                         <p className="font-inter text-sm text-[#928E87] leading-relaxed mb-6 max-w-sm">{cat.desc}</p>
                         <Link href={`/category/${cat.id}`} className="inline-block font-montserrat text-[10px] font-bold text-[#CBA14D] uppercase tracking-widest border-b border-transparent hover:border-[#CBA14D] transition-all">

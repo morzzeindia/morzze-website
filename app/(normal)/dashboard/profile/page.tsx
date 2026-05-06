@@ -13,7 +13,7 @@ export default function ProfilePage() {
       </h1>
 
       {/* Personal Information Section */}
-      <Card className="bg-[#111111] border-zinc-900 rounded-lg overflow-hidden">
+      <Card className="bg-[#141414] border-zinc-900 rounded-lg overflow-hidden">
         <CardHeader className="pt-8 px-8 pb-4">
           <CardTitle className="text-xl font-medium text-white font-montserrat tracking-tight">
             Personal Information
@@ -57,7 +57,7 @@ export default function ProfilePage() {
       </Card>
 
       {/* Change Password Section */}
-      <Card className="bg-[#111111] border-zinc-900 rounded-lg overflow-hidden">
+      <Card className="bg-[#141414] border-zinc-900 rounded-lg overflow-hidden">
         <CardHeader className="pt-8 px-8 pb-4">
           <CardTitle className="text-xl font-medium text-white font-montserrat tracking-tight">
             Change Password
@@ -100,7 +100,7 @@ export default function ProfilePage() {
       </Card>
 
       {/* Delete Account Section */}
-      <Card className="bg-[#111111] border-zinc-900 rounded-lg overflow-hidden">
+      <Card className="bg-[#141414] border-zinc-900 rounded-lg overflow-hidden">
         <CardHeader className="pt-8 px-8 pb-2">
           <CardTitle className="text-xl font-medium text-red-500 font-montserrat tracking-tight">
             Delete Account

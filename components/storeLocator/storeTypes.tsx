@@ -61,7 +61,7 @@ export default function StoreTypesSection() {
                 transition={{ duration: 0.55, delay: i * 0.08 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -4 }}
-                className="border border-[#4a4a4a] bg-[#111111] rounded-[8px] px-5 py-6 min-h-[210px] hover:border-[#666666] transition-all duration-400"
+                className="border border-[#4a4a4a] bg-[#141414] rounded-[8px] px-5 py-6 min-h-[210px] hover:border-[#666666] transition-all duration-400"
               >
                 <div
                   className={`w-11 h-11 rounded-full ${item.iconBg} flex items-center justify-center mb-5`}

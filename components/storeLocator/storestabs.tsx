@@ -96,7 +96,7 @@ export default function StoreLocatorSection() {
             />
             <input
               placeholder="Search"
-              className="w-full h-11 rounded-full bg-[#111111] border border-[#383838] pl-10 pr-4 text-[13px] outline-none"
+              className="w-full h-11 rounded-full bg-[#141414] border border-[#383838] pl-10 pr-4 text-[13px] outline-none"
             />
           </div>
 
@@ -152,7 +152,7 @@ export default function StoreLocatorSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 15 }}
               transition={{ duration: 0.45 }}
-              className="border border-[#2a2a2a] bg-[#111111] overflow-hidden"
+              className="border border-[#2a2a2a] bg-[#141414] overflow-hidden"
             >
               <div className="relative w-full h-[210px] md:h-[260px] bg-[#1a1a1a]">
                 <iframe

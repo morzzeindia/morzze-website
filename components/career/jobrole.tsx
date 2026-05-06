@@ -124,7 +124,7 @@ export default function CareersPositionsModal() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ duration: 0.35 }}
-              className="w-full max-w-5xl bg-[#111111] border border-[#3a3a3a] p-5 md:p-8 relative max-h-[95vh] overflow-y-auto"
+              className="w-full max-w-5xl bg-[#141414] border border-[#3a3a3a] p-5 md:p-8 relative max-h-[95vh] overflow-y-auto"
             >
               <button
                 onClick={() => setSelectedJob(null)}

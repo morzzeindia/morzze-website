@@ -12,7 +12,7 @@ const statsData = [
 
 const PerformanceShowcase = () => {
   return (
-    <section className="bg-[#111111] text-white py-16 px-6 md:px-10">
+    <section className="bg-[#141414] text-white py-16 px-6 md:px-10">
       <div className="max-w-screen-2xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 items-center justify-items-center">
           {statsData.map((stat, index) => (

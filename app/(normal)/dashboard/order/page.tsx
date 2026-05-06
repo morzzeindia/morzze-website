@@ -34,7 +34,7 @@ export default function MyOrdersPage() {
           {orders.map((order, idx) => (
             <div 
               key={idx} 
-              className="w-full bg-[#111111] border border-zinc-900 rounded-xl p-4 md:p-6 box-border"
+              className="w-full bg-[#141414] border border-zinc-900 rounded-xl p-4 md:p-6 box-border"
             >
               {/* Row 1: ID, Date & Status */}
               <div className="flex justify-between items-start gap-2 mb-3">
