@@ -90,13 +90,15 @@ const Header = () => {
 
           {/* Icons Actions [Merged Styles] */}
           <div className="flex items-center space-x-4">
-            <button className="hidden lg:block hover:text-[#B88E2F] transition-colors">
-              <IconHeart size={20} stroke={1.5} />
-            </button>
+            <Link href={"/wishlist"}>
+              <button className="hidden lg:block hover:text-[#B88E2F] transition-colors">
+                <IconHeart size={20} stroke={1.5} />
+              </button>
+            </Link>
             <Link href={"/dashboard/profile"}>
-            <button className="hidden lg:block hover:text-[#B88E2F] transition-colors">
-              <IconUser size={20} stroke={1.5} />
-            </button>
+              <button className="hidden lg:block hover:text-[#B88E2F] transition-colors">
+                <IconUser size={20} stroke={1.5} />
+              </button>
             </Link>
             
             {/* Cart with Badge [From Code 2 Style] */}

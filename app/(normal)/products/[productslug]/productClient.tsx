@@ -207,7 +207,7 @@ const ProductClient = ({ product }: any) => {
             {/* BUTTONS */}
             <div className="flex gap-3">
 
-              <Button onClick={() => addInLocal(slug)} className="flex-1 py-5 bg-[#FDB813] text-black">
+              <Button onClick={() => addInLocal(slug)} className="flex-1 py-5 bg-[#FDB813] text-black hover:bg-amber-300">
                 <IconShoppingBag size={16} /> Add to Cart
               </Button>
 
