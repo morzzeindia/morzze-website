@@ -17,21 +17,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    var refUser: any;
-    if (ref) {
-      refUser = await db.select().from(users).where(eq(users.id, ref));
-      if (refUser?.length) {
-        await db
-          .update(users)
-          .set({ referralCoins: sql`${users.referralCoins} + ${200}` })
-          .where(eq(users.id, refUser[0].id));
-      } else {
-        return NextResponse.json(
-          { message: "Referral code is invalid." },
-          { status: 400 },
-        );
-      }
-    }
     const existingUser = await cognitoAdminGetUser({ email });
 
     if (existingUser?.UserStatus === "CONFIRMED") {
@@ -85,18 +70,6 @@ export async function POST(req: Request) {
               referralCoins: ref ? 200 : 0,
             })
             .returning();
-
-          const referredUser = refUser?.[0];
-
-          if (referredUser) {
-            await db.insert(referralCoinHistory).values({
-              userId: referredUser.id,
-              coins: 200,
-              newUserName: name,
-              newUserId: userRes.id,
-              type: "referral",
-            });
-          }
         } else {
           userRes = existingDbUser;
         }

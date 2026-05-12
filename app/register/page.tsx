@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,9 +19,123 @@ import {
   User2,
 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signUp } from "@/helper";
+import { toast } from "sonner";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 
-const page = () => {
+const RegisterContent = () => {
+  const params = useSearchParams();
+  const ref = params.get("ref");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    ref: ref || "",
+  });
+
+  const [errors, setErrors] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Full name is required";
+      isValid = false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email";
+      isValid = false;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone required";
+      isValid = false;
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password required";
+      isValid = false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (loading) return;
+
+    setLoading(true);
+
+    const toastId = toast.loading("Creating your account...");
+
+    try {
+      const res = await signUp({
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        name: formData.fullName,
+        ref: formData?.ref || "",
+      });
+
+      toast.success(res.message || "OTP sent!", {
+        id: toastId,
+      });
+
+      router.push(`/verify-otp?email=${formData.email}`);
+    } catch (error: any) {
+      toast.error(error.message || "Signup failed ❌", {
+        id: toastId,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section>
       <div className="w-full flex h-screen bg-black text-white ">
@@ -41,8 +157,11 @@ const page = () => {
               <InputGroupInput
                 className="  "
                 id="inline-end-input"
+                name="fullName"
                 type="text"
                 placeholder="Full Name"
+                value={formData.fullName}
+                onChange={handleChange}
               />
               <InputGroupAddon>
                 <User2 />
@@ -53,8 +172,11 @@ const page = () => {
               <InputGroupInput
                 className="  "
                 id="inline-end-input"
+                name="email"
                 type="Email"
                 placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
               />
               <InputGroupAddon>
                 <MailIcon />
@@ -65,8 +187,11 @@ const page = () => {
               <InputGroupInput
                 className="  "
                 id="inline-end-input"
+                name="phone"
                 type="text"
                 placeholder="Mobile Number"
+                value={formData.phone}
+                onChange={handleChange}
               />
               <InputGroupAddon>
                 <PhoneIcon />
@@ -77,8 +202,11 @@ const page = () => {
               <InputGroupInput
                 className="  "
                 id="inline-end-input"
+                name="ref"
                 type="text"
+                value={formData.ref}
                 placeholder="Referal Code"
+                onChange={handleChange}
               />
               <InputGroupAddon>
                 <TicketPercentIcon />
@@ -88,31 +216,63 @@ const page = () => {
             <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
               <InputGroupInput
                 id="inline-end-input"
-                type="password"
-                placeholder="password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
               />
               <InputGroupAddon>
                 <LockIcon />
               </InputGroupAddon>
               <InputGroupAddon align="inline-end">
-                <EyeIcon />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? (
+                    <IconEyeOff size={18} />
+                  ) : (
+                    <IconEye size={18} />
+                  )}
+                </button>
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                )}
               </InputGroupAddon>
             </InputGroup>
             <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
               <InputGroupInput
                 id="inline-end-input"
-                type="confirmPassword"
-                placeholder="Confirm password"
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
               />
               <InputGroupAddon>
                 <LockIcon />
               </InputGroupAddon>
               <InputGroupAddon align="inline-end">
-                <EyeIcon />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <IconEyeOff size={18} />
+                  ) : (
+                    <IconEye size={18} />
+                  )}
+                </button>
               </InputGroupAddon>
             </InputGroup>
 
-            <Button className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold">
+            <Button
+              onClick={handleSubmit}
+              className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold"
+            >
               Create Account
             </Button>
             <p className="">
@@ -128,4 +288,16 @@ const page = () => {
   );
 };
 
-export default page;
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <section>
+        <div className="w-full flex h-screen bg-black text-white items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      </section>
+    }>
+      <RegisterContent />
+    </Suspense>
+  );
+}

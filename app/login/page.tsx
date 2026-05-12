@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,9 +15,173 @@ import {
   PhoneIcon,
 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "@/helper";
+import { toast } from "sonner";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+
+import { auth } from "@/lib/firebase";
+
+declare global {
+  interface Window {
+    recaptchaVerifier: any;
+  }
+}
 
 const page = () => {
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [confirmationResult, setConfirmationResult] = useState<any>(null);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const router = useRouter();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+      general: "",
+    }));
+  };
+
+  const validate = () => {
+    let valid = true;
+
+    const newErrors = {
+      email: "",
+      password: "",
+      general: "",
+    };
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      valid = false;
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validate()) return;
+    setLoading(true);
+
+    try {
+      await signIn({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      toast.success("Login successful 🎉");
+      router.push("/dashboard");
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      toast.error(err.message || "Login failed ❌");
+      setErrors((prev) => ({
+        ...prev,
+        general: err.message || "Login failed",
+      }));
+    }
+  };
+
+
+
+
+
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+        }
+      );
+    }
+  };
+
+  const sendOtp = async () => {
+    if (!phone) {
+      toast.error("Please enter mobile number");
+      return;
+    }
+
+    try {
+      setOtpLoading(true);
+
+      setupRecaptcha();
+
+      const appVerifier = window.recaptchaVerifier;
+
+      const result = await signInWithPhoneNumber(
+        auth,
+        `+91${phone}`,
+        appVerifier
+      );
+
+      setConfirmationResult(result);
+
+      toast.success("OTP sent successfully 🎉");
+      setOtpLoading(false);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+      setOtpLoading(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    if (!otp) {
+      toast.error("Please enter OTP");
+      return;
+    }
+
+    try {
+      setVerifyLoading(true);
+
+      await confirmationResult.confirm(otp);
+
+      toast.success("Login successful 🎉");
+
+      router.push("/dashboard");
+
+      setVerifyLoading(false);
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Invalid OTP");
+
+      setVerifyLoading(false);
+    }
+  };
+
   return (
     <section>
       <div className="w-full flex h-screen bg-black text-white ">
@@ -52,19 +217,28 @@ const page = () => {
                   <InputGroupInput
                     className="  "
                     id="inline-end-input"
-                    type="Email"
+                    name="email"
+                    type="email"
                     placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                   <InputGroupAddon>
                     <MailIcon />
                   </InputGroupAddon>
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </InputGroup>
 
                 <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
                   <InputGroupInput
                     id="inline-end-input"
                     type="password"
-                    placeholder="Enter password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                   <InputGroupAddon>
                     <LockIcon />
@@ -72,24 +246,37 @@ const page = () => {
                   <InputGroupAddon align="inline-end">
                     <EyeIcon />
                   </InputGroupAddon>
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                  )}
                 </InputGroup>
+                {errors.general && (
+                  <p className="text-red-500 text-xs mt-1">{errors.general}</p>
+                )}
+
+
                 <div className="lg:w-96 mb-2">
-                  <p className="float-right text-[#FDB813]">
-                    {" "}
+                  <Link
+                    href="/forgot-password"
+                    className="float-right text-[#FDB813] hover:underline"
+                  >
                     Forgot Password?
-                  </p>
+                  </Link>
                 </div>
-                <Button className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold">
-                  Sign in
+
+                <Button onClick={handleSubmit}
+                  disabled={loading} className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold">
+                  {loading ? "Logging in..." : "Login"}
                 </Button>
+
                 <p className="">
                   Don't have account?{" "}
-                  <a href="/signup" className="text-[#FDB813] underline">
+                  <Link href="/register" className="text-[#FDB813] underline">
                     Create Account
-                  </a>
+                  </Link>
                 </p>
               </TabsContent>
-              <TabsContent value="phone" className="grid grid-cols-1 gap-4">
+              {/* <TabsContent value="phone" className="grid grid-cols-1 gap-4">
                 <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
                   <InputGroupInput
                     id="inline-end-input"
@@ -111,6 +298,61 @@ const page = () => {
                     Create Account
                   </a>
                 </p>
+              </TabsContent> */}
+              <TabsContent value="phone" className="grid grid-cols-1 gap-4">
+
+                <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
+                  <InputGroupInput
+                    type="text"
+                    placeholder="Enter Mobile Number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="placeholder:text-[#8C8C8C]"
+                  />
+                  <InputGroupAddon>
+                    <PhoneIcon />
+                  </InputGroupAddon>
+                </InputGroup>
+
+                <Button
+                  onClick={sendOtp}
+                  disabled={otpLoading}
+                  className="w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold"
+                >
+                  {otpLoading ? "Sending OTP..." : "Send OTP"}
+                </Button>
+
+                {confirmationResult && (
+                  <>
+                    <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
+                      <InputGroupInput
+                        type="text"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="placeholder:text-[#8C8C8C]"
+                      />
+                    </InputGroup>
+
+                    <Button
+                      onClick={verifyOtp}
+                      disabled={verifyLoading}
+                      className="w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold"
+                    >
+                      {verifyLoading ? "Verifying..." : "Verify OTP"}
+                    </Button>
+                  </>
+                )}
+
+                <div id="recaptcha-container"></div>
+
+                <p>
+                  Don't have account?{" "}
+                  <Link href="/register" className="text-[#FDB813] underline">
+                    Create Account
+                  </Link>
+                </p>
+
               </TabsContent>
             </Tabs>
           </div>

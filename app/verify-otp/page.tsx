@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,9 +21,145 @@ import {
   PhoneIcon,
 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { resendOtp, signIn, verifyOtp } from "@/helper";
 
-const page = () => {
+const VerifyOtpContent = () => {
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [timer, setTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+
+  // Email login state
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "", general: "" });
+  const [emailLoading, setEmailLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const email = searchParams.get("email");
+
+  React.useEffect(() => {
+    if (!email) {
+      router.push("/login");  //should change later
+    }
+  }, [email, router]);
+
+  React.useEffect(() => {
+    if (timer === 0) {
+      setCanResend(true);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const handleVerifyOtp = async () => {
+    if (!otp.trim()) {
+      toast.error("Please enter OTP ❌");
+      return;
+    }
+
+    if (loading) return;
+
+    setLoading(true);
+
+    const toastId = toast.loading("Verifying OTP...");
+
+    try {
+      await verifyOtp({
+        email: email!,
+        code: otp,
+      });
+
+      toast.success("Email verified successfully 🎉", {
+        id: toastId,
+      });
+
+      setIsVerified(true);
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("OTP verification error:", error);
+
+      toast.error(error.message || "Verification failed ❌", {
+        id: toastId,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleResend = async () => {
+    if (!canResend || loading) return;
+    setLoading(true);
+
+    const toastId = toast.loading("Resending OTP...");
+
+    try {
+      await resendOtp(email!);
+
+      toast.success("OTP resent successfully 📩", {
+        id: toastId,
+      });
+
+      setTimer(30);
+      setCanResend(false);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to resend OTP ❌", {
+        id: toastId,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Email login handlers
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "", general: "" }));
+  };
+
+  const validateEmail = () => {
+    let valid = true;
+    const newErrors = { email: "", password: "", general: "" };
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      valid = false;
+    }
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+      valid = false;
+    }
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleEmailSubmit = async () => {
+    if (!validateEmail()) return;
+    setEmailLoading(true);
+    try {
+      await signIn({
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success("Login successful 🎉");
+      router.push("/dashboard");
+    } catch (err: any) {
+      toast.error(err.message || "Login failed ❌");
+      setErrors((prev) => ({ ...prev, general: err.message || "Login failed" }));
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
   return (
     <section>
       <div className="w-full px-4 lg:px-0 flex h-screen bg-black text-white ">
@@ -61,21 +198,30 @@ const page = () => {
               <TabsContent className="grid grid-cols-1 gap-4" value="email">
                 <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
                   <InputGroupInput
-                    className="  "
-                    id="inline-end-input"
-                    type="Email"
+                    className=""
+                    id="email-login-input"
+                    name="email"
+                    type="email"
                     placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleEmailChange}
                   />
                   <InputGroupAddon>
                     <MailIcon />
                   </InputGroupAddon>
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </InputGroup>
 
                 <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
                   <InputGroupInput
-                    id="inline-end-input"
+                    id="password-login-input"
                     type="password"
-                    placeholder="Enter password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleEmailChange}
                   />
                   <InputGroupAddon>
                     <LockIcon />
@@ -83,21 +229,33 @@ const page = () => {
                   <InputGroupAddon align="inline-end">
                     <EyeIcon />
                   </InputGroupAddon>
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                  )}
                 </InputGroup>
+                {errors.general && (
+                  <p className="text-red-500 text-xs mt-1">{errors.general}</p>
+                )}
                 <div className="lg:w-96 mb-2">
-                  <p className="float-right text-[#FDB813]">
-                    {" "}
+                  <Link
+                    href="/forgot-password"
+                    className="float-right text-[#FDB813] hover:underline"
+                  >
                     Forgot Password?
-                  </p>
+                  </Link>
                 </div>
-                <Button className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold">
-                  Sign in
+                <Button
+                  onClick={handleEmailSubmit}
+                  disabled={emailLoading}
+                  className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold"
+                >
+                  {emailLoading ? "Logging in..." : "Sign in"}
                 </Button>
                 <p className="">
                   Don't have account?{" "}
-                  <a href="/signup" className="text-[#FDB813] underline">
+                  <Link href="/register" className="text-[#FDB813] underline">
                     Create Account
-                  </a>
+                  </Link>
                 </p>
               </TabsContent>
               <TabsContent
@@ -107,7 +265,7 @@ const page = () => {
                 {/* <InputGroup className="max-w-96 py-5 bg-[#141414] rounded-xs px-3 border border-[#454545]">
                 </InputGroup> */}
 
-                <InputOTP maxLength={6}>
+                <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
                   </InputOTPGroup>
@@ -128,12 +286,38 @@ const page = () => {
                   </InputOTPGroup>
                 </InputOTP>
 
-                <Button className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold">
-                  Verify OTP
+                <Button
+                  type="button"
+                  onClick={handleVerifyOtp}
+                  disabled={loading}
+                  className="lg:w-96 py-5 rounded-xs bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold"
+                >
+                  {loading ? "Verifying..." : "Confirm"}
                 </Button>
+
+                <div className="flex items-center justify-between text-xs mt-4 w-full">
+                  {!canResend ? (
+                    <span className="text-white font-semibold">
+                      Resend OTP in 00:{timer.toString().padStart(2, "0")}
+                    </span>
+                  ) : (
+                    <span className="text-white font-semibold">
+                      You can resend OTP
+                    </span>
+                  )}
+
+                  <button
+                    onClick={handleResend}
+                    disabled={!canResend}
+                    className={`font-medium ${canResend ? "text-blue-600" : "text-gray-400 cursor-not-allowed"
+                      }`}
+                  >
+                    Resend
+                  </button>
+                </div>
                 <p className="">
                   Don't have account?{" "}
-                  <a href="/signup" className="text-[#FDB813] underline">
+                  <a href="/register" className="text-[#FDB813] underline">
                     Create Account
                   </a>
                 </p>
@@ -146,4 +330,16 @@ const page = () => {
   );
 };
 
-export default page;
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={
+      <section>
+        <div className="w-full flex h-screen bg-black text-white items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      </section>
+    }>
+      <VerifyOtpContent />
+    </Suspense>
+  );
+}
