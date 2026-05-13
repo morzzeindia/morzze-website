@@ -1,0 +1,1 @@
+ALTER TABLE "blog" ADD COLUMN "text_area" varchar;

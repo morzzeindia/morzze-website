@@ -25,6 +25,7 @@ export default function BlogForm() {
     image: "",
     userImage: "",
     userName: "",
+    textArea:"",
     tags: "",
   });
 
@@ -121,13 +122,27 @@ export default function BlogForm() {
             </div>
             <div className="space-y-2">
               <Label className="font-medium">Category</Label>
-              <Input
-                value={formData.blogCategory}
-                onChange={(e) =>
-                  setFormData({ ...formData, blogCategory: e.target.value })
-                }
-                placeholder="e.g. Period care"
-              />
+            
+                <select
+                  value={formData.blogCategory}
+                  onChange={(e) =>
+                    setFormData({ ...formData, blogCategory: e.target.value })
+                  }
+                  required
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select category</option>
+                  <option value="Air Taps">Air Taps</option>
+                  <option value="Bathroom Faucet">Bathroom Faucet</option>
+                  <option value="Food Waste Disposers">Food Waste Disposers</option>
+                  <option value="Floor Drainer">Floor Drainer</option>
+                  <option value="Granite Wash Basin">Granite Wash Basin</option>
+                  <option value="Kitchen Accessories">Kitchen Accessories</option>
+                  <option value="Kitchen Faucet">Kitchen Faucet</option>
+                  <option value="Steel Sinks">Steel Sinks</option>
+                  <option value="Towel Warmer">Towel Warmer</option>
+                </select>
+
             </div>
           </div>
 
@@ -198,8 +213,21 @@ export default function BlogForm() {
                   {formData.userImage ? "Photo Ready" : "Upload Photo"}
                 </span>
               </div>
+              
             </div>
+           
           </div>
+           <div className="space-y-2 w-full">
+              <Label className="font-medium w-full">Author Description</Label>
+             <Textarea
+              placeholder="Write a brief summary for author"
+              value={formData.textArea}
+              onChange={(e) =>
+                setFormData({ ...formData, textArea: e.target.value })
+              }
+              required
+            />
+            </div>
 
           <div className="space-y-2">
             <Label className="font-medium">

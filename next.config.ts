@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "av-morzze.s3.amazonaws.com",
+        pathname: "/blog/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
