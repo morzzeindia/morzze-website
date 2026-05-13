@@ -90,6 +90,7 @@ export const blog = pgTable("blog", {
   date: varchar("date"),
   data: text("data"),
   userImage: varchar("user_image"),
+  textArea:varchar("text_area"),
   userName: varchar("user_name"),
   slug: varchar("slug"),
   isVisible: boolean("is_visible").default(true),
@@ -176,8 +177,8 @@ export const productCategory = pgTable(
 // ================= PRODUCT FILTER =================
 
 export const productFilter = pgTable("product_filter", {
-  productId: uuid("product_id").references(() => product.id),
-  filter: varchar("filter"),
+  productId: uuid("product_id").references(() => product.id).notNull(),
+  filter: varchar("filter").notNull(),
 },
   (table) => [
     primaryKey({ columns: [table.productId, table.filter] }),
@@ -374,4 +375,5 @@ export const paymentGatewaySubscription = pgTable("payment_gateway_subscription"
   expireBy: timestamp("expire_by"),
   shourURL: varchar("shour_url"),
   startDate: timestamp("start_date").defaultNow(),
+
 });

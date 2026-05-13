@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { blog } from "@/db/blogSchema"; 
+import { blog } from "@/db/schema"; 
 import { db } from "@/lib/db";
 
 import { and, desc, eq, ilike, or } from "drizzle-orm";
@@ -61,6 +61,7 @@ export async function createBlog(blogData: any) {
       image: blogData.image,
       userImage: blogData.userImage,
       userName: blogData.userName,
+      textArea:blogData.textArea,
       date: blogData.date,
       data: blogData.data, 
       slug: slug,
@@ -95,6 +96,7 @@ export async function updateBlog(blogId: string, blogData: any) {
         image: blogData.image,
         userImage: blogData.userImage,
         userName: blogData.userName,
+        textArea: blogData.textArea,
         date: blogData.date,
         data: blogData.data,
         slug: slug,
