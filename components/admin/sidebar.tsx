@@ -13,30 +13,32 @@ import {
   Code,
   Feather,
   ShoppingCart,
-  IndianRupee
+  IndianRupee,
+  BookOpen
 } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutGrid },
   { label: "Blog", href: "/admin/blog", icon: LayoutGrid },
+  { label: "Catalogue", href: "/admin/catalogue", icon: BookOpen },
   { label: "Videos", href: "/admin/videos", icon: LayoutGrid },
-  
+
   { label: "Product", href: "/admin/product", icon: Box },
   { label: "Category", href: "/admin/category", icon: List },
   { label: "Order", href: "/admin/order", icon: FileText },
   { label: "User", href: "/admin/users", icon: User },
   { label: "Review", href: "/admin/reviews", icon: MessageSquare },
-    { label: "Payment", href: "/admin/payment", icon: IndianRupee },
+  { label: "Payment", href: "/admin/payment", icon: IndianRupee },
 
   {
     label: "Featured Products",
     href: "/admin/featured-products",
-    icon: ShoppingCart ,
+    icon: ShoppingCart,
   },
   {
     label: "Featured Categories",
     href: "/admin/featured-categories",
-    icon: Feather ,
+    icon: Feather,
   },
   { label: "Coupon", href: "/admin/coupon", icon: Code },
   { label: "Settings", href: "/admin/settings", icon: Settings },
@@ -93,11 +95,10 @@ function SidebarItem({
   return (
     <div
       className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer
-      ${
-        active
+      ${active
           ? "bg-[#FFF9EE] text-gray-800 font-semibold border-l-4 border-[#D4A056]"
           : "hover:bg-gray-50 text-gray-500"
-      }`}
+        }`}
     >
       <span className={active ? "opacity-100" : "opacity-70"}>{icon}</span>
       <span className="text-base">{label}</span>

@@ -1,7 +1,7 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 export type UploadResult = {
   fileKey: string;
-  fileUrl?: string;
+  fileUrl: string;
 };
 
 // export async function uploadFileToS3(file: File , folder: any): Promise<UploadResult> {
