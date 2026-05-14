@@ -6,12 +6,14 @@ import {
   LayoutGrid,
   Box,
   List,
+  File,
   FileText,
   User,
   MessageSquare,
   Settings,
   Code,
   Feather,
+  Video,
   ShoppingCart,
   IndianRupee,
   BookOpen
@@ -19,9 +21,9 @@ import {
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutGrid },
-  { label: "Blog", href: "/admin/blog", icon: LayoutGrid },
+  { label: "Blog", href: "/admin/blog", icon: File },
   { label: "Catalogue", href: "/admin/catalogue", icon: BookOpen },
-  { label: "Videos", href: "/admin/videos", icon: LayoutGrid },
+  { label: "Videos", href: "/admin/videos", icon: Video },
 
   { label: "Product", href: "/admin/product", icon: Box },
   { label: "Category", href: "/admin/category", icon: List },
