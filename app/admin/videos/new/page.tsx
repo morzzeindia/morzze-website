@@ -45,30 +45,30 @@ export default function VideoForm() {
     }
   };
 
-async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  setLoading(true);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
 
-  const data = new FormData();
+    const data = new FormData();
 
-  data.append("title", formData.title);
-  data.append("link", formData.link);
-  data.append("thumbnail", formData.thumbnail);
-  data.append("videoDescription", formData.videoDescription);
-  data.append("videoCategory", formData.videoCategory);
-  data.append("isVisible", formData.isVisible ? "on" : "off");
+    data.append("title", formData.title);
+    data.append("link", formData.link);
+    data.append("thumbnail", formData.thumbnail);
+    data.append("videoDescription", formData.videoDescription);
+    data.append("videoCategory", formData.videoCategory);
+    data.append("isVisible", formData.isVisible ? "on" : "off");
 
-  const res = await createVideo(data);
+    const res = await createVideo(data);
 
-  if (res.success) {
-    alert("Video Added Successfully!");
+    if (res.success) {
+      alert("Video Added Successfully!");
     window.location.href = "/admin/videos";
-  } else {
-    alert("Error: Video could not be added.");
-  }
+    } else {
+      alert("Error: Video could not be added.");
+    }
 
-  setLoading(false);
-}
+    setLoading(false);
+  }
 
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-xl border-none my-10">

@@ -389,3 +389,28 @@ export const paymentGatewaySubscription = pgTable("payment_gateway_subscription"
   startDate: timestamp("start_date").defaultNow(),
 
 });
+
+// ================= CATALOGUE =================
+
+export const catalogue = pgTable("catalogues", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: varchar("title").notNull(),
+  slug: varchar("slug").notNull().unique(),
+  shortDescription: text("short_description").notNull(),
+  image: varchar("image").notNull(),
+  pdfFile: varchar("pdf_file").notNull(),
+  totalPages: integer("total_pages").notNull(),
+  fileSize: varchar("file_size").notNull(),
+  publishYear: varchar("publish_year").notNull(),
+  category: varchar("category").notNull(),
+  isFeatured: boolean("is_featured").default(false),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+},
+  (table) => [
+    index("catalogue_slug_idx").on(table.slug),
+    index("catalogue_category_idx").on(table.category),
+    index("catalogue_featured_idx").on(table.isFeatured),
+  ]
+);
