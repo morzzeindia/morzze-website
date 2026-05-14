@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Box,
@@ -46,6 +46,13 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const signOutAdmin = async () => {
+    await fetch("/api/admin/access", { method: "DELETE" });
+    router.replace("/admin/gate");
+    router.refresh();
+  };
 
   // normalize path (remove trailing slash)
   const currentPath = pathname.replace(/\/$/, "");
@@ -59,7 +66,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="space-y-3 overflow-y-auto h-[78vh]">
+      <nav className="h-[calc(78vh-3rem)] space-y-3 overflow-y-auto">
         {navItems.map(({ label, href, icon: Icon }) => {
           let active = false;
           if (href === "/admin") {
@@ -79,6 +86,14 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      <button
+        type="button"
+        onClick={() => void signOutAdmin()}
+        className="mt-4 w-full rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 transition hover:bg-gray-50"
+      >
+        Sign out of admin
+      </button>
     </aside>
   );
 }

@@ -1,11 +1,49 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getAdminAccessCookieName, verifyAdminSession } from "@/lib/admin-access-cookie";
+
+const ADMIN_COOKIE = getAdminAccessCookieName();
 
 export function proxy(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  if (pathname.startsWith("/api/admin")) {
+    const method = req.method;
+    if (pathname === "/api/admin/access" && (method === "POST" || method === "DELETE")) {
+      return NextResponse.next();
+    }
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (!verifyAdminSession(token)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/admin")) {
+    if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+    if (pathname === "/admin/register" || pathname.startsWith("/admin/register/")) {
+      return NextResponse.redirect(new URL("/signup", req.url));
+    }
+
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    const ok = verifyAdminSession(token);
+    const isGate = pathname === "/admin/gate" || pathname.startsWith("/admin/gate/");
+    if (isGate) {
+      if (ok) {
+        return NextResponse.redirect(new URL("/admin", req.url));
+      }
+      return NextResponse.next();
+    }
+    if (!ok) {
+      return NextResponse.redirect(new URL("/admin/gate", req.url));
+    }
+    return NextResponse.next();
+  }
+
   const accessToken = req.cookies.get("accessToken");
   const isAuth = !!accessToken;
-
-  const pathname = req.nextUrl.pathname;
 
   const isAuthPage =
     pathname.startsWith("/login") ||
@@ -16,11 +54,8 @@ export function proxy(req: NextRequest) {
     pathname.startsWith("/reset-password-confirm");
 
   const isProtectedRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/admin") ||
-    pathname.startsWith("/checkout");
+    pathname.startsWith("/dashboard") || pathname.startsWith("/checkout");
 
-  // 🔥 FIXED HERE
   if (isAuthPage && isAuth) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
@@ -33,16 +68,8 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/api/admin/:path*",
+  ],
 };
-
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-
-// export function proxy(req: NextRequest) {
-//   return NextResponse.next();
-// }
-
-// export const config = {
-//   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-// };
