@@ -109,6 +109,21 @@ export const videos = pgTable("videos", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// ================= COUPON =================
+export const coupons = pgTable("coupons", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  category: varchar("category", { length: 100 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  couponCode: varchar("coupon_code", { length: 100 }).notNull(),
+  discountValue: varchar("discount_value", { length: 50 }).notNull(),
+  minimumOrder: varchar("minimum_order", { length: 100 }),
+  validUntil: timestamp("valid_until"),
+  termsPdf: text("terms_pdf"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // ================= CATEGORY =================
 
 export const category = pgTable("categories", {

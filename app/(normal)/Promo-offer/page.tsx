@@ -1,16 +1,21 @@
 import PromoCouponTabsCards from "@/components/promopage/allPromo";
 import PromoCodesOfferHero from "@/components/promopage/herobanner";
 import PromoStepsNewsletter from "@/components/promopage/howtouse";
+import { getCoupons } from "@/helper/coupons/action";
 import React from "react";
 
-const page = () => {
+const Page = async () => {
+  const coupons = await getCoupons();
+
   return (
     <div>
       <PromoCodesOfferHero />
-      <PromoCouponTabsCards />
+
+      <PromoCouponTabsCards coupons={coupons} />
+
       <PromoStepsNewsletter />
     </div>
   );
 };
 
-export default page;
+export default Page;
