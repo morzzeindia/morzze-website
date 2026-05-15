@@ -7,13 +7,40 @@ import { toast } from 'sonner'
 import { ShoppingBag } from 'lucide-react'
 
 const OrderReview = ({ shippingData }: { shippingData?: any }) => {
-  const { cartItems, clearCart } = useCart()
+  const { cartItems, clearCart, appliedCoupon } = useCart()
   const router = useRouter()
   const [paying, setPaying] = useState(false)
 
   const subtotal = cartItems.reduce((s, item) => s + (item.price ?? 0) * item.quantity, 0)
-  const gst = Math.round(subtotal * 0.18)
-  const total = subtotal + gst
+
+  const parseDiscountPercent = (discountValue: string): number | null => {
+    const normalized = discountValue.trim()
+    if (normalized.includes("%")) {
+      const percent = parseFloat(normalized.replace("%", ""))
+      return Number.isFinite(percent) ? percent : null
+    }
+    return null
+  }
+
+  const calculateDiscount = (base: number, discountValue: string): number => {
+    const normalized = discountValue.trim()
+    if (!normalized) return 0
+    if (normalized.includes("%")) {
+      const percent = parseFloat(normalized.replace("%", ""))
+      if (Number.isFinite(percent)) return Math.round((base * percent) / 100)
+    }
+    const fixed = parseFloat(normalized)
+    return Number.isFinite(fixed) ? Math.round(fixed) : 0
+  }
+
+  // Discount applies only to subtotal (product amount, ignoring GST)
+  const discountAmount = appliedCoupon
+    ? calculateDiscount(subtotal, appliedCoupon.discountValue)
+    : 0
+
+  const discountedSubtotal = subtotal - discountAmount
+  const gst = Math.round(discountedSubtotal * 0.18)
+  const total = Math.max(discountedSubtotal + gst, 0)
 
   const handlePayment = async () => {
     if (cartItems.length === 0) {
@@ -32,12 +59,12 @@ const OrderReview = ({ shippingData }: { shippingData?: any }) => {
 
       const address = shippingData
         ? {
-            street: shippingData.addressLine1 || "",
-            locality: shippingData.addressLine2 || "",
-            city: shippingData.city || "",
-            state: shippingData.state || "",
-            pincode: shippingData.pincode || "",
-          }
+          street: shippingData.addressLine1 || "",
+          locality: shippingData.addressLine2 || "",
+          city: shippingData.city || "",
+          state: shippingData.state || "",
+          pincode: shippingData.pincode || "",
+        }
         : {}
 
       await initiateRazorpayPayment({
@@ -133,6 +160,22 @@ const OrderReview = ({ shippingData }: { shippingData?: any }) => {
           <span className="text-zinc-500">Subtotal</span>
           <span className="text-zinc-300">₹{subtotal.toLocaleString("en-IN")}</span>
         </div>
+
+        {appliedCoupon && discountAmount > 0 && (
+          <div className="flex justify-between text-sm">
+            <span className="text-zinc-500">
+              Discount&nbsp;
+              <span className="text-emerald-400 font-semibold">
+                ({parseDiscountPercent(appliedCoupon.discountValue) !== null
+                  ? `${parseDiscountPercent(appliedCoupon.discountValue)}%`
+                  : appliedCoupon.discountValue})
+              </span>
+              &nbsp;· {appliedCoupon.code}
+            </span>
+            <span className="text-emerald-400">{discountAmount.toLocaleString("en-IN")}%</span>
+          </div>
+        )}
+
         <div className="flex justify-between text-sm">
           <span className="text-zinc-500">GST (18%)</span>
           <span className="text-zinc-300">₹{gst.toLocaleString("en-IN")}</span>

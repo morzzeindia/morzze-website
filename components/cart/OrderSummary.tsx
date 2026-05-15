@@ -5,19 +5,13 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { useCart } from '@/context/CartContext'
 
-type AppliedCoupon = {
-  code: string
-  discountValue: string
-  title?: string
-}
-
 const OrderSummary = () => {
-  const { cartItems } = useCart()
+  const { cartItems, appliedCoupon, setAppliedCoupon, clearCoupon } = useCart()
   const [couponCode, setCouponCode] = useState("")
-  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [isApplying, setIsApplying] = useState(false)
 
+  // Subtotal = sum of (basePrice × quantity) — no GST
   const subtotal = useMemo(
     () =>
       cartItems.reduce((sum, item) => {
@@ -27,14 +21,24 @@ const OrderSummary = () => {
     [cartItems]
   )
 
-  const calculateDiscount = (amount: number, discountValue: string) => {
+  // Discount helpers
+  const parseDiscountPercent = (discountValue: string): number | null => {
+    const normalized = discountValue.trim()
+    if (normalized.includes("%")) {
+      const percent = parseFloat(normalized.replace("%", ""))
+      return Number.isFinite(percent) ? percent : null
+    }
+    return null
+  }
+
+  const calculateDiscount = (base: number, discountValue: string): number => {
     const normalized = discountValue.trim()
     if (!normalized) return 0
 
     if (normalized.includes("%")) {
       const percent = parseFloat(normalized.replace("%", ""))
       if (Number.isFinite(percent)) {
-        return Math.round((amount * percent) / 100)
+        return Math.round((base * percent) / 100)
       }
     }
 
@@ -42,27 +46,31 @@ const OrderSummary = () => {
     return Number.isFinite(fixed) ? Math.round(fixed) : 0
   }
 
-  const gst = Math.round(subtotal * 0.18)
-  const totalBeforeDiscount = subtotal + gst
-
+  // Discount applies ONLY to subtotal (ignores GST)
   const discountAmount = appliedCoupon
-    ? calculateDiscount(totalBeforeDiscount, appliedCoupon.discountValue)
+    ? calculateDiscount(subtotal, appliedCoupon.discountValue)
     : 0
 
-  const total = Math.max(totalBeforeDiscount - discountAmount, 0)
+  const discountedSubtotal = subtotal - discountAmount
+  const gst = Math.round(discountedSubtotal * 0.18)
+  const total = Math.max(discountedSubtotal + gst, 0)
+
+  // Derive the display label for the discount (prefer % format)
+  const discountLabel = appliedCoupon
+    ? (() => {
+      const pct = parseDiscountPercent(appliedCoupon.discountValue)
+      return pct !== null ? `${pct}% off` : `₹${discountAmount.toLocaleString("en-IN")} off`
+    })()
+    : ""
 
   useEffect(() => {
     if (!appliedCoupon) return
-    if (!totalBeforeDiscount) {
-      setMessage({ type: 'success', text: `Coupon ${appliedCoupon.code} applied.` })
-      return
-    }
-    const amount = calculateDiscount(totalBeforeDiscount, appliedCoupon.discountValue)
+    const amount = calculateDiscount(subtotal, appliedCoupon.discountValue)
     if (amount <= 0) {
       setMessage({ type: 'error', text: 'Coupon is not valid for this cart.' })
-      setAppliedCoupon(null)
+      clearCoupon()
     }
-  }, [appliedCoupon, totalBeforeDiscount])
+  }, [appliedCoupon, subtotal])
 
   const handleApplyCoupon = async () => {
     const value = couponCode.trim().toUpperCase()
@@ -77,9 +85,7 @@ const OrderSummary = () => {
     try {
       const response = await fetch('/api/coupons/validate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: value }),
       })
 
@@ -87,7 +93,7 @@ const OrderSummary = () => {
 
       if (!response.ok || !data.success) {
         setMessage({ type: 'error', text: data.message || 'Invalid coupon code.' })
-        setAppliedCoupon(null)
+        clearCoupon()
         return
       }
 
@@ -96,18 +102,21 @@ const OrderSummary = () => {
         discountValue: data.coupon.discountValue,
         title: data.coupon.title,
       })
-      setMessage({ type: 'success', text: `Coupon applied: ${data.coupon.discountValue} off` })
+
+      const pct = parseDiscountPercent(data.coupon.discountValue)
+      const label = pct !== null ? `${pct}% off` : `${data.coupon.discountValue}%off`
+      setMessage({ type: 'success', text: `Coupon applied: ${label}` })
       toast.success('Coupon applied successfully')
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Unable to apply coupon. Please try again.' })
-      setAppliedCoupon(null)
+      clearCoupon()
     } finally {
       setIsApplying(false)
     }
   }
 
   const handleRemoveCoupon = () => {
-    setAppliedCoupon(null)
+    clearCoupon()
     setCouponCode("")
     setMessage({ type: 'success', text: 'Coupon removed.' })
   }
@@ -115,7 +124,7 @@ const OrderSummary = () => {
   return (
     <div className="bg-[#141414] border border-[#454545] rounded-md p-8 sticky top-24 font-montserrat">
       <h2 className="text-white text-xl font-medium mb-8">Order Summary</h2>
-      
+
       <div className="space-y-4 mb-4">
         <div className="flex justify-between text-sm">
           <span className="text-zinc-500 font-light">Subtotal</span>
@@ -123,10 +132,18 @@ const OrderSummary = () => {
         </div>
 
         {appliedCoupon && discountAmount > 0 && (
-          <div className="flex justify-between text-sm text-emerald-400">
-            <span className="text-zinc-500 font-light">Coupon ({appliedCoupon.code})</span>
+          <div className="flex justify-between text-sm">
+            <span className="text-zinc-500 font-light">
+              Discount&nbsp;
+              {/* <span className="text-emerald-400 font-semibold">
+                {parseDiscountPercent(appliedCoupon.discountValue) !== null
+                  ? `${parseDiscountPercent(appliedCoupon.discountValue)}%`
+                  : appliedCoupon.discountValucle}
+              </span> */}
+              &nbsp;· {appliedCoupon.code}
+            </span>
             <div className="flex items-center gap-3">
-              <span className="text-zinc-300">-₹{discountAmount.toLocaleString("en-IN")}</span>
+              <span className="text-emerald-400">{discountAmount.toLocaleString("en-IN")}%</span>
               <button
                 type="button"
                 onClick={handleRemoveCoupon}
@@ -142,14 +159,14 @@ const OrderSummary = () => {
           <span className="text-zinc-500 font-light">Shipping</span>
           <span className="text-green-500 uppercase text-xs font-bold tracking-widest">Free</span>
         </div>
-        <div className="flex justify-between text-sm border-b pb-4  ">
+        <div className="flex justify-between text-sm border-b pb-4">
           <span className="text-zinc-500 font-light">GST (18%)</span>
           <span className="text-zinc-300">₹{gst.toLocaleString("en-IN")}</span>
         </div>
       </div>
 
-      <div className="border-t border-zinc-900  mb-5">
-        <div className="flex justify-between items-center">
+      <div className="border-t border-zinc-900 mb-5">
+        <div className="flex justify-between items-center pt-4">
           <span className="text-white font-medium">Total</span>
           <span className="text-white text-xl font-semibold">₹{total.toLocaleString("en-IN")}</span>
         </div>
@@ -160,8 +177,8 @@ const OrderSummary = () => {
           Promo Code
         </label>
         <div className="flex gap-2">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
             placeholder="Enter Code"

@@ -17,6 +17,13 @@ export type CartItem = {
   productId?: string;    // DB uuid
 };
 
+export type AppliedCoupon = {
+  code: string;
+  discountValue: string; // e.g. "10%" or "500"
+  title?: string;
+  discountPercent?: number; // parsed % if applicable
+};
+
 type CartContextType = {
   cartItems: CartItem[];
   addToCart: (slug: string, quantity?: number, productData?: Partial<CartItem>) => void;
@@ -25,6 +32,9 @@ type CartContextType = {
   clearCart: () => void;
   getItemQuantity: (slug: string) => number;
   totalItems: number;
+  appliedCoupon: AppliedCoupon | null;
+  setAppliedCoupon: (coupon: AppliedCoupon | null) => void;
+  clearCoupon: () => void;
 };
 
 const CartContext = createContext<CartContextType>({
@@ -35,6 +45,9 @@ const CartContext = createContext<CartContextType>({
   clearCart: () => {},
   getItemQuantity: () => 0,
   totalItems: 0,
+  appliedCoupon: null,
+  setAppliedCoupon: () => {},
+  clearCoupon: () => {},
 });
 
 export const useCart = () => useContext(CartContext);
@@ -57,6 +70,7 @@ function setLocalCart(items: CartItem[]) {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -115,6 +129,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => {
     setCartItems([]);
+    setAppliedCoupon(null);
+  }, []);
+
+  const clearCoupon = useCallback(() => {
+    setAppliedCoupon(null);
   }, []);
 
   const getItemQuantity = useCallback(
@@ -136,6 +155,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         getItemQuantity,
         totalItems,
+        appliedCoupon,
+        setAppliedCoupon,
+        clearCoupon,
       }}
     >
       {children}

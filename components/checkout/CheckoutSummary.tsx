@@ -1,13 +1,43 @@
 "use client"
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useCart } from '@/context/CartContext'
 
 const CheckoutSummary = () => {
-  const { cartItems } = useCart()
+  const { cartItems, appliedCoupon } = useCart()
 
-  const subtotal = cartItems.reduce((s, item) => s + (item.price ?? 0) * item.quantity, 0)
-  const gst = Math.round(subtotal * 0.18)
-  const total = subtotal + gst
+  const subtotal = useMemo(
+    () => cartItems.reduce((s, item) => s + (item.price ?? 0) * item.quantity, 0),
+    [cartItems]
+  )
+
+  const parseDiscountPercent = (discountValue: string): number | null => {
+    const normalized = discountValue.trim()
+    if (normalized.includes("%")) {
+      const percent = parseFloat(normalized.replace("%", ""))
+      return Number.isFinite(percent) ? percent : null
+    }
+    return null
+  }
+
+  const calculateDiscount = (base: number, discountValue: string): number => {
+    const normalized = discountValue.trim()
+    if (!normalized) return 0
+    if (normalized.includes("%")) {
+      const percent = parseFloat(normalized.replace("%", ""))
+      if (Number.isFinite(percent)) return Math.round((base * percent) / 100)
+    }
+    const fixed = parseFloat(normalized)
+    return Number.isFinite(fixed) ? Math.round(fixed) : 0
+  }
+
+  // Discount applies only to subtotal (product amount, ignoring GST)
+  const discountAmount = appliedCoupon
+    ? calculateDiscount(subtotal, appliedCoupon.discountValue)
+    : 0
+
+  const discountedSubtotal = subtotal - discountAmount
+  const gst = Math.round(discountedSubtotal * 0.18)
+  const total = Math.max(discountedSubtotal + gst, 0)
 
   return (
     <div className="bg-[#0A0A0A] border border-zinc-900 rounded-lg p-8">
@@ -44,6 +74,22 @@ const CheckoutSummary = () => {
             <span className="text-zinc-500 font-light">Subtotal</span>
             <span className="text-zinc-300">₹{subtotal.toLocaleString("en-IN")}</span>
           </div>
+
+          {appliedCoupon && discountAmount > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500 font-light">
+                Discount&nbsp;
+                <span className="text-emerald-400 font-semibold">
+                  ({parseDiscountPercent(appliedCoupon.discountValue) !== null
+                    ? `${parseDiscountPercent(appliedCoupon.discountValue)}%`
+                    : appliedCoupon.discountValue})
+                </span>
+                &nbsp;· {appliedCoupon.code}
+              </span>
+              <span className="text-emerald-400">-₹{discountAmount.toLocaleString("en-IN")}</span>
+            </div>
+          )}
+
           <div className="flex justify-between text-sm">
             <span className="text-zinc-500 font-light">Shipping</span>
             <span className="text-green-500 uppercase text-xs font-bold tracking-widest">Free</span>
