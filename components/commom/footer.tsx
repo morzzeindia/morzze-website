@@ -10,12 +10,13 @@ import {
 } from "@tabler/icons-react";
 const companyLinks = [
   { name: "About Us", href: "/about" },
-  { name: "Become a Dealer", href: "/dealer" },
+  { name: "Promo and Offers", href: "/Promo-offer" },
   { name: "Catalogue", href: "/catalogue" },
   { name: "Media", href: "/media-center" },
   { name: "Careers", href: "/career" },
   { name: "Blogs", href: "/blogs" },
-   { name: "Stores", href: "/stores" },
+  { name: "Stores", href: "/stores" },
+
 ];
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -163,10 +164,11 @@ const Footer = () => {
               {[
                 { name: "Contact Us", link: "/contact" },
                 { name: "Warranty", link: "/warranty" },
+                { name: "Become a Dealer", link: "/dealer" },
                 { name: "Shipping & Returns", link: "/shipping-returns" },
                 { name: "FAQ", link: "/support" },
                 { name: "Track Order", link: "" },
-               
+
               ].map((item) => (
                 <li key={item.name}>
                   <Link
