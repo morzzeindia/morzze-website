@@ -10,12 +10,13 @@ import {
 } from "@tabler/icons-react";
 const companyLinks = [
   { name: "About Us", href: "/about" },
-  { name: "Promo and Offers", href: "/Promo-offer" },
+  { name: "Coupons", href: "/Promo-offer" },
+  // { name: "Find a Store", href: "/stores" },
+
   { name: "Catalogue", href: "/catalogue" },
-  { name: "Media", href: "/media-center" },
+  { name: "Media", href: "/mediacenter" },
   { name: "Careers", href: "/career" },
   { name: "Blogs", href: "/blogs" },
-  { name: "Stores", href: "/stores" },
 
 ];
 const Footer = () => {
@@ -165,9 +166,10 @@ const Footer = () => {
                 { name: "Contact Us", link: "/contact" },
                 { name: "Warranty", link: "/warranty" },
                 { name: "Become a Dealer", link: "/dealer" },
-                { name: "Shipping & Returns", link: "/shipping-returns" },
+                { name: "Find a Store", link: "/stores" },
+                // { name: "Shipping & Returns", link: "/shipping-returns" },
                 { name: "FAQ", link: "/support" },
-                { name: "Track Order", link: "" },
+
 
               ].map((item) => (
                 <li key={item.name}>

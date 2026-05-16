@@ -39,10 +39,10 @@ function mapOrderToRecentItem(o: NonNullable<Awaited<ReturnType<typeof getOrders
     id: o.id,
     date: o.createdAt
       ? new Date(o.createdAt).toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        })
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
       : "—",
     price: formatINR(o.totalAmount ?? undefined),
     status: formatStatus(o.status ?? undefined),
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat) => (
-          <a key={stat.label} href={stat.href} className="bg-[#0F0F0F] border border-zinc-900 p-5 rounded-xl flex flex-col justify-between h-[120px] hover:border-zinc-700 transition-colors group">
+          <a key={stat.label} href={stat.href} className="bg-[#141414] border border-zinc-900 p-5 rounded-xl flex flex-col justify-between h-[120px] hover:border-zinc-700 transition-colors group">
             <div className="flex justify-between">
               <stat.icon className="text-[#FFB800]" size={20} />
               <span className="text-zinc-800 group-hover:text-zinc-600 transition-colors">→</span>

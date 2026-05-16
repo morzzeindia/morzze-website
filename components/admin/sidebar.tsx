@@ -32,18 +32,18 @@ const navItems = [
   { label: "Review", href: "/admin/reviews", icon: MessageSquare },
   { label: "Payment", href: "/admin/payment", icon: IndianRupee },
 
-  {
-    label: "Featured Products",
-    href: "/admin/featured-products",
-    icon: ShoppingCart,
-  },
-  {
-    label: "Featured Categories",
-    href: "/admin/featured-categories",
-    icon: Feather,
-  },
+  // {
+  //   label: "Featured Products",
+  //   href: "/admin/featured-products",
+  //   icon: ShoppingCart,
+  // },
+  // {
+  //   label: "Featured Categories",
+  //   href: "/admin/featured-categories",
+  //   icon: Feather,
+  // },
   { label: "Coupons", href: "/admin/coupons", icon: Code },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+  // { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 export function Sidebar() {
@@ -92,7 +92,7 @@ export function Sidebar() {
       <button
         type="button"
         onClick={() => void signOutAdmin()}
-        className="mt-4 w-full rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 transition hover:bg-gray-50"
+        className="mt-4 w-full rounded-full hover:text-white border border-red-300 px-4 py-2 text-sm text-red-500 transition hover:bg-red-500 cursor-pointer"
       >
         Sign out of admin
       </button>

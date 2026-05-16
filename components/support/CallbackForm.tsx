@@ -45,7 +45,7 @@ const CallbackForm = () => {
         </div>
 
         {/* Date & Time Picker Area */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <Label className="text-[11px] uppercase tracking-widest font-bold">Preferred Date and Time</Label>
           <div className="bg-[#111] border border-white/5 p-6 space-y-6">
             <p className="text-center text-xs text-gray-500">April</p>
@@ -65,7 +65,7 @@ const CallbackForm = () => {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="space-y-2">
           <Label className="text-[11px] uppercase tracking-widest font-bold">Message (Optional)</Label>
@@ -80,7 +80,7 @@ const CallbackForm = () => {
         </div>
 
         <Button className="w-full bg-[#FDB813] hover:bg-[#e6a700] text-black font-bold h-14 uppercase tracking-[2px] rounded-none">
-          Register Product
+          Request Call Back
         </Button>
       </form>
     </div>

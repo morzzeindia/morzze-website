@@ -93,15 +93,15 @@ const ServiceRequest = () => {
           {/* Textarea */}
           <div className="space-y-3">
             <Label className="text-white text-xs font-semibold ml-1">Upload Invoice (Optional)</Label>
-            <textarea 
-              className="w-full bg-[#1A1A1A] border border-white/10 p-4 h-40 outline-none focus:ring-1 focus:ring-[#FDB813] text-sm text-gray-400 rounded-md" 
-              placeholder="Describe your problem you are having" 
+            <textarea
+              className="w-full bg-[#1A1A1A] border border-white/10 p-4 h-40 outline-none focus:ring-1 focus:ring-[#FDB813] text-sm text-gray-400 rounded-md"
+              placeholder="Describe your problem you are having"
             />
           </div>
 
           {/* Submit Button */}
           <Button className="w-full bg-[#FFB81C] hover:bg-[#e6a619] text-black font-bold h-16 rounded-xl text-lg transition-all duration-300">
-            Register Product
+            Request Service
           </Button>
         </form>
       </div>

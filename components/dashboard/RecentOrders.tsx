@@ -17,7 +17,7 @@ type RecentOrdersProps = {
 
 export function RecentOrders({ orders = [] }: RecentOrdersProps) {
   return (
-    <div className="bg-[#0F0F0F] border border-zinc-900 rounded-2xl p-5 lg:p-8">
+    <div className="bg-[#141414] border border-zinc-900 rounded-2xl p-5 lg:p-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-white text-lg font-medium">Recent Orders</h2>
         <Link

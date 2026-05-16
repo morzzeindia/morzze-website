@@ -14,9 +14,9 @@ const page = () => {
       <PressCoverageSection />
       <BrandFilmsProductDemos />
       <ProductPhotographyGallery />
-      <PressKitRequestSection />
+      {/* <PressKitRequestSection /> */}
     </div>
   );
-};
+}; ``
 
 export default page;

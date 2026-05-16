@@ -81,7 +81,7 @@ const DealerHero = () => {
             className="flex flex-col sm:flex-row justify-center items-center gap-4"
           >
             <Link
-              href="/products"
+              href="#dealer-form"
               className="w-full sm:w-auto min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 hover:bg-[#CBA14D] overflow-hidden"
             >
               <span className="flex items-center relative z-10 font-inter text-[11px] md:text-xs font-bold text-[#CBA14D] group-hover:text-black uppercase tracking-[0.22em]">
@@ -89,14 +89,14 @@ const DealerHero = () => {
               </span>
             </Link>
 
-            <Link
+            {/* <Link
               href="/products"
               className="w-full sm:w-auto min-w-[190px] md:min-w-[220px] h-[48px] md:h-[52px] flex items-center justify-center group relative border border-[#CBA14D]/70 px-8 md:px-12 transition-all duration-300 hover:bg-[#CBA14D] overflow-hidden"
             >
               <span className="relative z-10 font-inter text-[11px] md:text-xs font-bold text-[#CBA14D] group-hover:text-black uppercase tracking-[0.22em]">
                 Learn More
               </span>
-            </Link>
+            </Link> */}
           </motion.div>
         </motion.div>
       </div>

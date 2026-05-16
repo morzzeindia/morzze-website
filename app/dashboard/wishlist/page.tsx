@@ -22,7 +22,7 @@ type WishlistProduct = {
 
 const WishlistPage = () => {
   const { wishlistSlugs, toggleWishlist, loading } = useWishlist();
-  const { addToCart } = useCart();
+  const { addToCart, getItemQuantity } = useCart();
 
   const [wishlistItems, setWishlistItems] = useState<WishlistProduct[]>([]);
   const [fetching, setFetching] = useState(false);
@@ -65,9 +65,9 @@ const WishlistPage = () => {
   // ─── Empty state ─────────────────────────────────────────────────────────
   if (wishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-black text-white p-2 font-inter">
+      <div className=" min-h-screen bg-black text-white p-2 font-inter">
         <h2 className="text-2xl mb-8 font-medium">Wishlist</h2>
-        <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="flex flex-col ml-64 items-center justify-center py-20 text-center">
           <IconHeart size={48} className="text-zinc-700 mb-4" />
           <p className="text-zinc-500 text-sm mb-6">Your wishlist is empty</p>
           <Link
@@ -166,7 +166,8 @@ const WishlistPage = () => {
                 {/* Add to Cart Button */}
                 <button
                   disabled={!item.isInStock}
-                  onClick={() =>
+                  onClick={() => {
+                    if (getItemQuantity(item.slug!) > 0) return;
                     addToCart(item.slug!, 1, {
                       name: item.name ?? undefined,
                       price: item.basePrice ?? undefined,
@@ -174,12 +175,15 @@ const WishlistPage = () => {
                       image: item.bannerImage ?? undefined,
                       sku: item.sku ?? undefined,
                       productId: item.id,
-                    })
-                  }
-                  className="w-full bg-[#FFBF3F] hover:bg-[#ffb31f] text-black font-bold py-3 px-4 rounded-md flex items-center justify-center gap-2 text-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    });
+                  }}
+                  className="w-full bg-[#FFBF3F] hover:bg-[#ffb31f] text-black font-bold py-3 px-4 rounded-md flex items-center justify-center gap-2 text-sm transition-all active:scale-95 disabled:opacity-10 disabled:cursor-not-allowed"
                 >
-                  <IconShoppingBag size={18} />
-                  Add to cart
+                  {getItemQuantity(item.slug!) > 0 ? (
+                    <><IconShoppingBag size={18} /> In Cart ✓</>
+                  ) : (
+                    <><IconShoppingBag size={18} /> Add to cart</>
+                  )}
                 </button>
               </div>
             </div>

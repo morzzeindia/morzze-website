@@ -24,7 +24,7 @@ const ProductBanner = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-3xl md:text-5xl font-semibold text-white tracking-tight"
           >
-            Granite Basin
+            Our Products
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, x: -20 }}
