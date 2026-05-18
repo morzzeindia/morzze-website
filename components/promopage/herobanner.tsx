@@ -36,7 +36,7 @@ export default function PromoCodesOfferHero() {
           viewport={{ once: true }}
           className="text-[10px] md:text-xs uppercase tracking-[0.45em] text-[#d29a18] font-semibold mb-4"
         >
-          Careers at Morzze
+          Coupons
         </motion.p>
 
         <motion.h1
@@ -46,7 +46,7 @@ export default function PromoCodesOfferHero() {
           viewport={{ once: true }}
           className="text-[34px] md:text-[52px] lg:text-[60px] font-semibold text-white tracking-[-0.03em] leading-[1.08] mb-4"
         >
-          Promo Codes & Offer
+          Get Discount on Our Products
         </motion.h1>
 
         <motion.p

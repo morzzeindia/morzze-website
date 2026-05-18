@@ -88,9 +88,9 @@ export default function ExhibitionHighlightsSection() {
           </div>
         </motion.div>
 
-        <button className="px-14 h-11 border border-[#d39b10] text-[#d39b10] text-[12px] hover:bg-[#d39b10] hover:text-black transition">
+        {/* <button className="px-14 h-11 border border-[#d39b10] text-[#d39b10] text-[12px] hover:bg-[#d39b10] hover:text-black transition">
           VIEW ARTICLE
-        </button>
+        </button> */}
       </div>
     </section>
   );

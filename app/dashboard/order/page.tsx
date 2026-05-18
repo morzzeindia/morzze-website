@@ -30,10 +30,10 @@ export default async function MyOrdersPage() {
       id: o.id,
       date: o.createdAt
         ? new Date(o.createdAt).toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })
         : "—",
       price: formatINR(o.totalAmount ?? undefined),
       status: formatStatus(o.status ?? undefined),
@@ -55,9 +55,8 @@ export default async function MyOrdersPage() {
             <button
               key={tab}
               type="button"
-              className={`px-6 py-2 rounded-full border border-[#FFB800] text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
-                idx === 0 ? "bg-[#FFB800] text-black" : "text-[#FFB800]"
-              }`}
+              className={`px-6 py-2 rounded-full border border-[#FFB800] text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-all ${idx === 0 ? "bg-[#FFB800] text-black" : "text-[#FFB800]"
+                }`}
             >
               {tab}
             </button>
@@ -89,11 +88,7 @@ export default async function MyOrdersPage() {
                   </span>
                 </div>
 
-                <div className="mb-4">
-                  <span className="text-2xl md:text-3xl font-bold font-montserrat">
-                    {order.price}
-                  </span>
-                </div>
+
 
                 <div className="flex gap-4 items-start">
                   <div className="w-20 h-20 md:w-24 md:h-24 bg-[#181818] border border-zinc-800 rounded-lg shrink-0 overflow-hidden">
@@ -105,9 +100,17 @@ export default async function MyOrdersPage() {
                       <h4 className="text-sm md:text-lg font-semibold font-montserrat truncate tracking-wide uppercase">
                         {order.product}
                       </h4>
-                      <p className="text-[11px] md:text-sm text-zinc-500 font-inter truncate uppercase">
-                        {order.variant} | QTY: {order.qty}
-                      </p>
+                      <div className="flex justify-between items-center gap-2">
+                        <p className="text-[11px] md:text-sm text-zinc-500 font-inter truncate uppercase">
+                          QTY: {order.qty}
+                        </p>
+                        <span className="text-lg md:text-lg font-semibold font-montserrat">
+                          {order.price}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mb-4">
+
                     </div>
 
                     <div className="flex justify-end mt-auto">

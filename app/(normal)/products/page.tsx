@@ -58,20 +58,16 @@ const page = async ({ searchParams }: PageProps) => {
             </Link>
             <span>&gt;</span>
             <Link
-              href="/category"
+              href="/products"
               className="hover:text-[#EDEBE9] transition-colors"
             >
-              Category
+              Products
             </Link>
-            <span>&gt;</span>
-            <span className="text-[#FFBF3F]">
-              {params.category || "Granite Basin"}
-            </span>
+
+
           </nav>
 
-          <h2 className="text-3xl md:text-4xl font-montserrat font-semibold tracking-tight text-[#EDEBE9]">
-            {params.category || "Granite Basin"}
-          </h2>
+
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">

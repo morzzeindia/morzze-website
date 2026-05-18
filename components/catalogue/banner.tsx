@@ -31,7 +31,7 @@ export default function ProductCatalogueHero() {
           viewport={{ once: true }}
           className="text-[10px] md:text-xs uppercase tracking-[0.42em] text-[#d39b10] font-medium mb-4"
         >
-          Careers at Morzze
+          Product Catalogue
         </motion.p>
 
         <motion.h1

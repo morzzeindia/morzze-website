@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from "@/lib/db";
-
-
-import { and, asc, ilike, sql } from "drizzle-orm";
+import { db } from "@/db";
+import { and, asc, ilike, sql, eq } from "drizzle-orm";
 import { pageSize } from "@/const/globalconst";
-import { review } from "@/db/schema";
+import { review, product } from "@/db/schema";
 import ReviewClient from "./reviewClient";
 
 interface PageProps {
@@ -34,8 +32,21 @@ const Page = async ({ searchParams }: PageProps) => {
   const offset = (page - 1) * pageSize;
 
   const reviews = await db
-    .select()
+    .select({
+      id: review.id,
+      name: review.name,
+      email: review.email,
+      rating: review.rating,
+      message: review.message,
+      isAdminApproved: review.isAdminApproved,
+      productId: review.productId,
+      createdAt: review.createdAt,
+      productName: product.name,
+      productSlug: product.slug,
+      productImage: product.bannerImage,
+    })
     .from(review)
+    .leftJoin(product, eq(review.productId, product.id))
     .orderBy(asc(review.createdAt))
     .limit(PAGE_SIZE)
     .offset(offset)

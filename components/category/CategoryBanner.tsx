@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const CategoryBanner = () => {
   return (
     <section className="relative w-full h-[50vh] md:h-[65vh] overflow-hidden font-montserrat">
-      
+
       {/* --- BACKGROUND IMAGE --- */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -23,7 +23,7 @@ const CategoryBanner = () => {
       {/* --- CONTENT CONTAINER --- */}
       <div className="relative z-10 h-full max-w-screen-2xl mx-auto px-6 md:px-10 flex flex-col justify-center">
         <div className="max-w-2xl space-y-4">
-          
+
           {/* Animated Heading */}
           <motion.h1
             initial={{ opacity: 0, x: -30 }}
@@ -31,7 +31,7 @@ const CategoryBanner = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-3xl md:text-5xl font-semibold text-white tracking-tight"
           >
-            Our Products
+            Our Categories
           </motion.h1>
 
           {/* Animated Description */}
@@ -41,7 +41,7 @@ const CategoryBanner = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="text-white font-inter text-sm md:text-md leading-relaxed max-w-lg opacity-90"
           >
-            Discover our premium collection of kitchen and bathroom fittings designed for modern living.
+            Explore our diverse range of high-quality kitchen and bathroom products.
           </motion.p>
 
         </div>

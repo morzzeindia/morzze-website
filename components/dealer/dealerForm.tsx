@@ -136,7 +136,7 @@ export default function DealerApplicationForm() {
   };
 
   return (
-    <section className="w-full bg-black text-white py-20 px-4 md:px-8 lg:px-12">
+    <section className="w-full bg-black text-white py-20 px-4 md:px-8 lg:px-12" id="dealer-form">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

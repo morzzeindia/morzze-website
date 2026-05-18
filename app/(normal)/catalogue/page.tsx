@@ -23,7 +23,7 @@ const page = async () => {
     <div>
       <ProductCatalogueHero />
       <CatalogueGridDownloads items={items} />
-      <CatalogueInfoRequestSection />
+      {/* <CatalogueInfoRequestSection /> */}
     </div>
   );
 };

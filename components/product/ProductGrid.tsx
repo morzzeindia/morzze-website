@@ -8,6 +8,8 @@ import {
   IconShoppingBag,
   IconStarFilled,
   IconAdjustmentsHorizontal,
+  IconHeart,
+  IconHeartFilled,
 } from "@tabler/icons-react";
 import {
   Sheet,
@@ -18,6 +20,7 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import Pagination from "../commom/Pagination";
 import FilterSidebar from "@/components/product/FilterSidebar";
 
@@ -32,7 +35,8 @@ const ProductGrid = ({
   total: number;
   currentPage: number;
 }) => {
-  const { addToCart } = useCart();
+  const { addToCart, getItemQuantity } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   return (
     <div className="w-full space-y-6 md:space-y-10">
@@ -95,23 +99,48 @@ const ProductGrid = ({
               </Link>
 
               <div className="absolute inset-x-0 bottom-0 z-30 translate-y-0 md:translate-y-full p-2 group-hover:translate-y-0 transition-transform duration-300">
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addToCart(product.slug, 1, {
-                      name: product.name,
-                      price: product.basePrice,
-                      oldPrice: product.strikethroughPrice,
-                      image: product.bannerImage,
-                      sku: product.sku,
-                      productId: product.id,
-                    });
-                  }}
-                  className="w-full bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-2"
-                >
-                  <IconShoppingBag size={18} />
-                  Add to cart
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    disabled={getItemQuantity(product.slug) > 0}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addToCart(product.slug, 1, {
+                        name: product.name,
+                        price: product.basePrice,
+                        oldPrice: product.strikethroughPrice,
+                        image: product.bannerImage,
+                        sku: product.sku,
+                        productId: product.id,
+                      });
+                    }}
+                    className="flex-1 bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
+                  >
+                    {getItemQuantity(product.slug) > 0 ? (
+                      <><IconShoppingBag size={18} /> In Cart ✓</>
+                    ) : (
+                      <><IconShoppingBag size={18} /> Add to cart</>
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleWishlist(product.slug, product.id);
+                    }}
+                    className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${isInWishlist(product.slug)
+                      ? "bg-[#FFBF3F] hover:bg-white "
+                      : "bg-[#FFBF3F] cursor-pointer"
+                      }`}
+                  >
+                    {isInWishlist(product.slug) ? (
+                      <IconHeartFilled size={20} className="text-red-500" />
+                    ) : (
+                      <IconHeart size={20} className="text-white hover:text-black" />
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
 

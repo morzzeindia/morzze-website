@@ -169,7 +169,7 @@ export default function StoreLocatorSection() {
         {/* TOP SEARCH */}
         <div className="flex flex-col md:flex-row gap-4 mb-10">
           {/* STATE */}
-          <div className="w-full md:w-[320px]">
+          <div className="w-full md:w-[450px]">
             <Select
               options={stateOptions}
               value={selectedState}
@@ -218,7 +218,7 @@ export default function StoreLocatorSection() {
           </div>
 
           {/* CITY */}
-          <div className="w-full md:w-[320px]">
+          <div className="w-full md:w-[450px]">
             <Select
               options={cityOptions}
               value={selectedCity}
@@ -403,12 +403,12 @@ export default function StoreLocatorSection() {
 
                     {/* FEATURES */}
                     <div>
-                      <p className="flex items-center gap-2 text-[#e6aa12] mb-2">
+                      {/* <p className="flex items-center gap-2 text-[#e6aa12] mb-2">
                         <Star size={14} />
                         Features
-                      </p>
+                      </p> */}
 
-                      <div className="flex flex-wrap gap-2">
+                      {/* <div className="flex flex-wrap gap-2">
                         {activeStore.features.map((feature, i) => (
                           <span
                             key={i}
@@ -417,7 +417,7 @@ export default function StoreLocatorSection() {
                             {feature}
                           </span>
                         ))}
-                      </div>
+                      </div> */}
 
                       {/* <button className="mt-5 w-[180px] h-11 bg-[#e6aa12] text-black flex items-center justify-center gap-2 font-medium">
                         <Calendar size={14} />

@@ -71,14 +71,11 @@ export default function ProductPhotographyGallery() {
           </motion.div>
         </AnimatePresence>
 
-        <p className="text-[13px] text-[#777777] mb-6">
-          High-resolution images available for editorial use. Contact our media
-          team for access.
-        </p>
 
-        <button className="px-8 h-10 border border-[#d39b10] text-[#d39b10] text-[12px] inline-flex items-center gap-2 hover:bg-[#d39b10] hover:text-black transition">
+
+        {/* <button className="px-8 h-10 border border-[#d39b10] text-[#d39b10] text-[12px] inline-flex items-center gap-2 hover:bg-[#d39b10] hover:text-black transition">
           <Download size={13} /> Download Image Guidelines
-        </button>
+        </button> */}
       </div>
     </section>
   );

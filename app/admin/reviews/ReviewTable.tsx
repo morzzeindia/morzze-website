@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-
+import Link from "next/link";
 import { useTransition, useState } from "react";
 
 
@@ -15,7 +15,7 @@ import {
   Trash2,
   Check,
   Loader2,
-  Undo2,
+  Package,
 } from "lucide-react";
 
 import {
@@ -98,9 +98,10 @@ async function handleDelete() {
           <TableRow className="text-muted-foreground">
             <TableHead className="w-[70px] ">S.No</TableHead>
             <TableHead>User</TableHead>
+            <TableHead>Product</TableHead>
             <TableHead>Contact</TableHead>
             <TableHead className="w-[160px]">Rating</TableHead>
-            <TableHead className="w-[40%]">Message</TableHead>
+            <TableHead className="w-[30%]">Message</TableHead>
             <TableHead className="text-right pr-4 w-[150px]">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -119,9 +120,38 @@ async function handleDelete() {
                 {/* User */}
                 <TableCell className="py-5">
                   <div className="flex items-center gap-3">
-                
                     <span className="font-medium">{review.name}</span>
                   </div>
+                </TableCell>
+
+                {/* Product */}
+                <TableCell className="py-5">
+                  {review.productSlug ? (
+                    <Link
+                      href={`/products/${review.productSlug}`}
+                      target="_blank"
+                      className="flex items-center gap-2.5 group w-max max-w-[200px]"
+                    >
+                      {review.productImage ? (
+                        <div className="w-9 h-9 rounded-md overflow-hidden shrink-0 border border-muted">
+                          <img
+                            src={review.productImage}
+                            alt={review.productName ?? ""}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-9 h-9 rounded-md bg-muted shrink-0 flex items-center justify-center">
+                          <Package size={16} className="text-muted-foreground" />
+                        </div>
+                      )}
+                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                        {review.productName ?? "Unknown Product"}
+                      </span>
+                    </Link>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">—</span>
+                  )}
                 </TableCell>
 
                 {/* Email */}

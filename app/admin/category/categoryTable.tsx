@@ -38,18 +38,18 @@ const PAGE_SIZE = 3;
 
 const CategoryTable = ({ page, categories }: CategoryTableProps) => {
   const startIndex = (page - 1) * PAGE_SIZE;
-const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
 
-const handleDelete = (id: string) => {
+  const handleDelete = (id: string) => {
 
-  startTransition(async () => {
-    const res = await deleteCategory(id);
+    startTransition(async () => {
+      const res = await deleteCategory(id);
 
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  });
-};
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    });
+  };
   const router = useRouter();
   const pathname = usePathname();
 
@@ -62,7 +62,7 @@ const handleDelete = (id: string) => {
             <TableHead>Category Name</TableHead>
             <TableHead>Slug Name</TableHead>
             <TableHead>Description</TableHead>
-            <TableHead>Created At</TableHead>
+            {/* <TableHead>Created At</TableHead> */}
             <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -85,57 +85,57 @@ const handleDelete = (id: string) => {
 
                 <TableCell>{category.description}</TableCell>
 
-                <TableCell>
+                {/* <TableCell>
                   {new Date(category.createdAt).toLocaleDateString()}
+                </TableCell> */}
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+
+                    {/* EDIT */}
+                    <Button
+                      variant="outline"
+                      onClick={() => router.push(`${pathname}/${category.id}`)}
+                    >
+                      <Pencil size={16} />
+                    </Button>
+
+                    {/* DELETE */}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" disabled={isPending}>
+                          <Trash2 size={16} className="text-red-500" />
+                        </Button>
+                      </AlertDialogTrigger>
+
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Delete category permanently?
+                          </AlertDialogTitle>
+
+                          <AlertDialogDescription>
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <AlertDialogFooter>
+                          <AlertDialogCancel disabled={isPending}>
+                            Cancel
+                          </AlertDialogCancel>
+
+                          <AlertDialogAction
+                            disabled={isPending}
+                            onClick={() => handleDelete(category.id)}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            {isPending ? <Loader2 className="animate-spin" size={16} /> : "Delete"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+
+                  </div>
                 </TableCell>
-<TableCell className="text-right">
-  <div className="flex justify-end gap-2">
-
-    {/* EDIT */}
-    <Button
-      variant="outline"
-      onClick={() => router.push(`${pathname}/${category.id}`)}
-    >
-      <Pencil size={16} />
-    </Button>
-
-    {/* DELETE */}
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline" disabled={isPending}>
-          <Trash2 size={16} className="text-red-500" />
-        </Button>
-      </AlertDialogTrigger>
-
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            Delete category permanently?
-          </AlertDialogTitle>
-
-          <AlertDialogDescription>
-            This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>
-            Cancel
-          </AlertDialogCancel>
-
-          <AlertDialogAction
-            disabled={isPending}
-            onClick={() => handleDelete(category.id)}
-            className="bg-red-600 hover:bg-red-700"
-          >
-            {isPending ? <Loader2 className="animate-spin" size={16} /> : "Delete"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-
-  </div>
-</TableCell>
 
               </TableRow>
             );

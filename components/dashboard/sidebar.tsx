@@ -2,10 +2,10 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { 
-  IconLayoutDashboard, IconUser, IconShoppingBag, 
-  IconAddressBook, IconHeart, IconStar, 
-  IconBell, IconLogout, IconChevronRight 
+import {
+  IconLayoutDashboard, IconUser, IconShoppingBag,
+  IconAddressBook, IconHeart, IconStar,
+  IconBell, IconLogout, IconChevronRight
 } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { logout } from "@/helper"
@@ -56,8 +56,8 @@ export default function AppSidebar() {
   }
 
   return (
-    <aside className="w-full lg:w-[280px] flex flex-col gap-4 p-4  lg:sticky lg:top-0 border-b lg:border-b-0 lg:border-r border-zinc-900 bg-[#0A0A0A]">
-      
+    <aside className="w-full lg:w-[280px] flex flex-col gap-4 p-4  lg:sticky lg:top-0 border-b lg:border-b-0 lg:border-r border-zinc-900 bg-[#141414]">
+
       {/* Profile Section - Centered Like Image */}
       <div className="bg-[#141414] rounded-xl p-6 text-center border border-zinc-900 shadow-sm">
         <div className="w-14 h-14 bg-zinc-800 rounded-full mx-auto mb-3 flex items-center justify-center border border-zinc-700/50">
@@ -81,47 +81,47 @@ export default function AppSidebar() {
         <div className="bg-[#141414] lg:bg-transparent rounded-xl lg:rounded-none border lg:border-0 border-zinc-900 overflow-hidden space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href
-            
+
             return (
               <Link
                 key={item.title}
                 href={item.href}
                 className={cn(
                   "w-full flex items-center justify-between px-4 md:py-2.5 py-3.5 transition-all group border-b lg:border-b-0 border-zinc-900/50 last:border-0",
-                  isActive 
-                    ? "bg-[#FFB800]/10 text-[#FFB800] lg:border lg:border-[#FFB800]/20 lg:rounded-lg" 
+                  isActive
+                    ? "bg-[#FFB800]/10 text-[#FFB800] lg:border lg:border-[#FFB800]/20 lg:rounded-lg"
                     : "text-zinc-400 hover:text-white lg:hover:bg-zinc-900 lg:rounded-lg"
                 )}
               >
                 <div className="flex items-center gap-3">
-                  <item.icon 
-                    size={19} 
-                    className={cn("transition-colors", isActive ? "text-[#FFB800]" : "text-zinc-500 group-hover:text-zinc-300")} 
+                  <item.icon
+                    size={19}
+                    className={cn("transition-colors", isActive ? "text-[#FFB800]" : "text-zinc-500 group-hover:text-zinc-300")}
                   />
                   <span className="text-[13px] font-medium">{item.title}</span>
                 </div>
-                <IconChevronRight 
-                  size={14} 
-                  className={cn("opacity-30 transition-transform group-hover:translate-x-0.5", isActive && "opacity-100")} 
+                <IconChevronRight
+                  size={14}
+                  className={cn("opacity-30 transition-transform group-hover:translate-x-0.5", isActive && "opacity-100")}
                 />
               </Link>
             )
           })}
         </div>
         <div className="mt-auto pt-4 lg:border-t lg:border-zinc-900">
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/5 rounded-lg transition-all group disabled:opacity-50"
-        >
-          <IconLogout size={19} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[13px] font-medium">{loggingOut ? "Signing Out..." : "Sign Out"}</span>
-        </button>
-      </div>
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/5 rounded-lg transition-all group disabled:opacity-50"
+          >
+            <IconLogout size={19} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="text-[13px] font-medium">{loggingOut ? "Signing Out..." : "Sign Out"}</span>
+          </button>
+        </div>
       </nav>
 
       {/* Sign Out - Bottom Section */}
-     
+
     </aside>
   )
 }
