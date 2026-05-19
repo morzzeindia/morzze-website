@@ -281,19 +281,22 @@ export async function createProduct(formData: FormData): Promise<void> {
         );
       }
 
-      // 5. Insert Filters
-      if (variants.filters?.length) {
-        await tx.insert(productFilter).values(
-          Array.from(
-            new Set(
-              variants.filters.map((fltr: any) => fltr.slug).filter(Boolean),
-            ),
-          ).map((slug: any) => ({
-            productId,
-            filter: slug,
-          })),
-        );
-      }
+// 5. Insert Filters
+if (variants.filters?.length) {
+  await tx.insert(productFilter).values(
+    variants.filters
+      .filter(
+        (f: any) =>
+          f?.slug?.trim() &&
+          f?.type?.trim(),
+      )
+      .map((f: any) => ({
+        productId,
+        filter: f.slug.trim(),
+        type: f.type.trim(),
+      })),
+  );
+}
 
       // 8. Insert FAQ DATA
       // 7. Insert FAQs
@@ -416,20 +419,28 @@ export async function updateProduct(formData: FormData): Promise<void> {
         );
       }
 
-      // update Filters
-      await tx.delete(productFilter).where(eq(productFilter.productId, vId!));
-      if (variants.filters?.length) {
-        await tx.insert(productFilter).values(
-          Array.from(
-            new Set(
-              variants.filters.map((fltr: any) => fltr.slug).filter(Boolean),
-            ),
-          ).map((slug: any) => ({
-            productId: vId!,
-            filter: slug,
-          })),
-        );
-      }
+// Update Filters
+await tx
+  .delete(productFilter)
+  .where(eq(productFilter.productId, vId!));
+
+if (variants.filters?.length) {
+  const filterPayload = variants.filters
+    .filter(
+      (f: any) =>
+        f.filter?.trim()?.length > 0 &&
+        f.type?.trim()?.length > 0,
+    )
+    .map((f: any) => ({
+      productId: productId,
+      filter: f.filter,
+      type: f.type,
+    }));
+
+  if (filterPayload.length > 0) {
+    await tx.insert(productFilter).values(filterPayload);
+  }
+}
 
       await tx
         .delete(productVarientBox)
@@ -573,7 +584,7 @@ export async function getFullProduct(identifier: string) {
 
     const [
       prodcutVarientBoxRes,
-      categoryRes,
+      categoryRes,  
       productAttributeRes,
       productMediaRes,
       filters,

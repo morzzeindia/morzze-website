@@ -313,12 +313,12 @@ export default function AddProductForm() {
     f.answer.trim().length > 0
 ),
       filters: [
-        ...(productType || []),
-        ...(size || []),
-        ...(flowType || []),
-        ...(material || []),
-        ...(cramps || []),
-        ...(sensitive || []),
+        ...(productType || []).map((item: any) => ({ ...item, type: "product_type" })),
+        ...(size || []).map((item: any) => ({ ...item, type: "size" })),
+        ...(flowType || []).map((item: any) => ({ ...item, type: "flow_or_usage_type" })),
+        ...(material || []).map((item: any) => ({ ...item, type: "material" })),
+        ...(cramps || []).map((item: any) => ({ ...item, type: "cramps_or_discomfort" })),
+        ...(sensitive || []).map((item: any) => ({ ...item, type: "allergies_or_sensitivities" })),
       ],
       
       VarientBoxes: varientBox ? variantBoxes : [],
