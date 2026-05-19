@@ -53,6 +53,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { CartProvider } from "@/context/CartContext";
+import FloatingWhatsappButton from "@/components/Whatsapp_Button/FloatingWhatsappButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,6 +100,7 @@ export default function RootLayout({
           <WishlistProvider>
             {children}
             <Toaster theme="dark" position="top-right" richColors />
+            <FloatingWhatsappButton />
           </WishlistProvider>
         </CartProvider>
       </body>
