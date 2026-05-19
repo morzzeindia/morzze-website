@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import { toast } from "sonner"
 import ReturnRequestModal from "./ReturnRequestModal"
+import Link from "next/link"
 
 export type OrderDetailLineItem = {
   id: string
@@ -132,6 +133,12 @@ export default function OrderDetails({ order }: { order: OrderDetailViewModel })
             ) : null}
             <p className="text-xs text-zinc-500 leading-relaxed">{order.shippingAddress}</p>
           </div>
+          <Link
+            href={`/orders/${order.id}/tracking`}
+            className="bg-black text-white px-4 py-2 rounded-xl"
+          >
+            Track Order
+          </Link>
         </div>
       </div>
 
@@ -166,32 +173,32 @@ export default function OrderDetails({ order }: { order: OrderDetailViewModel })
             </div>
           ) : (
             order.lineItems.map((line) => (
-            <div
-              key={line.id}
-              className="p-6 flex flex-col md:flex-row justify-between items-center gap-6"
-            >
-              <div className="flex items-center gap-6 w-full">
-                <div className="w-24 h-24 bg-[#181818] border border-zinc-800 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
-                  {line.image ? (
-                    <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-12 h-16 bg-zinc-800 rounded opacity-40 shadow-2xl rotate-6" />
-                  )}
-                </div>
+              <div
+                key={line.id}
+                className="p-6 flex flex-col md:flex-row justify-between items-center gap-6"
+              >
+                <div className="flex items-center gap-6 w-full">
+                  <div className="w-24 h-24 bg-[#181818] border border-zinc-800 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    {line.image ? (
+                      <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-12 h-16 bg-zinc-800 rounded opacity-40 shadow-2xl rotate-6" />
+                    )}
+                  </div>
 
-                <div className="space-y-1 min-w-0">
-                  <h3 className="text-lg font-semibold font-montserrat truncate tracking-wide">
-                    {line.name}
-                  </h3>
+                  <div className="space-y-1 min-w-0">
+                    <h3 className="text-lg font-semibold font-montserrat truncate tracking-wide">
+                      {line.name}
+                    </h3>
 
-                  <p className="text-xs text-zinc-500 uppercase tracking-tighter">{line.variant}</p>
+                    <p className="text-xs text-zinc-500 uppercase tracking-tighter">{line.variant}</p>
 
-                  <p className="text-xs text-zinc-500">
-                    Qty: {line.quantity} · {line.unitPriceFormatted} each · {line.lineTotalFormatted}
-                  </p>
+                    <p className="text-xs text-zinc-500">
+                      Qty: {line.quantity} · {line.unitPriceFormatted} each · {line.lineTotalFormatted}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
             ))
           )}
         </div>

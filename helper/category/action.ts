@@ -242,6 +242,41 @@ export async function getCategoryBySlug(slug: string) {
   }
 }
 
+export async function getCategoriesWithProducts(limit = 4) {
+  try {
+    const categories = await db.select().from(category);
+
+    const result = await Promise.all(
+      categories.map(async (cat) => {
+        const products = await db
+          .select({
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            bannerImage: product.bannerImage,
+            basePrice: product.basePrice,
+            strikethroughPrice: product.strikethroughPrice,
+          })
+          .from(product)
+          .innerJoin(productCategory, eq(product.id, productCategory.productId))
+          .where(eq(productCategory.categoryId, cat.id))
+          .limit(limit);
+
+        return {
+          ...cat,
+          products,
+        };
+      })
+    );
+
+    // Only return categories that have at least 1 product
+    return result.filter((cat) => cat.products.length > 0);
+  } catch (error) {
+    console.error("getCategoriesWithProducts failed:", error);
+    return [];
+  }
+}
+
 export async function getAllCategoriesMeta() {
   try {
     return await db

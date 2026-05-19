@@ -1,11 +1,15 @@
 import Header from "@/components/commom/header"
 import Footer from "@/components/commom/footer"
-export default function Layout({ children }: {
+import { getCategories } from "@/helper/category/action"
+
+export default async function Layout({ children }: {
     children: React.ReactNode
 }) {
+    const categories = await getCategories();
+
     return <>
         <Header />
         {children}
-        <Footer />
+        <Footer categories={categories} />
     </>
 }

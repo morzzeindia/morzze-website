@@ -18,11 +18,12 @@ import TouchlessInnovation from '@/components/home/TouchlessInnovation'
 import TrendingNow from '@/components/home/TrendingNow'
 import TrustSection from '@/components/home/TrustSection'
 import WhereWaterMeet from '@/components/home/WhereWaterMeet'
-import { getCategories } from '@/helper/category/action'
+import { getCategories, getCategoriesWithProducts } from '@/helper/category/action'
 import React from 'react'
 
 const page = async () => {
   const categories = await getCategories();
+  const categoriesWithProducts = await getCategoriesWithProducts(4);
 
   return (
     <main>
@@ -34,7 +35,7 @@ const page = async () => {
       <TheARTSection/>
       <TrustSection/>
       <WhereWaterMeet/>
-      <CategoryShowcase/>
+      <CategoryShowcase categories={categoriesWithProducts}/>
       <TrendingNow/>
       <JustArrived/>
       <Craftsmanship/>

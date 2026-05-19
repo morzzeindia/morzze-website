@@ -83,14 +83,14 @@ export const fetchPurchasePayments = async ({
 
   const rows = whereClause
     ? await baseSelect()
-        .where(whereClause)
-        .orderBy(desc(payment.createdAt))
-        .limit(pageSize)
-        .offset(offset)
+      .where(whereClause)
+      .orderBy(desc(payment.createdAt))
+      .limit(pageSize)
+      .offset(offset)
     : await baseSelect()
-        .orderBy(desc(payment.createdAt))
-        .limit(pageSize)
-        .offset(offset);
+      .orderBy(desc(payment.createdAt))
+      .limit(pageSize)
+      .offset(offset);
 
   const countQuery = db
     .select({ count: sql<number>`count(*)::int` })

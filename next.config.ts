@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "av-morzze.s3.amazonaws.com",
-        pathname: "/blog/**",
+      },
+      {
+        protocol: "https",
+        hostname: "av-morzze.s3.ap-south-1.amazonaws.com",
       },
     ],
   },

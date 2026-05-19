@@ -85,18 +85,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-   <html
-  lang="en"
-  className={`
+    <html
+      lang="en"
+      className={`
     ${geistSans.variable}
     ${geistMono.variable}
     ${inter.variable}
     ${montserrat.variable}
   `}
->
-<body className="min-h-screen bg-green-400 font-[var(--font-montserrat)]">  
+    >
+      <body className="min-h-screen  font-[var(--font-montserrat)]">
         <CartProvider>
-          <WishlistProvider>         
+          <WishlistProvider>
             {children}
             <Toaster theme="dark" position="top-right" richColors />
           </WishlistProvider>

@@ -19,7 +19,7 @@ const companyLinks = [
   { name: "Blogs", href: "/blogs" },
 
 ];
-const Footer = () => {
+const Footer = ({ categories = [] }: { categories?: { name: string | null; slug: string | null }[] }) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -116,20 +116,13 @@ const Footer = () => {
                 Shop
               </h4>
               <ul className="space-y-3">
-                {[
-                  "Steel Sinks",
-                  "Kitchen Faucets",
-                  "Granite Basins",
-                  "Air Taps",
-                  "Floor Drainers",
-                  "Towel Warmers",
-                ].map((item) => (
-                  <li key={item}>
+                {categories.map((cat) => (
+                  <li key={cat.slug}>
                     <Link
-                      href="/products"
+                      href={`/category/${cat.slug}`}
                       className="text-sm text-white/70 hover:text-[#CBA14D] font-inter transition-colors block"
                     >
-                      {item}
+                      {cat.name}
                     </Link>
                   </li>
                 ))}

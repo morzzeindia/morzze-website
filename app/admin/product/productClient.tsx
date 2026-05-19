@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import {useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,8 +92,15 @@ const ProductClient = ({ products, total, currentPage }: Props) => {
 
         <CardContent>
           {/* ADD BUTTON */}
-          <div className="flex cursor-pointer justify-end mb-4">
-            <Button onClick={() => router.push("/admin/product/add")}>
+          <div className="flex cursor-pointer justify-end gap-4 mb-4">
+            <Button
+              onClick={() => router.push("/admin/product/upload-csv")}
+              variant="outline"
+            >
+              Upload CSV
+            </Button>
+
+            <Button className="cursor-pointer" onClick={() => router.push("/admin/product/add")}>
               <Plus />
               Add Product
             </Button>
