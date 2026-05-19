@@ -1,8 +1,45 @@
 "use client"
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useState } from "react";
+import { toast } from "sonner";
 
 const   NewsletterSection = () => {
+   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      return toast.error("Please enter your email");
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Subscribed successfully");
+        setEmail("");
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <section className="bg-[#050505] text-white py-24 px-6 overflow-hidden relative border-t border-white/5">
       
@@ -38,27 +75,32 @@ const   NewsletterSection = () => {
           </div>
 
           {/* Form Section - Exactly like your attachment */}
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-2xl px-4 pt-4">
-            
-            {/* Input Field */}
-            <div className="w-full relative group">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
-                className="w-full h-14 bg-[#141414] border rounded-md border-zinc-800 px-6 text-white font-inter text-sm focus:outline-none focus:border-[#CBA14D]/50 transition-all duration-300 placeholder:text-zinc-600"
-              />
-            </div>
+          <form
+                onSubmit={handleSubscribe}
+                className="flex flex-col md:flex-row items-center gap-4 w-full max-w-2xl px-4 pt-4"
+              >
+                {/* Input Field */}
+                <div className="w-full relative group">
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full h-14 bg-[#141414] border rounded-md border-zinc-800 px-6 text-white font-inter text-sm focus:outline-none focus:border-[#CBA14D]/50 transition-all duration-300 placeholder:text-zinc-600"
+                  />
+                </div>
 
-            {/* Premium Gold Button */}
-            <motion.button 
-              whileHover={{ backgroundColor: "#CBA14D", color: "#000" }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full md:w-45 rounded-md h-14 border-2 border-[#CBA14D] text-[#CBA14D] font-bold text-xs uppercase tracking-[0.2em] transition-all duration-500 bg-transparent shrink-0"
-            >
-              SUBSCRIBE
-            </motion.button>
-
-          </div>
+                {/* Premium Gold Button */}
+                <motion.button
+                  type="submit"
+                  disabled={loading}
+                  whileHover={{ backgroundColor: "#CBA14D", color: "#000" }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full md:w-45 rounded-md h-14 border-2 border-[#CBA14D] text-[#CBA14D] font-bold text-xs uppercase tracking-[0.2em] transition-all duration-500 bg-transparent shrink-0 disabled:opacity-50"
+                >
+                  {loading ? "SUBSCRIBING..." : "SUBSCRIBE"}
+                </motion.button>
+              </form>
         </motion.div>
       </div>
 

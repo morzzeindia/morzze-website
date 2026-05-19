@@ -52,7 +52,7 @@ const warrantyData = [
 
 const WarrantyCoverageGrid = () => {
   return (
-    <section className="bg-[#050505] py-20 md:py-32 font-montserrat overflow-hidden">
+    <section className="bg-[#050505] py-20 md:py-20 font-montserrat overflow-hidden">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-10">
         
         {/* --- HEADER SECTION --- */}

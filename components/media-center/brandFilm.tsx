@@ -33,7 +33,7 @@ export default function BrandFilmsProductDemos() {
         <h2 className="text-[38px] md:text-[52px] font-semibold tracking-[-0.03em] mb-4">
           Brand Films & Product Demos
         </h2>
-        <p className="max-w-3xl mx-auto text-[14px] leading-7 text-[#777777] mb-10">
+        <p className="max-w-3xl mx-auto text-[14px] leading-7 text-[white]/70 mb-10">
           Explore our collection of brand films showcasing bathroom and kitchen
           innovations manufacturing excellence, and design philosophy.
         </p>
@@ -66,7 +66,7 @@ export default function BrandFilmsProductDemos() {
                 </span>
               </div>
               <h3 className="text-[22px] font-medium mb-2">{film.title}</h3>
-              <p className="text-[13px] leading-6 text-[#777777]">
+              <p className="text-[13px] leading-6 text-[white]/70">
                 {film.desc}
               </p>
             </motion.div>

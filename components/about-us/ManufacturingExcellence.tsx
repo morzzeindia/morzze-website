@@ -62,7 +62,7 @@ const features = [
 
 const ManufacturingExcellence = () => {
   return (
-    <section className="relative w-full bg-[#050505] text-white py-8 md:py-24 overflow-hidden font-montserrat">
+    <section className="relative w-full bg-[#050505] text-white py-8 md:py-10 overflow-hidden font-montserrat">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-10 w-full">
         <div className="text-center mb-20 md:mb-12 space-y-4">
           <motion.span

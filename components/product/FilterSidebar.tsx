@@ -84,40 +84,40 @@ const FilterSidebar = ({ categories }: FilterSidebarProps) => {
   ];
 
   const updateFilter = (sectionId: string, value: string) => {
-  const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams.toString());
 
-  params.delete("page");
+    params.delete("page");
 
-  if (sectionId === "price") {
-    const { min, max } = getPriceParams(value);
+    if (sectionId === "price") {
+      const { min, max } = getPriceParams(value);
 
-    const currentMin = searchParams.get("min") || "";
-    const currentMax = searchParams.get("max") || "";
+      const currentMin = searchParams.get("min") || "";
+      const currentMax = searchParams.get("max") || "";
 
-    const alreadyChecked = currentMin === min && currentMax === max;
+      const alreadyChecked = currentMin === min && currentMax === max;
 
-    if (alreadyChecked) {
-      params.delete("min");
-      params.delete("max");
-    } else {
-      min ? params.set("min", min) : params.delete("min");
-      max ? params.set("max", max) : params.delete("max");
+      if (alreadyChecked) {
+        params.delete("min");
+        params.delete("max");
+      } else {
+        min ? params.set("min", min) : params.delete("min");
+        max ? params.set("max", max) : params.delete("max");
+      }
+
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      return;
     }
 
-    router.push(`${pathname}?${params.toString()}`);
-    return;
-  }
+    const current = params.get(sectionId);
 
-  const current = params.get(sectionId);
+    if (current === value) {
+      params.delete(sectionId);
+    } else {
+      params.set(sectionId, value);
+    }
 
-  if (current === value) {
-    params.delete(sectionId);
-  } else {
-    params.set(sectionId, value);
-  }
-
-  router.push(`${pathname}?${params.toString()}`);
-};
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   const updateStock = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -130,21 +130,21 @@ const FilterSidebar = ({ categories }: FilterSidebarProps) => {
       params.set("stock", "true");
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const isChecked = (sectionId: string, value: string) => {
-  if (sectionId === "price") {
-    const { min, max } = getPriceParams(value);
+    if (sectionId === "price") {
+      const { min, max } = getPriceParams(value);
 
-    const currentMin = searchParams.get("min") || "";
-    const currentMax = searchParams.get("max") || "";
+      const currentMin = searchParams.get("min") || "";
+      const currentMax = searchParams.get("max") || "";
 
-    return currentMin === min && currentMax === max;
-  }
+      return currentMin === min && currentMax === max;
+    }
 
-  return searchParams.get(sectionId) === value;
-};
+    return searchParams.get(sectionId) === value;
+  };
 
   return (
     <div className="w-full bg-black p-0 select-none md:block hidden">

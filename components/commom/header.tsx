@@ -296,18 +296,19 @@ const Header = () => {
         </div>
 
         {/* -- Logo -- */}
-        <div className="flex-none lg:flex-none flex justify-center lg:justify-start pt-1">
-          <Link href="/">
-            <Image
-              src="/logo.png"
-              alt="Morzze Logo"
-              width={150}
-              height={50}
-              priority
-              className="w-[120px] md:w-[150px]"
-            />
-          </Link>
-        </div>
+      <div
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="cursor-pointer"
+      >
+        <Image
+          src="/logo.png"
+          alt="Morzze Logo"
+          width={150}
+          height={50}
+          priority
+          className="w-[120px] md:w-[150px]"
+        />
+      </div>
 
         {/* -- WEB: Navigation Links -- */}
         <div className="hidden lg:flex items-center ml-15">

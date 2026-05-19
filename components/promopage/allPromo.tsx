@@ -80,7 +80,7 @@ export default function PromoCouponTabsCards({
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
           >
             {filtered.length === 0 ? (
-              <p className="text-[#777777] text-sm col-span-full">
+              <p className="text-[white]/80 text-sm col-span-full">
                 No coupons available.
               </p>
             ) : (
@@ -106,7 +106,7 @@ export default function PromoCouponTabsCards({
                     {item.title}
                   </h3>
 
-                  <p className="text-[13px] leading-6 text-[#7a7a7a] mb-5">
+                  <p className="text-[13px] leading-6 text-[white]/80 mb-5">
                     {item.description}
                   </p>
 
@@ -123,7 +123,7 @@ export default function PromoCouponTabsCards({
                     </button>
                   </div>
 
-                  <div className="flex justify-between text-[12px] text-[#6f6f6f] mb-4">
+                  <div className="flex justify-between text-[12px] text-[#white]/80 mb-4">
                     <span className="flex items-center gap-1">
                       <ShoppingCart size={12} /> Min:{" "}
                       {item.minimumOrder || "No minimum"}

@@ -1,14 +1,17 @@
-import SupportHero from '@/components/support/SupportHero'
-import SupportTabs from '@/components/support/SupportTabs'
-import React from 'react'
+import SupportHero from "@/components/support/SupportHero";
+import SupportTabs from "@/components/support/SupportTabs";
+import React, { Suspense } from "react";
 
 const page = () => {
   return (
     <div>
-      <SupportHero/>    
-      <SupportTabs/>
-    </div>
-  )
-}
+      <SupportHero />
 
-export default page
+      <Suspense fallback={null}>
+        <SupportTabs />
+      </Suspense>
+    </div>
+  );
+};
+
+export default page;

@@ -23,7 +23,7 @@ const artPoints = [
 
 const TheARTSection = () => {
   return (
-    <section className="bg-black text-white py-24 px-6 md:px-10 overflow-hidden">
+    <section className="bg-black text-white pb-24 px-6 md:px-10 overflow-hidden">
       <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <motion.div
           initial={{ opacity: 0, x: -100 }}

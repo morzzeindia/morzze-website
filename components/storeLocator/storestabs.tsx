@@ -300,11 +300,11 @@ export default function StoreLocatorSection() {
                     </span>
                   </div>
 
-                  <p className="text-[12px] text-[#7a7a7a] mb-2">
+                  <p className="text-[12px] text-[white]/80 mb-2">
                     {store.city}, {store.state}
                   </p>
 
-                  <p className="text-[11px] text-[#666666]">
+                  <p className="text-[11px] text-[white]/80">
                     {store.hours}
                   </p>
 
@@ -361,10 +361,12 @@ export default function StoreLocatorSection() {
                         Address
                       </p>
 
-                      <p className="text-[#7a7a7a] leading-6">
+                      <p className="text-[white]/80 leading-6">
                         {activeStore.address}
                       </p>
                     </div>
+                    </div>
+
 
                     {/* HOURS */}
                     <div>
@@ -373,7 +375,7 @@ export default function StoreLocatorSection() {
                         Working Hours
                       </p>
 
-                      <p className="text-[#7a7a7a]">
+                      <p className="text-[white]/80">
                         {activeStore.hours}
                       </p>
                     </div>
@@ -385,7 +387,7 @@ export default function StoreLocatorSection() {
                         Contact
                       </p>
 
-                      <p className="text-[#7a7a7a] leading-6">
+                      <p className="text-[white]/80 leading-6">
                         {activeStore.contact}
                         <br />
                         {activeStore.email}
@@ -402,29 +404,23 @@ export default function StoreLocatorSection() {
                     </div>
 
                     {/* FEATURES */}
-                    <div>
-                      {/* <p className="flex items-center gap-2 text-[#e6aa12] mb-2">
-                        <Star size={14} />
-                        Features
-                      </p> */}
+                      <div>
+                        <p className="flex items-center gap-2 text-[#e6aa12] mb-2">
+                          <Star size={14} />
+                          Features
+                        </p>
 
-                      {/* <div className="flex flex-wrap gap-2">
-                        {activeStore.features.map((feature, i) => (
-                          <span
-                            key={i}
-                            className="px-3 py-1 bg-[#1a1a1a] border border-[#2a2a2a] text-[11px]"
-                          >
-                            {feature}
-                          </span>
-                        ))}
-                      </div> */}
-
-                      {/* <button className="mt-5 w-[180px] h-11 bg-[#e6aa12] text-black flex items-center justify-center gap-2 font-medium">
-                        <Calendar size={14} />
-                        Book Appointment
-                      </button> */}
-                    </div>
-                  </div>
+                        <div className="flex flex-wrap gap-2">
+                          {activeStore.features.map((feature, i) => (
+                            <span
+                              key={i}
+                              className="px-3 py-1 bg-[#1a1a1a] border border-[#2a2a2a] text-[11px]"
+                            >
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                 </div>
               </motion.div>
             </AnimatePresence>

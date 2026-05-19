@@ -287,13 +287,13 @@ const WarrantyServices = () => {
         </div>
 
         <Tabs defaultValue="register" className="w-full flex flex-col gap-10">
-          <TabsList variant="line" className="w-full overflow-x-auto whitespace-nowrap justify-center gap-4 md:gap-12 border-none bg-transparent">
+          <TabsList variant="line" className="w-full overflow-x-auto whitespace-nowrap justify-center gap-4 md:gap-12 border-none scrollbar-hide bg-transparent">
             <TabsTrigger value="register" className="group py-4 px-2 flex items-center gap-3 !text-white/80 data-active:!text-[#FDB813] after:!bg-[#FDB813] after:bottom-[-2px] transition-all">
               <IconClipboardCheck size={20} />
               <span className="text-[13px] font-medium tracking-wide">Register Product</span>
             </TabsTrigger>
 
-            <TabsTrigger value="claim" className="group py-4 px-2 flex items-center gap-3 !text-white/80 data-active:!text-[#FDB813] after:!bg-[#FDB813] after:bottom-[-2px] transition-all">
+            {/* <TabsTrigger value="claim" className="group py-4 px-2 flex items-center gap-3 !text-white/80 data-active:!text-[#FDB813] after:!bg-[#FDB813] after:bottom-[-2px] transition-all">
               <IconFileText size={20} />
               <span className="text-[13px] font-medium tracking-wide">File a Claim</span>
             </TabsTrigger>
@@ -301,7 +301,7 @@ const WarrantyServices = () => {
             <TabsTrigger value="status" className="group py-4 px-2 flex items-center gap-3 !text-white/80 data-active:!text-[#FDB813] after:!bg-[#FDB813] after:bottom-[-2px] transition-all">
               <IconSearch size={20} />
               <span className="text-[13px] font-medium tracking-wide">Check Status</span>
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
 
           <div className="bg-[#0A0A0A] border border-white/5 p-6 md:p-10 rounded-sm shadow-2xl relative overflow-hidden">

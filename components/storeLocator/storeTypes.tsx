@@ -45,7 +45,7 @@ export default function StoreTypesSection() {
           <h2 className="text-[42px] md:text-[50px] font-semibold tracking-[-0.03em] text-[#f5f2ea] mb-3">
             Our Store Types
           </h2>
-          <p className="text-[14px] text-[#7b7b7b]">
+          <p className="text-[14px] text-[white]/80">
             Choose the right location for your needs
           </p>
         </motion.div>
@@ -72,11 +72,11 @@ export default function StoreTypesSection() {
                 <h3 className="text-[16px] md:text-[18px] font-semibold text-[#f5f2ea] mb-4">
                   {item.title}
                 </h3>
-                <p className="text-[13px] leading-7 text-[#7a7a7a] mb-5">
+                <p className="text-[13px] leading-7 text-[white]/70 mb-5">
                   {item.desc}
                 </p>
 
-                <p className="flex items-center gap-2 text-[12px] text-[#8b8b8b]">
+                <p className="flex items-center gap-2 text-[12px] text-[white]/80">
                   <MapPin size={12} /> {item.cities}
                 </p>
               </motion.div>

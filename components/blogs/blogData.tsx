@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, X } from "lucide-react";
+import { toast } from "sonner";
 import { IconBrandFacebook, IconBrandLinkedin } from "@tabler/icons-react";
 
 export default function BlogDetailPage({
@@ -13,6 +14,40 @@ export default function BlogDetailPage({
   blog: any;
   relatedBlogs: any[];
 }) {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      return toast.error("Please enter your email");
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Subscribed successfully");
+        setEmail("");
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="w-full bg-black text-white px-4 md:px-8 lg:px-10 py-10 md:py-12">
       <div className="max-w-7xl mx-auto">
@@ -25,8 +60,8 @@ export default function BlogDetailPage({
           <span className="px-3 py-[4px] rounded-full bg-[#f4e8c7] text-[#9b5d00] text-[10px]">
             {blog.blogCategory}
           </span>
-          <span className="text-[12px] text-[#6f6f6f]">{blog.date}</span>
-          <span className="text-[12px] text-[#6f6f6f]">5 min read</span>
+          <span className="text-[12px] text-[white]/80">{blog.date}</span>
+          <span className="text-[12px] text-[white]/80">5 min read</span>
         </motion.div>
 
         <motion.h1
@@ -42,7 +77,7 @@ export default function BlogDetailPage({
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="max-w-3xl text-[14px] leading-7 text-[#7b7b7b] mb-10"
+          className="max-w-3xl text-[14px] leading-7 text-[white]/70 mb-10"
         >
           {blog.metaDescription}
         </motion.p>
@@ -81,21 +116,56 @@ export default function BlogDetailPage({
                 ))}
               </div>
 
-              <div className="flex items-center gap-3">
-                <span className="text-[13px] text-[#7a7a7a] mr-2">
-                  Share this article:
-                </span>
-                {[IconBrandFacebook, X, IconBrandLinkedin, Mail].map(
-                  (Icon, i) => (
-                    <button
-                      key={i}
-                      className="w-8 h-8 rounded-full bg-[#1a1a1a] flex items-center justify-center hover:bg-[#2a2a2a] transition"
-                    >
-                      <Icon size={14} />
-                    </button>
-                  )
-                )}
-              </div>
+             <div className="flex items-center gap-3">
+              <span className="text-[13px] text-[#7a7a7a] mr-2">
+                Share this article:
+              </span>
+
+              {[
+                {
+                  icon: IconBrandFacebook,
+                  link: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                    typeof window !== "undefined" ? window.location.href : ""
+                  )}`,
+                },
+                {
+                  icon: X,
+                  link: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    typeof window !== "undefined" ? window.location.href : ""
+                  )}&text=${encodeURIComponent(blog.title)}`,
+                },
+                {
+                  icon: IconBrandLinkedin,
+                  link: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                    typeof window !== "undefined" ? window.location.href : ""
+                  )}`,
+                },
+                {
+                  icon: Mail,
+                  link: `mailto:?subject=${encodeURIComponent(
+                    blog.title
+                  )}&body=${encodeURIComponent(
+                    `Check out this article: ${
+                      typeof window !== "undefined" ? window.location.href : ""
+                    }`
+                  )}`,
+                },
+              ].map((item, i) => {
+                const Icon = item.icon;
+
+                return (
+                  <a
+                    key={i}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-[#1a1a1a] flex items-center justify-center hover:bg-[#2a2a2a] transition"
+                  >
+                    <Icon size={14} />
+                  </a>
+                );
+              })}
+</div>
             </div>
           </div>
 
@@ -115,10 +185,10 @@ export default function BlogDetailPage({
                   <p className="text-[13px] font-medium">
                     {blog.userName || "Morzze Team"}
                   </p>
-                  <p className="text-[11px] text-[#777777]">Author</p>
+                  <p className="text-[11px] text-[white]/80">Author</p>
                 </div>
               </div>
-              <p className="text-[12px] leading-6 text-[#7b7b7b]">
+              <p className="text-[12px] leading-6 text-[white]/80">
                 {blog.textArea ||
                   "Morzze Team shares insights, guides, and updates from Morzze."}
               </p>
@@ -151,7 +221,7 @@ export default function BlogDetailPage({
                         <p className="text-[12px] leading-5 text-white group-hover:text-[#e6aa12] transition">
                           {item.title}
                         </p>
-                        <p className="text-[11px] text-[#6d6d6d] mt-1">
+                        <p className="text-[11px] text-[white]/70 mt-1">
                           {item.date}
                         </p>
                       </div>
@@ -167,15 +237,25 @@ export default function BlogDetailPage({
 
             <div className="bg-[#121212] border border-[#1e1e1e] rounded-[8px] p-5">
               <h4 className="text-[15px] font-semibold mb-3">Stay Updated</h4>
-              <p className="text-[12px] leading-6 text-[#777777] mb-4">
+
+              <p className="text-[12px] leading-6 text-[white]/80 mb-4">
                 Get design tips and inspiration delivered to your inbox.
               </p>
+
               <input
+                type="email"
                 placeholder="Your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-10 bg-[#151515] border border-[#2b2b2b] px-3 text-[12px] mb-3 outline-none"
               />
-              <button className="w-full h-10 bg-[#e6aa12] text-black text-[12px] font-semibold">
-                Subscribe
+
+              <button
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="w-full h-10 bg-[#e6aa12] text-black text-[12px] font-semibold disabled:opacity-50"
+              >
+                {loading ? "Subscribing..." : "Subscribe"}
               </button>
             </div>
           </div>

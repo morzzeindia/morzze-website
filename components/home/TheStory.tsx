@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 const TheStory = () => {
   return (
-    <section className="bg-black text-white py-20 md:py-32 px-6 overflow-hidden">
+    <section className="bg-black text-white pb-20 md:py-22 px-6 overflow-hidden">
       <motion.div 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

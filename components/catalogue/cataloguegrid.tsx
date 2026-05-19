@@ -59,11 +59,11 @@ export default function CatalogueGridDownloads({ items }: Props) {
 
         {/* Grid */}
         {items.length === 0 ? (
-          <p className="text-center text-[#777777] text-sm py-16 border border-dashed border-[#2a2a2a] rounded-lg">
+          <p className="text-center text-[white]/80 text-sm py-16 border border-dashed border-[#2a2a2a] rounded-lg">
             No catalogues available yet. Please check back soon.
           </p>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-[#777777] text-sm py-16">
+          <p className="text-center text-[white]/80 text-sm py-16">
             No catalogues in this category.
           </p>
         ) : (
@@ -104,11 +104,11 @@ export default function CatalogueGridDownloads({ items }: Props) {
                   <h3 className="text-[15px] font-medium text-[#f5f2ea] mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-[12px] leading-6 text-[#777777] mb-4 line-clamp-4">
+                  <p className="text-[12px] leading-6 text-[white]/80 mb-4 line-clamp-4">
                     {item.shortDescription}
                   </p>
 
-                  <div className="flex flex-wrap gap-3 text-[10px] text-[#777777] mb-4">
+                  <div className="flex flex-wrap gap-3 text-[10px] text-[white]/80 mb-4">
                     <span className="flex items-center gap-1">
                       <FileText size={11} /> {item.totalPages} pages
                     </span>

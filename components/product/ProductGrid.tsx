@@ -117,9 +117,13 @@ const ProductGrid = ({
                     className="flex-1 bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
                   >
                     {getItemQuantity(product.slug) > 0 ? (
-                      <><IconShoppingBag size={18} /> In Cart ✓</>
+                      <>
+                        <IconShoppingBag size={18} /> In Cart ✓
+                      </>
                     ) : (
-                      <><IconShoppingBag size={18} /> Add to cart</>
+                      <>
+                        <IconShoppingBag size={18} /> Add to cart
+                      </>
                     )}
                   </Button>
 
@@ -129,15 +133,19 @@ const ProductGrid = ({
                       e.preventDefault();
                       toggleWishlist(product.slug, product.id);
                     }}
-                    className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${isInWishlist(product.slug)
-                      ? "bg-[#FFBF3F] hover:bg-white "
-                      : "bg-[#FFBF3F] cursor-pointer"
-                      }`}
+                    className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
+                      isInWishlist(product.slug)
+                        ? "bg-[#FFBF3F] hover:bg-white "
+                        : "bg-[#FFBF3F] cursor-pointer"
+                    }`}
                   >
                     {isInWishlist(product.slug) ? (
                       <IconHeartFilled size={20} className="text-red-500" />
                     ) : (
-                      <IconHeart size={20} className="text-white hover:text-black" />
+                      <IconHeart
+                        size={20}
+                        className="text-white hover:text-black"
+                      />
                     )}
                   </Button>
                 </div>

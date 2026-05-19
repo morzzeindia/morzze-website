@@ -38,7 +38,7 @@ const CategoryShowcase = ({ categories }: { categories: CategoryWithProducts[] }
                 className="w-full text-left flex items-center gap-4 group focus:outline-none"
               >
                 <div className={`h-[24px] w-[2px] bg-[#CBA14D] transition-all duration-500 ${activeTab.id === cat.id ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0'}`} />
-                <span className={`font-montserrat text-lg md:text-xl tracking-wide transition-colors duration-300 ${activeTab.id === cat.id ? 'text-white' : 'text-[#928E8780] hover:text-white/60'}`}>
+                <span className={`font-montserrat text-lg md:text-xl tracking-wide transition-colors duration-300 ${activeTab.id === cat.id ? 'text-white' : 'text-[white]/70 hover:text-white/60'}`}>
                   {cat.name}
                 </span>
               </button>

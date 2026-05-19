@@ -6,6 +6,8 @@ import {
   getUserAllReviews,
 } from "@/helper/review/action";
 
+export const dynamic = "force-dynamic";
+
 export default async function ReviewRatingPage() {
   const [purchases, myReviews] = await Promise.all([
     getPurchasedProductsForReview(),

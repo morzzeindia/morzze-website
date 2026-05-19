@@ -64,11 +64,8 @@ const LeadershipSection = () => {
                 </p>
               </div>
               <div className="flex gap-4 pt-4 border-t border-white/5">
-                <a href="https://www.linkedin.com/company/anupamretailltd/?originalSubdomain=in"  className="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 text-white/80 hover:border-[#CBA14D] hover:text-[#CBA14D] transition-colors duration-300">
+                <a href="https://in.linkedin.com/in/rajendergarg?original_referer=https%3A%2F%2Fwww.linkedin.com%2F"  className="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 text-white/80 hover:border-[#CBA14D] hover:text-[#CBA14D] transition-colors duration-300">
                   <IconBrandLinkedin size={24} stroke={1.5} />
-                </a>
-                <a href="https://x.com/morzzeindia" className="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 text-white/80 hover:border-[#CBA14D] hover:text-[#CBA14D] transition-colors duration-300">
-                  <IconBrandX size={24} stroke={1.5} />
                 </a>
               </div>
             </motion.div>

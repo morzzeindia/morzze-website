@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -6,8 +7,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const images = [
-  "/insta1.png", "/insta2.png", "/insta3.png",
-  "/insta4.png", "/insta5.png", "/insta4.png",
+  "/insta1.png",
+  "/insta2.png",
+  "/insta3.png",
+  "/insta4.png",
+  "/insta5.png",
+  "/insta4.png",
 ];
 
 export default function InstagramCarousel() {
@@ -15,7 +20,6 @@ export default function InstagramCarousel() {
 
   return (
     <div className="relative text-white py-24 overflow-hidden ">
-      
       {/* ✅ Background Image using Next Image */}
       <Image
         src="/insta-bg.png"
@@ -29,7 +33,6 @@ export default function InstagramCarousel() {
       <div className="absolute inset-0 bg-black/70 " />
 
       <div className="relative z-10 max-w-7xl mx-auto text-center px-6 md:px-10">
-        
         {/* Header */}
         <div className="mb-12 space-y-4">
           <span className="block font-montserrat text-xs md:text-sm font-bold text-[#CBA14D] uppercase tracking-[0.4em]">
@@ -41,13 +44,26 @@ export default function InstagramCarousel() {
           </h2>
 
           <p className="font-inter text-white/80 text-sm md:text-md max-w-2xl mx-auto leading-relaxed">
-            Get inspired by our latest designs and see how our customers transform their spaces
+            Get inspired by our latest designs and see how our customers
+            transform their spaces
           </p>
         </div>
 
         {/* Carousel */}
         <div className="relative">
-          <div className="overflow-hidden">
+          <div
+            className="overflow-hidden h-[250px] md:h-[270px] flex items-center"
+            style={{
+             WebkitMaskImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 270' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M0 15 C300 45 900 45 1200 15 L1200 255 C900 225 300 225 0 255 Z'/%3E%3C/svg%3E\")",
+              maskImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 270' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M0 15 C300 45 900 45 1200 15 L1200 255 C900 225 300 225 0 255 Z'/%3E%3C/svg%3E\")",
+              WebkitMaskSize: "100% 100%",
+              maskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+            }}
+          >
             <motion.div
               ref={containerRef}
               className="flex gap-4 md:gap-6"
@@ -57,7 +73,7 @@ export default function InstagramCarousel() {
               {[...images, ...images].map((src, index) => (
                 <div
                   key={index}
-                  className="min-w-60 md:min-w-55 aspect-square bg-[#111] border border-white/10 group overflow-hidden"
+                  className="min-w-60 md:min-w-72 h-[230px] md:h-[250px] bg-[#111] border border-white/10 group overflow-hidden"
                 >
                   <img
                     src={src}
@@ -76,13 +92,13 @@ export default function InstagramCarousel() {
 
         {/* Button */}
         <div className="mt-16">
-          <Link  href="https://www.instagram.com/morzzeindia/" >
-          <Button 
-            variant="outline"
-            className="h-14 px-12 rounded-md font-montserrat border-[#CBA14D] text-[#CBA14D] hover:bg-[#CBA14D] hover:text-black font-bold uppercase tracking-[0.2em] transition-all duration-500 bg-transparent border-2"
-          >
-            FOLLOW @MORZZEINDIA
-          </Button>
+          <Link href="https://www.instagram.com/morzzeindia/">
+            <Button
+              variant="outline"
+              className="h-14 px-12 rounded-md font-montserrat border-[#CBA14D] text-[#CBA14D] hover:bg-[#CBA14D] hover:text-black font-bold uppercase tracking-[0.2em] transition-all duration-500 bg-transparent border-2"
+            >
+              FOLLOW @MORZZEINDIA
+            </Button>
           </Link>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -22,8 +23,16 @@ import {
 import Image from "next/image";
 import React from "react";
 
+
+
 const page = () => {
   const maxLength = 500;
+
+  const router = useRouter();
+
+const handleFaqRedirect = () => {
+  router.push("/support?tab=faq");
+};
 
   const [messageLength, setMessageLength] = useState(0);
   const [error, setError] = useState("");
@@ -376,7 +385,7 @@ const page = () => {
                 />
               </div>
 
-              <div className="bg-white/5 border border-white/20 rounded-xs p-6">
+              {/* <div className="bg-white/5 border border-white/20 rounded-xs p-6">
                 <h3 className="text-white font-semibold mb-4">
                   <Clock
                     size={14}
@@ -402,7 +411,7 @@ const page = () => {
                     <span className="text-[#EF4444]">Closed</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="bg-[#F0FDF4] border rounded-xs p-6 flex items-center gap-4 cursor-pointer">
                 <div className="w-12 h-12 rounded-full bg-[#22C55E] flex items-center justify-center">
@@ -425,12 +434,12 @@ const page = () => {
                 >
                   <IconBrandFacebook className="text-[#4B5563] w-5 h-5" />
                 </a>
-                <a
+                {/* <a
                   href="#"
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center transition"
                 >
                   <IconBrandTwitter className="text-[#4B5563] w-5 h-5" />
-                </a>
+                </a> */}
                 <a
                   href="https://www.linkedin.com/company/anupamretailltd/?originalSubdomain=in"
                   className="w-10 h-10 rounded-full bg-[#F3F4F6] flex items-center justify-center transition"
@@ -461,13 +470,16 @@ const page = () => {
           <h2 className="text-4xl font-bold mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-gray-400">
+          <p className="text-white/80">
             Find quick answers to common questions about our products and
             services
           </p>
         </div>
         <div className="max-w-2xl mx-auto pb-10 text-center">
-          <Button className="border-2 text-[#FDB813] border-[#FDB813] font-semibold p-6 px-16 rounded-sm">
+          <Button
+            onClick={handleFaqRedirect}
+            className="border-2 text-[#FDB813] border-[#FDB813] font-semibold p-6 px-16 rounded-sm"
+          >
             View All FAQs
           </Button>
         </div>

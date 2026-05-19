@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { getOrdersByUserId } from "@/helper/order/action"
 
+export const dynamic = "force-dynamic";
+
 function formatINR(amount: number | null | undefined) {
   if (amount == null) return "—"
   return new Intl.NumberFormat("en-IN", {

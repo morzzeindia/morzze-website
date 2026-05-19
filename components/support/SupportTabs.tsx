@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   IconPhoneCall,
@@ -14,9 +15,13 @@ import ServiceRequest from "./ServiceRequest";
 import WhatsappChat from "./WhatsappChat";
 
 const SupportTabs = () => {
+  const searchParams = useSearchParams();
+
+  const defaultTab = searchParams.get("tab") || "callback";
+
   return (
     <section className="bg-black py-16 px-6 font-montserrat ">
-      <Tabs defaultValue="callback" className="max-w-7xl mx-auto">
+      <Tabs defaultValue={defaultTab} className="max-w-7xl mx-auto">
         {/* --- GRID TABS LIST --- */}
         <TabsList
           className=" grid grid-cols-2 md:grid-cols-4
@@ -98,6 +103,7 @@ const SupportTabs = () => {
               </span>
             </div>
           </TabsTrigger>
+
           {/* Tab 3: Service Request */}
           <TabsTrigger
             value="service"
@@ -184,12 +190,15 @@ const SupportTabs = () => {
           <TabsContent value="callback">
             <CallbackForm />
           </TabsContent>
+
           <TabsContent value="faq">
             <FAQSection />
           </TabsContent>
+
           <TabsContent value="service">
             <ServiceRequest />
           </TabsContent>
+
           <TabsContent value="whatsapp">
             <WhatsappChat />
           </TabsContent>

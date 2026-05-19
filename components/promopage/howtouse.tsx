@@ -32,7 +32,7 @@ export default function PromoStepsNewsletter() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
             viewport={{ once: true }}
-            className="text-[14px] text-[#7a7a7a] max-w-md mx-auto mb-12 leading-7"
+            className="text-[14px] text-[white]/80 max-w-md mx-auto mb-12 leading-7"
           >
             Follow these simple steps to apply your discount
           </motion.p>
@@ -85,7 +85,7 @@ export default function PromoStepsNewsletter() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
             viewport={{ once: true }}
-            className="text-[14px] text-[#7a7a7a] max-w-xl mx-auto mb-8 leading-7"
+            className="text-[14px] text-[white]/70 max-w-xl mx-auto mb-8 leading-7"
           >
             Subscribe to our newsletter and be the first to know about exclusive
             offers and new promo codes

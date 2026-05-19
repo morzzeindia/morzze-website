@@ -50,7 +50,7 @@ const TrustSection = () => {
               <h3 className="font-montserrat text-[10px] md:text-xs font-bold tracking-[0.2em] mb-2 text-white/90">
                 {item.title}
               </h3>
-              <p className="font-inter text-[10px] md:text-[11px] text-[#928E8780] leading-relaxed uppercase tracking-wider">
+              <p className="font-inter text-[10px] md:text-[11px] text-[white]/70 leading-relaxed uppercase tracking-wider">
                 {item.desc}
               </p>
             </motion.div>

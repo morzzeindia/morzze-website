@@ -119,7 +119,7 @@ const RecognitionSection = () => {
                 <h4 className="text-lg md:text-sm font-medium text-[#FEFFF1] leading-tight">
                   {item.title}
                 </h4>
-                <p className="text-xs md:text-sm font-inter text-[#6B7280]">
+                <p className="text-xs md:text-sm font-inter text-[white]/70">
                   {item.org}
                 </p>
               </div>

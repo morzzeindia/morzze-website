@@ -80,7 +80,7 @@ const FeaturedInnovation = () => {
               <div className="w-[3px] h-12 bg-[#CBA14D]" />
               
               <div className="flex flex-row items-center gap-12">
-                <h3 className="font-montserrat text-4xl md:text-5xl font-medium text-white tracking-tighter">
+                <h3 className="font-montserrat text-4xl md:text-5xl font-medium text-white tracking-wide">
                   {stat.value}
                 </h3>
                 <p className="font-montserrat text-[10px] md:text-xs font-bold text-white uppercase tracking-[0.2em] leading-tight max-w-[80px]">

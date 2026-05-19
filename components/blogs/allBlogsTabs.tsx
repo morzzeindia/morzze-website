@@ -116,7 +116,7 @@ export default function BlogGridTabs() {
                     {blog.title}
                   </h3>
 
-                  <p className="text-[13px] text-[#7b7b7b] leading-6 mb-6">
+                  <p className="text-[13px] text-[white]/80 leading-6 mb-6">
                     {blog.metaDescription}
                   </p>
 
@@ -135,7 +135,7 @@ export default function BlogGridTabs() {
                       <p className="text-[13px] text-white">
                         {blog.userName || "Morzze Team"}
                       </p>
-                      <p className="text-[11px] text-[#6d6d6d]">
+                      <p className="text-[11px] text-[white]/70">
                         {blog.date} · 5 min read
                       </p>
                     </div>

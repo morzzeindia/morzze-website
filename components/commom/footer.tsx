@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,20 @@ import {
   IconBrandYoutube,
   IconBrandLinkedin,
 } from "@tabler/icons-react";
+
+type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  bannerImage?: string | null;
+  description?: string | null;
+  updatedAt?: Date | null;
+};
+
+type FooterProps = {
+  categories?: Category[];
+};
+
 const companyLinks = [
   { name: "About Us", href: "/about" },
   { name: "Coupons", href: "/Promo-offer" },
@@ -17,9 +32,9 @@ const companyLinks = [
   { name: "Media", href: "/mediacenter" },
   { name: "Careers", href: "/career" },
   { name: "Blogs", href: "/blogs" },
-
 ];
-const Footer = ({ categories = [] }: { categories?: { name: string | null; slug: string | null }[] }) => {
+
+const Footer = ({ categories: _categories }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -30,6 +45,7 @@ const Footer = ({ categories = [] }: { categories?: { name: string | null; slug:
           src="/footer-bg.png"
           alt="Footer Background"
           fill
+          sizes="100vw"
           className="object-cover object-center opacity-100"
           priority
         />
@@ -41,21 +57,33 @@ const Footer = ({ categories = [] }: { categories?: { name: string | null; slug:
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12">
           {/* Logo & Description Section */}
           <div className="space-y-6 text-left">
-            <Link href="/" className="inline-block">
+            <div
+              onClick={() => {
+                if (window.location.pathname === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                  window.location.href = "/";
+                }
+              }}
+              className="inline-block cursor-pointer"
+            >
               <div className="relative w-40 h-16 md:w-48 md:h-20">
                 <Image
                   src="/footer-logo.png"
                   alt="Morzze Logo"
                   fill
+                  sizes="(max-width: 768px) 160px, 192px"
                   className="object-contain object-left"
                   priority
                 />
               </div>
-            </Link>
+            </div>
+
             <p className="text-sm md:text-[13px] text-white/90 font-inter leading-relaxed max-w-sm">
               Premium kitchen & bathroom fittings crafted with European design
               sensibility and Indian craftsmanship.
             </p>
+
             {/* Social Icons Stacked like Mobile Screenshot */}
             <div className="flex items-center space-x-5 pt-2">
               <a
@@ -115,14 +143,44 @@ const Footer = ({ categories = [] }: { categories?: { name: string | null; slug:
               <h4 className="font-montserrat text-sm font-bold text-white uppercase tracking-[0.15em] mb-6 border-b border-white/10 pb-2 md:border-none">
                 Shop
               </h4>
+
               <ul className="space-y-3">
-                {categories.map((cat) => (
-                  <li key={cat.slug}>
+                {[
+                  {
+                    label: "Steel Sinks",
+                    href: "/products?category=steel-sinks",
+                  },
+                  {
+                    label: "Kitchen Faucets",
+                    href: "/products?category=kitchen-faucet",
+                  },
+                  {
+                    label: "Granite Basins",
+                    href: "/products?category=granite-wash-basin",
+                  },
+                  {
+                    label: "Air Taps",
+                    href: "/products?category=air-taps",
+                  },
+                  {
+                    label: "Floor Drainers",
+                    href: "/products?category=floor-drainer",
+                  },
+                  {
+                    label: "Towel Warmers",
+                    href: "/products?category=towel-warmer",
+                  },
+                  {
+                    label: "Bathroom Faucets",
+                    href: "/products?category=bathroom-faucet",
+                  },
+                ].map((item) => (
+                  <li key={item.label}>
                     <Link
-                      href={`/category/${cat.slug}`}
+                      href={item.href}
                       className="text-sm text-white/70 hover:text-[#CBA14D] font-inter transition-colors block"
                     >
-                      {cat.name}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -134,6 +192,7 @@ const Footer = ({ categories = [] }: { categories?: { name: string | null; slug:
               <h4 className="font-montserrat text-sm font-bold text-white uppercase tracking-[0.15em] mb-6 border-b border-white/10 pb-2 md:border-none">
                 Company
               </h4>
+
               <ul className="space-y-3">
                 {companyLinks.map((item) => (
                   <li key={item.name}>
@@ -154,16 +213,15 @@ const Footer = ({ categories = [] }: { categories?: { name: string | null; slug:
             <h4 className="font-montserrat text-sm font-bold text-white uppercase tracking-[0.15em] mb-6 border-b border-white/10 pb-2 md:border-none">
               Support
             </h4>
+
             <ul className="space-y-3">
               {[
                 { name: "Contact Us", link: "/contact" },
                 { name: "Warranty", link: "/warranty" },
                 { name: "Become a Dealer", link: "/dealer" },
                 { name: "Find a Store", link: "/stores" },
-                // { name: "Shipping & Returns", link: "/shipping-returns" },
+                { name: "Returns & Exchange", link: "/return-exchange" },
                 { name: "FAQ", link: "/support" },
-
-
               ].map((item) => (
                 <li key={item.name}>
                   <Link
@@ -194,22 +252,25 @@ const Footer = ({ categories = [] }: { categories?: { name: string | null; slug:
             >
               Privacy Policy
             </Link>
+
             <Link
-              href="terms-of-use"
+              href="/terms-of-use"
               target="_blank"
               className="text-white/80 hover:text-white transition-colors"
             >
               Terms of Service
             </Link>
-            <Link
+
+            {/* <Link
               href="return-exchange"
               target="_blank"
               className="text-white/80 hover:text-white transition-colors"
             >
               Refund
-            </Link>
+            </Link> */}
+
             <Link
-              href="return-exchange"
+              href="/return-exchange"
               target="_blank"
               className="text-white/80 hover:text-white transition-colors"
             >

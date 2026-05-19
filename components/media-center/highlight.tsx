@@ -50,7 +50,7 @@ export default function ExhibitionHighlightsSection() {
                 <p className="text-[15px] text-white">
                   Architectural Digest India
                 </p>
-                <p className="text-[12px] text-[#777777]">March 15, 2024</p>
+                <p className="text-[12px] text-[white]/80">March 15, 2024</p>
               </div>
             </div>
 
@@ -58,7 +58,7 @@ export default function ExhibitionHighlightsSection() {
               ARCHEX Dehradun 2026
             </h3>
 
-            <p className="text-[14px] leading-8 text-white/60 mb-4">
+            <p className="text-[14px] leading-8 text-white/70 mb-4">
               Morzze proudly showcased its premium kitchen and bathroom
               solutions at ARCHEX Dehradun 2026. Designed for modern and elegant
               spaces, our collection reflects refined finishes, seamless

@@ -53,7 +53,7 @@ const steps = [
 
 const HowWarrantyWorks = () => {
   return (
-    <section className="bg-[#0A0A0A] py-8 md:py-24 font-montserrat overflow-hidden">
+    <section className="bg-[#0A0A0A] py-8 md:py-15 font-montserrat overflow-hidden">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-10">
         
         {/* --- HEADER --- */}

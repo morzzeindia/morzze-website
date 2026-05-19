@@ -35,7 +35,7 @@ const BannerAbout = () => {
               animate: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="font-montserrat text-[10px]  md:text-xs font-bold text-[#FDB813] uppercase tracking-[0.3em] mb-4 block"
+            className="font-montserrat text-[10px]  md:text-xs font-bold text-[#FDB813] uppercase tracking-[0.3em] pl-2 mb-4 block"
           >
             OUR STORY
           </motion.span>
