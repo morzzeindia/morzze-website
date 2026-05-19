@@ -281,22 +281,24 @@ export async function createProduct(formData: FormData): Promise<void> {
         );
       }
 
-// 5. Insert Filters
-if (variants.filters?.length) {
-  await tx.insert(productFilter).values(
-    variants.filters
-      .filter(
-        (f: any) =>
-          f?.slug?.trim() &&
-          f?.type?.trim(),
-      )
-      .map((f: any) => ({
-        productId,
-        filter: f.slug.trim(),
-        type: f.type.trim(),
-      })),
-  );
-}
+      // 5. Insert Filters
+      if (variants.filters?.length) {
+        const filterPayload = variants.filters
+          .filter(
+            (f: any) =>
+              (f?.slug || f?.filter)?.trim()?.length > 0 &&
+              f?.type?.trim()?.length > 0,
+          )
+          .map((f: any) => ({
+            productId,
+            filter: (f.slug || f.filter).trim(),
+            type: f.type.trim(),
+          }));
+
+        if (filterPayload.length > 0) {
+          await tx.insert(productFilter).values(filterPayload);
+        }
+      }
 
       // 8. Insert FAQ DATA
       // 7. Insert FAQs
@@ -419,28 +421,26 @@ export async function updateProduct(formData: FormData): Promise<void> {
         );
       }
 
-// Update Filters
-await tx
-  .delete(productFilter)
-  .where(eq(productFilter.productId, vId!));
+      // Update Filters
+      await tx.delete(productFilter).where(eq(productFilter.productId, vId!));
 
-if (variants.filters?.length) {
-  const filterPayload = variants.filters
-    .filter(
-      (f: any) =>
-        f.filter?.trim()?.length > 0 &&
-        f.type?.trim()?.length > 0,
-    )
-    .map((f: any) => ({
-      productId: productId,
-      filter: f.filter,
-      type: f.type,
-    }));
+      if (variants.filters?.length) {
+        const filterPayload = variants.filters
+          .filter(
+            (f: any) =>
+              (f?.slug || f?.filter)?.trim()?.length > 0 &&
+              f?.type?.trim()?.length > 0,
+          )
+          .map((f: any) => ({
+            productId: vId!,
+            filter: (f.slug || f.filter).trim(),
+            type: f.type.trim(),
+          }));
 
-  if (filterPayload.length > 0) {
-    await tx.insert(productFilter).values(filterPayload);
-  }
-}
+        if (filterPayload.length > 0) {
+          await tx.insert(productFilter).values(filterPayload);
+        }
+      }
 
       await tx
         .delete(productVarientBox)
