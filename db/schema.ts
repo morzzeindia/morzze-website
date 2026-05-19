@@ -203,18 +203,25 @@ export const productCategory = pgTable(
 
 // ================= PRODUCT FILTER =================
 
-export const productFilter = pgTable("product_filter", {
-  productId: uuid("product_id").references(() => product.id).notNull(),
-  filter: varchar("filter").notNull(),
-},
+export const productFilter = pgTable(
+  "product_filter",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    productId: uuid("product_id")
+      .references(() => product.id)
+      .notNull(),
+
+    filter: varchar("filter").notNull(),
+
+    type: varchar("type", { length: 50 }),
+  },
   (table) => [
-    primaryKey({ columns: [table.productId, table.filter] }),
     index("filter_idx").on(table.filter),
+    index("type_idx").on(table.type),
     index("product_id_idx").on(table.productId),
-  ]
+  ],
 );
-
-
 
 
 

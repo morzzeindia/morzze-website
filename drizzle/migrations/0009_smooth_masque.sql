@@ -1,0 +1,1 @@
+ALTER TABLE "product_filter" ALTER COLUMN "type" DROP NOT NULL;

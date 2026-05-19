@@ -105,20 +105,26 @@ export default function EditProduct({ productDetails }: any) {
   const mapSlugsToObjects = (slugs: string[], source: any[]) =>
     source.filter((item) => slugs.includes(item.slug));
 
-  useEffect(() => {
-    if (!productDetails?.filters) return;
+useEffect(() => {
+  if (!productDetails?.filters) return;
 
-    const slugs = extractSlugs(productDetails.filters);
+  const filters = productDetails.filters;
 
-    setProductType(mapSlugsToObjects(slugs, PRODUCT_FILTER.product_type));
-    setSize(mapSlugsToObjects(slugs, PRODUCT_FILTER.size));
-    setFlowType(mapSlugsToObjects(slugs, PRODUCT_FILTER.flow_or_usage_type));
-    setMaterial(mapSlugsToObjects(slugs, PRODUCT_FILTER.material));
-    setCramps(mapSlugsToObjects(slugs, PRODUCT_FILTER.cramps_or_discomfort));
-    setSensitive(
-      mapSlugsToObjects(slugs, PRODUCT_FILTER.allergies_or_sensitivities),
-    );
-  }, [productDetails]);
+  const mapFilters = (type: string) =>
+    filters
+      .filter((f: any) => f.type === type)
+      .map((f: any) => ({
+        slug: f.filter,
+        name: f.filter.replace(/-/g, " "),
+      }));
+
+  setProductType(mapFilters("product_type"));
+  setSize(mapFilters("size"));
+  setFlowType(mapFilters("flow_type"));
+  setMaterial(mapFilters("material"));
+  setCramps(mapFilters("cramps"));
+  setSensitive(mapFilters("sensitive"));
+}, [productDetails]);
 
   const {
     categoryRes,
@@ -349,18 +355,37 @@ pdfDocuments:
           value: val.value,
         }))
         .filter((a: any) => a.value?.trim()?.length > 0),
-      filters: [
-        ...new Map(
-          [
-            ...(productType || []),
-            ...(size || []),
-            ...(flowType || []),
-            ...(material || []),
-            ...(cramps || []),
-            ...(sensitive || []),
-          ].map((filter: any) => [filter.slug, filter]),
-        ).values(),
-      ],
+ filters: [
+  ...(productType || []).map((item: any) => ({
+    filter: item.slug,
+    type: "product_type",
+  })),
+
+  ...(size || []).map((item: any) => ({
+    filter: item.slug,
+    type: "size",
+  })),
+
+  ...(flowType || []).map((item: any) => ({
+    filter: item.slug,
+    type: "flow_type",
+  })),
+
+  ...(material || []).map((item: any) => ({
+    filter: item.slug,
+    type: "material",
+  })),
+
+  ...(cramps || []).map((item: any) => ({
+    filter: item.slug,
+    type: "cramps",
+  })),
+
+  ...(sensitive || []).map((item: any) => ({
+    filter: item.slug,
+    type: "sensitive",
+  })),
+],
       VarientBoxes: varientBox ? variantBoxes : [],
       hasVarientBox: varientBox,
     };
