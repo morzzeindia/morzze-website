@@ -812,7 +812,7 @@ export default function EditProduct({ productDetails }: any) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">Variant Sizes</span>
+                  <span className="flex items-center gap-2">Colour Variants</span>
 
                   <Checkbox
                     checked={varientBox}
@@ -859,7 +859,7 @@ export default function EditProduct({ productDetails }: any) {
 
                       <div className="col-span-2">
                         <Input
-                          placeholder="Size Name (e.g. Small)"
+                          placeholder="Variant Name (e.g. Chrome, Gold)"
                           value={item.name}
                           onChange={(e) =>
                             updateVariantBox(index, "name", e.target.value)

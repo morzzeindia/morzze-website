@@ -1,5 +1,5 @@
 import { cart, cartItem, product, users } from "@/db/schema";
-import { getProfile, sendCartAbandonmentEmail } from "@/helper";
+// import {     sendCartAbandonmentEmail } from "@/helper";
 import { db } from "@/lib/db";
 import { and, eq, gt, lt } from "drizzle-orm";
 
@@ -32,7 +32,7 @@ SIX_DAYS_AGO.setDate(now.getDate() - 6);
 
  
   for (const item of data) {
-     await sendCartAbandonmentEmail(item.email,item.fullName,item.productName,"https://www.potenthygiene.com/cart","https://www.potenthygiene.com/dashboard/reviews");
+    //  await sendCartAbandonmentEmail(item.email,item.fullName,item.productName,"https://www.morzze.com/cart","https://www.morzze.com/dashboard/reviews");
   }
 
   return Response.json({ success: true });

@@ -66,10 +66,11 @@ export default function TrackingPage({
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+       <section  className="w-full bg-black">
+         <div className="max-w-4xl mx-auto p-6 text-white">
             {/* HEADER */}
 
-            <div className="border rounded-2xl p-6 shadow-sm mb-6">
+            <div className="border rounded-2xl p-6 shadow-sm mb-6 bg-[#171717]">
                 <h1 className="text-3xl font-bold mb-2">
                     Order Tracking
                 </h1>
@@ -81,7 +82,7 @@ export default function TrackingPage({
 
             {/* ORDER DETAILS */}
 
-            <div className="border rounded-2xl p-6 mb-6">
+            <div className="border rounded-2xl p-6 mb-6 bg-[#171717]">
                 <div className="grid md:grid-cols-2 gap-4">
                     <div>
                         <p className="text-sm text-gray-500">
@@ -131,7 +132,7 @@ export default function TrackingPage({
 
             {/* TIMELINE */}
 
-            <div className="border rounded-2xl p-6">
+            <div className="border rounded-2xl p-6 bg-[#171717]">
                 <h2 className="text-2xl font-semibold mb-6">
                     Shipment Timeline
                 </h2>
@@ -187,5 +188,6 @@ export default function TrackingPage({
                 </div>
             </div>
         </div>
+       </section>
     );
 }

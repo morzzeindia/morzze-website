@@ -5,6 +5,17 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { useCart } from '@/context/CartContext'
 
+/**
+ * Parse a rupee string like "₹1,000" or "₹15000" into a number.
+ * Returns 0 if parsing fails or input is empty/null.
+ */
+const parseRupeeValue = (value: string | null | undefined): number => {
+  if (!value) return 0
+  const cleaned = value.replace(/[₹,\s]/g, '')
+  const num = parseFloat(cleaned)
+  return Number.isFinite(num) ? num : 0
+}
+
 const OrderSummary = () => {
   const { cartItems, appliedCoupon, setAppliedCoupon, clearCoupon } = useCart()
   const [couponCode, setCouponCode] = useState("")
@@ -21,54 +32,71 @@ const OrderSummary = () => {
     [cartItems]
   )
 
-  // Discount helpers
-  const parseDiscountPercent = (discountValue: string): number | null => {
-    const normalized = discountValue.trim()
-    if (normalized.includes("%")) {
-      const percent = parseFloat(normalized.replace("%", ""))
-      return Number.isFinite(percent) ? percent : null
-    }
-    return null
-  }
-
-  const calculateDiscount = (base: number, discountValue: string): number => {
+  /**
+   * Calculate discount amount.
+   * discountValue from admin is always a percentage number (e.g. "25" means 25%).
+   * upto is the maximum cap (e.g. "₹1000").
+   */
+  const calculateDiscount = (
+    base: number,
+    discountValue: string,
+    upto?: string | null
+  ): number => {
     const normalized = discountValue.trim()
     if (!normalized) return 0
 
-    if (normalized.includes("%")) {
-      const percent = parseFloat(normalized.replace("%", ""))
-      if (Number.isFinite(percent)) {
-        return Math.round((base * percent) / 100)
-      }
+    // discountValue is always a percentage from the admin form
+    const percent = parseFloat(normalized.replace("%", ""))
+    if (!Number.isFinite(percent) || percent <= 0) return 0
+
+    let discount = Math.round((base * percent) / 100)
+
+    // Cap at upto value if provided
+    const maxDiscount = parseRupeeValue(upto)
+    if (maxDiscount > 0 && discount > maxDiscount) {
+      discount = maxDiscount
     }
 
-    const fixed = parseFloat(normalized)
-    return Number.isFinite(fixed) ? Math.round(fixed) : 0
+    return discount
   }
 
+  // Check minimum order and calculate discount
+  const minimumOrderValue = parseRupeeValue(appliedCoupon?.minimumOrder)
+  const meetsMinimumOrder = !minimumOrderValue || subtotal >= minimumOrderValue
+
   // Discount applies ONLY to subtotal (ignores GST)
-  const discountAmount = appliedCoupon
-    ? calculateDiscount(subtotal, appliedCoupon.discountValue)
+  const discountAmount = appliedCoupon && meetsMinimumOrder
+    ? calculateDiscount(subtotal, appliedCoupon.discountValue, appliedCoupon.upto)
     : 0
 
   const discountedSubtotal = subtotal - discountAmount
   const gst = Math.round(discountedSubtotal * 0.18)
   const total = Math.max(discountedSubtotal + gst, 0)
 
-  // Derive the display label for the discount (prefer % format)
-  const discountLabel = appliedCoupon
-    ? (() => {
-      const pct = parseDiscountPercent(appliedCoupon.discountValue)
-      return pct !== null ? `${pct}% off` : `₹${discountAmount.toLocaleString("en-IN")} off`
-    })()
-    : ""
+  // Derive the display label for the discount
+  const discountPercent = appliedCoupon
+    ? parseFloat(appliedCoupon.discountValue.replace("%", ""))
+    : 0
 
   useEffect(() => {
     if (!appliedCoupon) return
-    const amount = calculateDiscount(subtotal, appliedCoupon.discountValue)
+
+    // Check minimum order
+    if (minimumOrderValue > 0 && subtotal < minimumOrderValue) {
+      setMessage({
+        type: 'error',
+        text: `Minimum order of ₹${minimumOrderValue.toLocaleString("en-IN")} required. Add ₹${(minimumOrderValue - subtotal).toLocaleString("en-IN")} more.`
+      })
+      return
+    }
+
+    const amount = calculateDiscount(subtotal, appliedCoupon.discountValue, appliedCoupon.upto)
     if (amount <= 0) {
       setMessage({ type: 'error', text: 'Coupon is not valid for this cart.' })
       clearCoupon()
+    } else {
+      // Clear any stale min-order error
+      setMessage(null)
     }
   }, [appliedCoupon, subtotal])
 
@@ -97,14 +125,33 @@ const OrderSummary = () => {
         return
       }
 
+      const coupon = data.coupon
+
+      // Check minimum order value before applying
+      const minOrder = parseRupeeValue(coupon.minimumOrder)
+      if (minOrder > 0 && subtotal < minOrder) {
+        setMessage({
+          type: 'error',
+          text: `Minimum order of ₹${minOrder.toLocaleString("en-IN")} required to use this coupon.`
+        })
+        clearCoupon()
+        return
+      }
+
       setAppliedCoupon({
-        code: data.coupon.couponCode,
-        discountValue: data.coupon.discountValue,
-        title: data.coupon.title,
+        code: coupon.couponCode,
+        discountValue: coupon.discountValue,
+        title: coupon.title,
+        upto: coupon.upto,
+        minimumOrder: coupon.minimumOrder,
       })
 
-      const pct = parseDiscountPercent(data.coupon.discountValue)
-      const label = pct !== null ? `${pct}% off` : `${data.coupon.discountValue}%off`
+      const percent = parseFloat(coupon.discountValue.replace("%", ""))
+      const uptoVal = parseRupeeValue(coupon.upto)
+      const label = Number.isFinite(percent) && percent > 0
+        ? `${percent}% off${uptoVal > 0 ? ` (upto ₹${uptoVal.toLocaleString("en-IN")})` : ''}`
+        : `₹${coupon.discountValue} off`
+
       setMessage({ type: 'success', text: `Coupon applied: ${label}` })
       toast.success('Coupon applied successfully')
     } catch {
@@ -135,15 +182,10 @@ const OrderSummary = () => {
           <div className="flex justify-between text-sm">
             <span className="text-zinc-500 font-light">
               Discount&nbsp;
-              {/* <span className="text-emerald-400 font-semibold">
-                {parseDiscountPercent(appliedCoupon.discountValue) !== null
-                  ? `${parseDiscountPercent(appliedCoupon.discountValue)}%`
-                  : appliedCoupon.discountValucle}
-              </span> */}
-              &nbsp;· {appliedCoupon.code}
+              · {appliedCoupon.code}
             </span>
             <div className="flex items-center gap-3">
-              <span className="text-emerald-400">{discountAmount.toLocaleString("en-IN")}%</span>
+              <span className="text-emerald-400">-₹{discountAmount.toLocaleString("en-IN")}</span>
               <button
                 type="button"
                 onClick={handleRemoveCoupon}
@@ -152,6 +194,13 @@ const OrderSummary = () => {
                 Remove
               </button>
             </div>
+          </div>
+        )}
+
+        {appliedCoupon && !meetsMinimumOrder && (
+          <div className="text-xs text-amber-400 bg-amber-400/10 rounded px-3 py-2">
+            Minimum order ₹{minimumOrderValue.toLocaleString("en-IN")} required.
+            Add ₹{(minimumOrderValue - subtotal).toLocaleString("en-IN")} more to apply this coupon.
           </div>
         )}
 

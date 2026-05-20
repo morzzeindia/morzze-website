@@ -34,11 +34,14 @@ const ProductClient = ({ product, slug }: any) => {
   const { addToCart, getItemQuantity } = useCart()
 
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedFinish, setSelectedFinish] = useState(
-    product?.finishes?.[0] || ""
-  );
+  const [selectedFinish, setSelectedFinish] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedMaterial, setSelectedMaterial] = useState("");
   const [quantity, setQuantity] = useState(1);
 
+  // Colour variant state
+  const colourVariants = product?.prodcutVarientBoxRes || [];
+  const [selectedVariant, setSelectedVariant] = useState<number | null>(null);
 
   // FOR MEDIA AND PDF DOCUMENTATION
   if (!product) return null;
@@ -56,8 +59,15 @@ const ProductClient = ({ product, slug }: any) => {
     ...mediaImages,
   ].filter(Boolean);
 
+  // When a colour variant is selected, prepend its image to the images array
+  const displayImages = selectedVariant !== null && colourVariants[selectedVariant]?.image
+    ? [colourVariants[selectedVariant].image, ...images]
+    : images;
+
   const wishlisted = isInWishlist(slug)
 
+  // The image that should be shown as the hero (cart will also use this)
+  const currentHeroImage = displayImages[selectedImage] || product.bannerImage;
 
   // 1. Sare Attributes ko as variables nikal lo
   const attributes = product.productAttributeRes || [];
@@ -69,11 +79,22 @@ const ProductClient = ({ product, slug }: any) => {
   const tabDocumentation = attributes.find((a: any) => a.attribute === "Documentation")?.value;
 
 
-  // 1. "size" wala attribute find karein
-  const sizeAttr = product.productAttributeRes?.find((a: any) => a.attribute === "size")?.value;
+  // Extract filters by type from product.filters
+  const filters = product.filters || [];
+  const finishFilters = filters.filter((f: any) => f.type === "finish").map((f: any) => f.filter);
+  const sizeFilters = filters.filter((f: any) => f.type === "size").map((f: any) => f.filter);
+  const materialFilters = filters.filter((f: any) => f.type === "material").map((f: any) => f.filter);
 
-  // 2. Comma se split karke array banayein (agar data nahi hai to empty array)
-  const finishesArray = sizeAttr ? sizeAttr.split(",") : [];
+  const handleVariantClick = (index: number) => {
+    if (selectedVariant === index) {
+      // Deselect
+      setSelectedVariant(null);
+      setSelectedImage(0);
+    } else {
+      setSelectedVariant(index);
+      setSelectedImage(0); // Reset to first image which will be the variant image
+    }
+  };
 
   return (
     <>
@@ -85,8 +106,8 @@ const ProductClient = ({ product, slug }: any) => {
             <div className="relative aspect-square bg-[#1A1A1A] overflow-hidden group">
               <AnimatePresence mode="wait">
                 <motion.img
-                  key={selectedImage}
-                  src={images[selectedImage]}
+                  key={`${selectedVariant}-${selectedImage}`}
+                  src={displayImages[selectedImage]}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -95,12 +116,12 @@ const ProductClient = ({ product, slug }: any) => {
               </AnimatePresence>
 
               {/* ARROWS */}
-              {images.length > 1 && (
+              {displayImages.length > 1 && (
                 <>
                   <button
                     onClick={() =>
                       setSelectedImage(
-                        (prev) => (prev - 1 + images.length) % images.length
+                        (prev) => (prev - 1 + displayImages.length) % displayImages.length
                       )
                     }
                     className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100"
@@ -111,7 +132,7 @@ const ProductClient = ({ product, slug }: any) => {
                   <button
                     onClick={() =>
                       setSelectedImage(
-                        (prev) => (prev + 1) % images.length
+                        (prev) => (prev + 1) % displayImages.length
                       )
                     }
                     className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100"
@@ -124,7 +145,7 @@ const ProductClient = ({ product, slug }: any) => {
 
             {/* THUMBNAILS */}
             <div className="flex gap-3 overflow-x-auto pb-2">
-              {images.map((img: string, i: number) => (
+              {displayImages.map((img: string, i: number) => (
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
@@ -193,29 +214,140 @@ const ProductClient = ({ product, slug }: any) => {
               {product.description}
             </p>
 
-            {/* FINISH */}
-            <div>
-              <p className="text-xs text-white/80 mb-2">
-                FINISH: {selectedFinish}
-              </p>
+            {/* COLOUR VARIANTS */}
+            {colourVariants.length > 0 && (
+              <div>
+                <p className="text-xs text-white/80 mb-3 uppercase tracking-widest font-bold">
+                  Colour:{" "}
+                  <span className="text-[#FFBF3F]">
+                    {selectedVariant !== null
+                      ? colourVariants[selectedVariant]?.name
+                      : "Default"}
+                  </span>
+                </p>
 
-              <div className="flex gap-2 flex-wrap">
-                {finishesArray.map((finish: string) => (
-                  <button
-                    key={finish}
-                    onClick={() => setSelectedFinish(finish)}
-                    className={cn(
-                      "px-4 py-2 border text-xs",
-                      selectedFinish === finish
-                        ? "border-yellow-400 text-yellow-400  rounded-md"
-                        : "border-white/10 text-white/70"
-                    )}
-                  >
-                    {finish}
-                  </button>
-                ))}
+                <div className="flex gap-3 flex-wrap">
+                  {colourVariants.map((variant: any, index: number) => (
+                    <button
+                      key={variant.id || index}
+                      onClick={() => handleVariantClick(index)}
+                      className={cn(
+                        "relative group/variant flex items-center gap-2 px-3 py-2 border rounded-md transition-all duration-200",
+                        selectedVariant === index
+                          ? "border-[#FFBF3F] bg-[#FFBF3F]/10"
+                          : "border-white/10 hover:border-white/30"
+                      )}
+                    >
+                      {variant.image && (
+                        <div className="w-8 h-8 rounded overflow-hidden border border-white/10">
+                          <img
+                            src={variant.image}
+                            alt={variant.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <span
+                        className={cn(
+                          "text-xs font-medium",
+                          selectedVariant === index
+                            ? "text-[#FFBF3F]"
+                            : "text-white/70"
+                        )}
+                      >
+                        {variant.name}
+                      </span>
+
+                      {/* Active indicator */}
+                      {selectedVariant === index && (
+                        <motion.div
+                          layoutId="variant-indicator"
+                          className="absolute -bottom-px left-1/2 -translate-x-1/2 w-6 h-0.5 bg-[#FFBF3F] rounded-full"
+                        />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* FINISH */}
+            {finishFilters.length > 0 && (
+              <div>
+                <p className="text-xs text-white/80 mb-2 uppercase tracking-widest font-bold">
+                  Finish: <span className="text-[#FFBF3F]">{selectedFinish || "Select"}</span>
+                </p>
+
+                <div className="flex gap-2 flex-wrap">
+                  {finishFilters.map((finish: string) => (
+                    <button
+                      key={finish}
+                      onClick={() => setSelectedFinish(finish)}
+                      className={cn(
+                        "px-4 py-2 border text-xs rounded-md transition-all",
+                        selectedFinish === finish
+                          ? "border-yellow-400 text-yellow-400 bg-yellow-400/10"
+                          : "border-white/10 text-white/70 hover:border-white/30"
+                      )}
+                    >
+                      {finish}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* SIZE */}
+            {sizeFilters.length > 0 && (
+              <div>
+                <p className="text-xs text-white/80 mb-2 uppercase tracking-widest font-bold">
+                  Size: <span className="text-[#FFBF3F]">{selectedSize || "Select"}</span>
+                </p>
+
+                <div className="flex gap-2 flex-wrap">
+                  {sizeFilters.map((size: string) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={cn(
+                        "px-4 py-2 border text-xs rounded-md transition-all",
+                        selectedSize === size
+                          ? "border-yellow-400 text-yellow-400 bg-yellow-400/10"
+                          : "border-white/10 text-white/70 hover:border-white/30"
+                      )}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* MATERIAL */}
+            {materialFilters.length > 0 && (
+              <div>
+                <p className="text-xs text-white/80 mb-2 uppercase tracking-widest font-bold">
+                  Material: <span className="text-[#FFBF3F]">{selectedMaterial || "Select"}</span>
+                </p>
+
+                <div className="flex gap-2 flex-wrap">
+                  {materialFilters.map((material: string) => (
+                    <button
+                      key={material}
+                      onClick={() => setSelectedMaterial(material)}
+                      className={cn(
+                        "px-4 py-2 border text-xs rounded-md transition-all",
+                        selectedMaterial === material
+                          ? "border-yellow-400 text-yellow-400 bg-yellow-400/10"
+                          : "border-white/10 text-white/70 hover:border-white/30"
+                      )}
+                    >
+                      {material}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* QUANTITY */}
             <div className="flex items-center gap-4">
@@ -240,7 +372,7 @@ const ProductClient = ({ product, slug }: any) => {
                     name: product.name,
                     price: product.basePrice,
                     oldPrice: product.strikethroughPrice,
-                    image: product.bannerImage,
+                    image: currentHeroImage,
                     sku: product.sku,
                     productId: product.id,
                   });
@@ -262,7 +394,7 @@ const ProductClient = ({ product, slug }: any) => {
                     name: product.name,
                     price: product.basePrice,
                     oldPrice: product.strikethroughPrice,
-                    image: product.bannerImage,
+                    image: currentHeroImage,
                     sku: product.sku,
                     productId: product.id,
                   });

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Plus, X } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -413,6 +413,43 @@ export default function AddProductForm() {
     }
   };
 
+  const handleVariantImage = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const { fileUrl } = await upload(file, "product");
+
+      const updated = [...variantBoxes];
+      updated[index].image = fileUrl;
+      setVariantBoxes(updated);
+      toast.success("Variant image uploaded");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to upload variant image");
+    }
+  };
+
+  const updateVariantBox = (index: number, key: string, value: any) => {
+    const updated = [...variantBoxes];
+    updated[index] = { ...updated[index], [key]: value };
+    setVariantBoxes(updated);
+  };
+
+  const addVariantBox = () => {
+    setVariantBoxes([
+      ...variantBoxes,
+      { name: "", description: "", image: "" },
+    ]);
+  };
+
+  const removeVariantBox = (index: number) => {
+    setVariantBoxes(variantBoxes.filter((_, i) => i !== index));
+  };
+
   const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -690,16 +727,103 @@ export default function AddProductForm() {
               />
             </div>
 
-            {/* <ProductFilters
-              productType={productType}
-              setProductType={setProductType}
-              flowType={flowType}
-              setFlowType={setFlowType}
-              cramps={cramps}
-              setCramps={setCramps}
-              sensitive={sensitive}
-              setSensitive={setSensitive}
-            /> */}
+            {/* Colour Variants Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span className="flex items-center gap-2">Colour Variants</span>
+
+                  <Switch
+                    checked={varientBox}
+                    onCheckedChange={(val) => setVarientBox(val)}
+                  />
+                </CardTitle>
+              </CardHeader>
+
+              {varientBox && (
+                <CardContent className="space-y-4">
+                  {variantBoxes.map((item, index) => (
+                    <div
+                      key={index}
+                      className="border rounded-xl p-4 grid md:grid-cols-6 gap-4 items-center"
+                    >
+                      <div className="col-span-1">
+                        <div
+                          onClick={() => fileRefs.current[index]?.click()}
+                          className="h-20 w-20 border rounded-md overflow-hidden flex items-center justify-center bg-gray-100 cursor-pointer hover:opacity-80"
+                        >
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              className="h-full w-full object-cover"
+                              alt="Variant"
+                            />
+                          ) : (
+                            <span className="text-xs text-gray-400">
+                              Upload
+                            </span>
+                          )}
+                        </div>
+
+                        <input
+                          type="file"
+                          accept="image/*"
+                          hidden
+                          ref={(el: any) => {
+                            fileRefs.current[index] = el;
+                          }}
+                          onChange={(e) => handleVariantImage(e, index)}
+                        />
+                      </div>
+
+                      <div className="col-span-2">
+                        <Input
+                          placeholder="Variant Name (e.g. Chrome, Gold)"
+                          value={item.name}
+                          onChange={(e) =>
+                            updateVariantBox(index, "name", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="col-span-2">
+                        <Input
+                          placeholder="Description (optional)"
+                          value={item.description}
+                          onChange={(e) =>
+                            updateVariantBox(
+                              index,
+                              "description",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div className="col-span-1 flex justify-end">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => removeVariantBox(index)}
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addVariantBox}
+                  >
+                    <Plus size={16} className="mr-2" />
+                    Add Variant
+                  </Button>
+                </CardContent>
+              )}
+            </Card>
 
             <GallerySection
               gallery={variants.gallery}

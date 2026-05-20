@@ -93,9 +93,9 @@ export {
   sendNewsletterEmail,
   sendUserExperienceEmail,
   sendShippingConfirmationEmail,
-  sendrefillReminderEmail,
+  // sendrefillReminderEmail,
   sendDeliveryConfirmationEmail,
-  sendCartAbandonmentEmail,
+  // sendCartAbandonmentEmail,
   sendWelcomeEmail
 } from "./emailTemplates/action";
 

@@ -48,6 +48,8 @@ export async function POST(request: Request) {
       coupon: {
         couponCode: coupon.couponCode,
         discountValue: coupon.discountValue,
+        upto: coupon.upto,
+        minimumOrder: coupon.minimumOrder,
         title: coupon.title,
       },
     });

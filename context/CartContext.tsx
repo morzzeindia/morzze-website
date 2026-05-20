@@ -19,9 +19,11 @@ export type CartItem = {
 
 export type AppliedCoupon = {
   code: string;
-  discountValue: string; // e.g. "10%" or "500"
+  discountValue: string; // e.g. "10" or "500" (always percentage from admin)
   title?: string;
   discountPercent?: number; // parsed % if applicable
+  upto?: string | null;        // max discount cap e.g. "₹1000"
+  minimumOrder?: string | null; // min order value e.g. "₹15000"
 };
 
 type CartContextType = {
