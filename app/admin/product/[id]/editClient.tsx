@@ -704,7 +704,7 @@ pdfDocuments:
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader>Brand Name</CardHeader>
               <CardContent>
                 <RadioGroup
@@ -725,7 +725,7 @@ pdfDocuments:
                   </div>
                 </RadioGroup>
               </CardContent>
-            </Card>
+            </Card> */}
 
             <ProductFilters
               productType={productType}

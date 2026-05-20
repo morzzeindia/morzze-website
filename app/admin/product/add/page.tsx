@@ -571,12 +571,12 @@ export default function AddProductForm() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">
-                  Product Specifications
+                  Finish (Multi-select)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-3">
-                  <Label>Select Finish (Multi-select)</Label>
+                  {/* <Label>Select Finish (Multi-select)</Label> */}
                   <div className="flex flex-wrap gap-2">
                     {["chrome", "Brushed Gold", "Matte Black", "Rose Gold"].map(
                       (s) => {
@@ -627,7 +627,7 @@ export default function AddProductForm() {
               </CardContent>
             </Card>
 
-            <Card>
+          {/*  <Card>
               <CardHeader>Brand Name</CardHeader>
               <CardContent>
                 <RadioGroup
@@ -648,7 +648,7 @@ export default function AddProductForm() {
                   </div>
                 </RadioGroup>
               </CardContent>
-            </Card>
+            </Card>*/}
 
             {/* filter section */}
             <ProductFilters
