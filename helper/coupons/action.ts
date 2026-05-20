@@ -20,10 +20,7 @@ export async function getCoupons() {
 
 export async function getCouponById(id: string) {
   try {
-    const data = await db
-      .select()
-      .from(coupons)
-      .where(eq(coupons.id, id));
+    const data = await db.select().from(coupons).where(eq(coupons.id, id));
 
     return data[0] || null;
   } catch (error) {
@@ -39,6 +36,7 @@ export async function createCoupon(formData: FormData) {
     const description = formData.get("description") as string;
     const couponCode = formData.get("couponCode") as string;
     const discountValue = formData.get("discountValue") as string;
+    const upto = formData.get("upto") as string;
     const minimumOrder = formData.get("minimumOrder") as string;
     const validUntil = formData.get("validUntil") as string;
     const termsPdf = formData.get("termsPdf") as string;
@@ -50,6 +48,7 @@ export async function createCoupon(formData: FormData) {
       description,
       couponCode,
       discountValue,
+      upto: upto || null,
       minimumOrder,
       validUntil: validUntil ? new Date(validUntil) : null,
       termsPdf,
@@ -77,6 +76,7 @@ export async function updateCoupon(id: string, formData: FormData) {
     const description = formData.get("description") as string;
     const couponCode = formData.get("couponCode") as string;
     const discountValue = formData.get("discountValue") as string;
+    const upto = formData.get("upto") as string;
     const minimumOrder = formData.get("minimumOrder") as string;
     const validUntil = formData.get("validUntil") as string;
     const termsPdf = formData.get("termsPdf") as string;
@@ -90,6 +90,7 @@ export async function updateCoupon(id: string, formData: FormData) {
         description,
         couponCode,
         discountValue,
+        upto: upto || null,
         minimumOrder,
         validUntil: validUntil ? new Date(validUntil) : null,
         termsPdf,
@@ -101,15 +102,15 @@ export async function updateCoupon(id: string, formData: FormData) {
       success: true,
       message: "Coupon updated successfully",
     };
-    } catch (error) {
-      console.error("Error creating coupon:", error);
+  } catch (error) {
+    console.error("Error updating coupon:", error);
 
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Failed to create coupon",
-      };
-    }
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to update coupon",
+    };
+  }
 }
 
 export async function deleteCoupon(id: string) {

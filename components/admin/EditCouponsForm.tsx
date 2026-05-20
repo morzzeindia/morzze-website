@@ -28,6 +28,7 @@ export default function EditCouponsForm({ initialData }: { initialData: any }) {
     description: initialData.description || "",
     couponCode: initialData.couponCode || "",
     discountValue: initialData.discountValue || "",
+    upto: initialData.upto || "",
     minimumOrder: initialData.minimumOrder || "",
     validUntil: initialData.validUntil
       ? new Date(initialData.validUntil).toISOString().split("T")[0]
@@ -35,6 +36,15 @@ export default function EditCouponsForm({ initialData }: { initialData: any }) {
     termsPdf: initialData.termsPdf || "",
     isActive: initialData.isActive ?? true,
   });
+
+  const handleUptoChange = (value: string) => {
+    const numberOnly = value.replace(/[^0-9,]/g, "");
+
+    setFormData({
+      ...formData,
+      upto: numberOnly ? `₹${numberOnly}` : "",
+    });
+  };
 
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -78,6 +88,7 @@ export default function EditCouponsForm({ initialData }: { initialData: any }) {
     data.append("description", formData.description);
     data.append("couponCode", formData.couponCode);
     data.append("discountValue", formData.discountValue);
+    data.append("upto", formData.upto);
     data.append("minimumOrder", formData.minimumOrder);
     data.append("validUntil", formData.validUntil);
     data.append("termsPdf", formData.termsPdf);
@@ -167,7 +178,7 @@ export default function EditCouponsForm({ initialData }: { initialData: any }) {
               onChange={(e) =>
                 setFormData({ ...formData, discountValue: e.target.value })
               }
-              placeholder="25% OFF"
+              placeholder="25"
               required
             />
           </div>
@@ -178,6 +189,17 @@ export default function EditCouponsForm({ initialData }: { initialData: any }) {
             <IconFileText className="w-5 h-5 text-teal-600" />
             Validity & Terms
           </h3>
+
+          <div>
+            <label className="text-sm font-semibold text-gray-700">
+              Maximum Discount Upto
+            </label>
+            <Input
+              value={formData.upto}
+              onChange={(e) => handleUptoChange(e.target.value)}
+              placeholder="₹1,000"
+            />
+          </div>
 
           <div>
             <label className="text-sm font-semibold text-gray-700">
