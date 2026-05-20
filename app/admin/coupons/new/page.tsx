@@ -21,6 +21,7 @@ export default function CouponForm() {
     description: "",
     couponCode: "",
     discountValue: "",
+    upto: "₹",
     minimumOrder: "₹",
     validUntil: "",
     termsPdf: "",
@@ -33,6 +34,15 @@ export default function CouponForm() {
     setFormData({
       ...formData,
       discountValue: numberOnly ? `${numberOnly}` : "",
+    });
+  };
+
+  const handleUptoChange = (value: string) => {
+    const numberOnly = value.replace(/[^0-9,]/g, "");
+
+    setFormData({
+      ...formData,
+      upto: numberOnly ? `₹${numberOnly}` : "₹",
     });
   };
 
@@ -87,6 +97,7 @@ export default function CouponForm() {
     data.append("description", formData.description);
     data.append("couponCode", formData.couponCode);
     data.append("discountValue", formData.discountValue);
+    data.append("upto", formData.upto === "₹" ? "" : formData.upto);
     data.append("minimumOrder", formData.minimumOrder);
     data.append("validUntil", formData.validUntil);
     data.append("termsPdf", formData.termsPdf);
@@ -179,6 +190,15 @@ export default function CouponForm() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
+              <Label className="font-medium">Maximum Discount Upto</Label>
+              <Input
+                placeholder="₹1,000"
+                value={formData.upto}
+                onChange={(e) => handleUptoChange(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label className="font-medium">Minimum Order</Label>
               <Input
                 placeholder="₹15,000"
@@ -186,17 +206,17 @@ export default function CouponForm() {
                 onChange={(e) => handleMinimumOrderChange(e.target.value)}
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label className="font-medium">Valid Until</Label>
-              <Input
-                type="date"
-                value={formData.validUntil}
-                onChange={(e) =>
-                  setFormData({ ...formData, validUntil: e.target.value })
-                }
-              />
-            </div>
+          <div className="space-y-2">
+            <Label className="font-medium">Valid Until</Label>
+            <Input
+              type="date"
+              value={formData.validUntil}
+              onChange={(e) =>
+                setFormData({ ...formData, validUntil: e.target.value })
+              }
+            />
           </div>
 
           <div className="space-y-2">

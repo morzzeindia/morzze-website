@@ -47,18 +47,20 @@ async function Page() {
               className="bg-white p-4 rounded-lg border shadow-sm flex justify-between items-center hover:shadow-md transition"
             >
               <div>
-                <h3 className="font-semibold text-lg">
-                  {coupon.title}
-                </h3>
+                <h3 className="font-semibold text-lg">{coupon.title}</h3>
 
-                <p className="text-sm text-gray-500">
-                  {coupon.category}
-                </p>
+                <p className="text-sm text-gray-500">{coupon.category}</p>
 
-                <div className="flex gap-3 mt-1">
+                <div className="flex gap-3 mt-1 flex-wrap">
                   <span className="text-sm text-green-600 font-medium">
-                    {coupon.discountValue}
+                    {coupon.discountValue}% OFF
                   </span>
+
+                  {coupon.upto && (
+                    <span className="text-sm text-blue-600 font-medium">
+                      Upto {coupon.upto}
+                    </span>
+                  )}
 
                   <span className="text-sm text-gray-400">
                     {coupon.couponCode}
@@ -82,9 +84,7 @@ async function Page() {
                   </Button>
                 </Link>
 
-                <DeleteCouponButton
-                  action={deleteAction.bind(null, coupon.id)}
-                />
+                <DeleteCouponButton action={deleteAction.bind(null, coupon.id)} />
               </div>
             </div>
           ))

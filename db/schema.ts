@@ -117,6 +117,7 @@ export const coupons = pgTable("coupons", {
   description: text("description").notNull(),
   couponCode: varchar("coupon_code", { length: 100 }).notNull(),
   discountValue: varchar("discount_value", { length: 50 }).notNull(),
+  upto: varchar("upto", { length: 100 }),
   minimumOrder: varchar("minimum_order", { length: 100 }),
   validUntil: timestamp("valid_until"),
   termsPdf: text("terms_pdf"),
