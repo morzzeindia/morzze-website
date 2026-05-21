@@ -15,6 +15,11 @@ import {
   productVarientBox,
   productFilter,
   productFaq,
+  review,
+  reviewMedia,
+  cartItem,
+  wishlistItem,
+  orderItem,
 } from "@/db/schema";
 import { bestSellingSlug, isUUID } from "@/const/globalconst";
 
@@ -696,23 +701,56 @@ export async function getProductSimilarProducts(slug: string | any) {
 export async function deleteProduct(id: string) {
   try {
     await db.transaction(async (tx) => {
-      const variants = await tx
-        .select({ id: product.id })
-        .from(product)
-        .where(eq(product.id, id));
-
-      for (const v of variants) {
-        // await tx
-        //   .delete(productSubscriptionPlan)
-        //   .where(eq(productSubscriptionPlan.productId, v.id));
-        await tx.delete(productMedia).where(eq(productMedia.productId, v.id));
+      // 1. Delete review media for reviews on this product
+      const productReviews = await tx
+        .select({ id: review.id })
+        .from(review)
+        .where(eq(review.productId, id));
+      if (productReviews.length) {
         await tx
-          .delete(productAttribute)
-          .where(eq(productAttribute.productId, v.id));
+          .delete(reviewMedia)
+          .where(
+            inArray(
+              reviewMedia.reviewId,
+              productReviews.map((r) => r.id),
+            ),
+          );
       }
 
-      await tx.delete(product).where(eq(product.id, id));
+      // 2. Delete reviews
+      await tx.delete(review).where(eq(review.productId, id));
+
+      // 3. Delete cart items referencing this product
+      await tx.delete(cartItem).where(eq(cartItem.productId, id));
+
+      // 4. Delete wishlist items referencing this product
+      await tx.delete(wishlistItem).where(eq(wishlistItem.productId, id));
+
+      // 5. Delete product media
+      await tx.delete(productMedia).where(eq(productMedia.productId, id));
+
+      // 6. Delete product attributes
+      await tx.delete(productAttribute).where(eq(productAttribute.productId, id));
+
+      // 7. Delete product filters
+      await tx.delete(productFilter).where(eq(productFilter.productId, id));
+
+      // 8. Delete product variant boxes
+      await tx.delete(productVarientBox).where(eq(productVarientBox.productId, id));
+
+      // 9. Delete product FAQs (has onDelete cascade but being explicit)
+      await tx.delete(productFaq).where(eq(productFaq.productId, id));
+
+      // 10. Delete product-category links
       await tx.delete(productCategory).where(eq(productCategory.productId, id));
+
+      // 11. Nullify orderItem references (preserve order history)
+      await tx
+        .update(orderItem)
+        .set({ productId: null })
+        .where(eq(orderItem.productId, id));
+
+      // 12. Finally delete the product itself
       await tx.delete(product).where(eq(product.id, id));
     });
 
