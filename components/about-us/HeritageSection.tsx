@@ -55,7 +55,7 @@ const HeritageSection = () => {
                 Morzze began with a simple belief: that everyday objects deserve
                 extraordinary attention. Founded in 2008 in the heart of New
                 Delhi, we set out to redefine what premium kitchen and bathroom
-                fittings could be
+                fittings could be.
               </p>
               <p>
                 Our journey started in a small workshop, where our founders
@@ -68,7 +68,7 @@ const HeritageSection = () => {
                 Every Morzze product undergoes rigorous testing and quality
                 control. We use only the finest materials—solid brass, 304-grade
                 stainless steel, and premium ceramic cartridges—to ensure
-                lasting performance and timeless beauty
+                lasting performance and timeless beauty .
               </p>
             </motion.div>
           </motion.div>
@@ -81,7 +81,7 @@ const HeritageSection = () => {
               className="relative w-1/2 aspect-4/5 rounded-3xl  overflow-hidden border border-white/10"
             >
               <motion.img
-                src="/heritage1.jpg"
+                src="/haritage1.jpg"
                 alt="Artisan"
                 className="w-full h-full object-cover"
                 whileHover={{ scale: 1.05 }}
@@ -96,7 +96,7 @@ const HeritageSection = () => {
               className="relative w-1/2 aspect-4/5 mt-12 md:mt-24 rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
             >
               <motion.img
-                src="/heritage2.jpg"
+                src="/haritage2.jpg"
                 alt="Product"
                 className="w-full h-full object-cover"
                 whileHover={{ scale: 1.05 }}

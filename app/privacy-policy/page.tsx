@@ -12,10 +12,10 @@ const page = () => {
       {/* Content */}
       <div className="space-y-6 text-sm leading-6 px-6 md:px-20 text-gray-300">
         <p>
-          Welcome to Morzzoo.com, an online platform provided by Anupam Retail
+          Welcome to Morzze.com, an online platform provided by Anupam Retail
           Limited. This Privacy Policy is designed to help you understand how we
           collect, use, disclose, and safeguard your personal information. By
-          using Morzzoo.com, you agree to the terms outlined in this policy.
+          using Morzze.com, you agree to the terms outlined in this policy.
         </p>
 
         {/* Information We Collect */}
@@ -27,7 +27,7 @@ const page = () => {
           <p className="font-medium text-white">1. Personal Information</p>
           <p>
             We may collect the following personal information when you use
-            Morzzoo.com:
+            Morzze.com:
           </p>
           <ul className="list-disc ml-6">
             <li>Name</li>
@@ -40,14 +40,14 @@ const page = () => {
 
           <p className="font-medium text-white mt-4">2. Usage Information</p>
           <p>
-            We collect information about how you interact with Morzzoo.com,
+            We collect information about how you interact with Morzze.com,
             including pages visited, products viewed, and actions taken.
           </p>
 
           <p className="font-medium text-white mt-4">3. Device Information</p>
           <p>
             We may collect information about the device you use to access
-            Morzzoo.com, including the device type, operating system, browser
+            Morzze.com, including the device type, operating system, browser
             type, and IP address.
           </p>
 
@@ -56,7 +56,7 @@ const page = () => {
           </p>
           <p>
             We use cookies and similar tracking technologies to enhance your
-            experience on Morzzoo.com and for analytics purposes. You can
+            experience on Morzze.com and for analytics purposes. You can
             control cookies through your browser settings.
           </p>
         </div>
@@ -67,7 +67,7 @@ const page = () => {
             How We Use Your Information
           </h2>
           <ul className="list-disc ml-6">
-            <li>To provide and maintain Morzzoo.com services</li>
+            <li>To provide and maintain Morzze.com services</li>
             <li>To process and fulfill orders</li>
             <li>
               To communicate with you about orders, products, promotions, and
@@ -88,7 +88,7 @@ const page = () => {
           </p>
           <ul className="list-disc ml-6">
             <li>
-              With service providers who assist us in operating Morzzoo.com and
+              With service providers who assist us in operating Morzze.com and
               providing services
             </li>
             <li>
@@ -109,7 +109,7 @@ const page = () => {
           </h2>
           <p>
             You can access, update, or delete your personal information through
-            your Morzzoo.com account settings. You can opt out of receiving
+            your Morzze.com account settings. You can opt out of receiving
             marketing communications from us by following the unsubscribe
             instructions included in emails.
           </p>
@@ -151,7 +151,7 @@ const page = () => {
           <h2 className="text-lg font-semibold text-white mb-2">Contact Us</h2>
           <p>
             If you have any questions or concerns about this Privacy Policy,
-            please contact us at: info@morzzoo.com
+            please contact us at: info@morzze.com
           </p>
         </div>
 
@@ -160,7 +160,7 @@ const page = () => {
           By using our services, you acknowledge that you have read and
           understood this Privacy Policy and agree to our practices regarding
           your personal information. Please check this Privacy Policy regularly
-          for updates. Your continued use of Morzzoo.com after changes to this
+          for updates. Your continued use of Morzze.com after changes to this
           policy will signify your acceptance of those changes.
         </p>
       </div>

@@ -98,15 +98,15 @@ const BrandHeritage = () => {
               </div>
 
               <div className="flex items-center gap-5 group">
-                <div className="w-[1.5px] h-12 bg-[#CBA14D] transition-all duration-500 group-hover:h-16" />
-                <div className="space-y-1">
+                {/* <div className="w-[1.5px] h-12 bg-[#CBA14D] transition-all duration-500 group-hover:h-16" /> */}
+                {/* <div className="space-y-1">
                   <h4 className="text-4xl md:text-5xl font-semibold text-white leading-none">
                     18
                   </h4>
                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/80">
                     Countries Served
                   </p>
-                </div>
+                </div> */}
               </div>
             </motion.div>
           </motion.div>

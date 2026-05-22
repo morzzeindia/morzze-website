@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 
 const LookbookSection = () => {
   return (
-    <section className="bg-black text-white py-8 md:py-24 px-6 md:px-10 overflow-hidden">
+    <section className="bg-black text-white py-8 md:py-2 px-6 md:px-10 overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-16">
         
         {/* -- HEADER SECTION -- */}

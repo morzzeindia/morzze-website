@@ -7,11 +7,27 @@ import React from 'react'
 
 const page = async () => {
   const categories = await getCategories();
+  const allowedCategoryNames = new Set([
+    "granite sink",
+    "steel sinks",
+    "floor drainer",
+    "food waste disposer",
+    "bathroom faucets",
+    "bathroom faucet",
+    "electric towel warmer",
+    "kitchen accessories",
+    "airtap",
+    "air tap",
+  ]);
+
+  const filteredCategories = categories.filter((cat) =>
+    allowedCategoryNames.has(cat.name.trim().toLowerCase()),
+  );
 
   return (
     <div>
       <CategoryBanner/>
-      <CategorySection categories={categories}/>
+      <CategorySection categories={filteredCategories}/>
       <SimpleCategoryBanner/>
       <ScrollingRibbon/>
     </div>

@@ -8,7 +8,7 @@ const FeaturedInnovation = () => {
   const stats = [
     { value: "100+", label: "Product Range" },
     { value: "35+", label: "Years of Legacy" },
-    { value: "300+", label: "Project Done" }
+    { value: "300+", label: "Projects Done" }
   ];
 
   return (

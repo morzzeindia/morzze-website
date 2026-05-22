@@ -13,7 +13,7 @@ const page = () => {
         {/* Content */}
         <div className="space-y-6 text-sm leading-6 text-gray-300">
           <p>
-            Welcome to Morzzoo.com (the "Website"), owned and operated by Anupam
+            Welcome to Morzze.com (the "Website"), owned and operated by Anupam
             Retail Limited ("Company", "we", "us", or "our"). Please read these
             Terms of Use ("Terms") carefully before using our Website.
           </p>
@@ -143,7 +143,7 @@ const page = () => {
             </h2>
             <p>
               8.1 If you have any questions or concerns about these Terms,
-              please contact us at: info@morzzoo.com
+              please contact us at: info@morzze.com
             </p>
           </div>
 

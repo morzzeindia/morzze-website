@@ -80,7 +80,7 @@ const page = async ({ searchParams }: PageProps) => {
               categories={allCategories}
               materialOptions={filterOptions.materialOptions}
               finishOptions={filterOptions.finishOptions}
-              sizeOptions={filterOptions.sizeOptions}
+              // sizeOptions={filterOptions.sizeOptions}
             />
           </div>
 

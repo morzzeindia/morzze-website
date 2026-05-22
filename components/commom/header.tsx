@@ -291,7 +291,7 @@ const Header = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
-    { name: "Shop All", href: "/category" },
+    { name: "Shop", href: "/category" },
     { name: "Kitchen", href: "/category" },
     { name: "Bathroom", href: "/category" },
     { name: "About", href: "/about" },
@@ -317,6 +317,7 @@ const Header = () => {
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="cursor-pointer"
       >
+       <Link href={"/"}>
         <Image
           src="/logo.png"
           alt="Morzze Logo"
@@ -325,6 +326,7 @@ const Header = () => {
           priority
           className="w-[120px] md:w-[150px]"
         />
+       </Link>
       </div>
 
         {/* -- WEB: Navigation Links -- */}

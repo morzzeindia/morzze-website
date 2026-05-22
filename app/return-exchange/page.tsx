@@ -12,7 +12,7 @@ const page = () => {
       {/* Content */}
       <div className="space-y-6 text-sm leading-6 px-6 md:px-20 text-gray-300">
         <p>
-          Thank you for choosing to shop at Morzzoo.com, the website owned and
+          Thank you for choosing to shop at Morzze.com, the website owned and
           operated by Anupam Retail Limited. We are dedicated to providing you
           with a delightful shopping experience. To ensure clarity and
           transparency, we have outlined our Return and Exchange Policy below.
@@ -38,7 +38,7 @@ const page = () => {
               The product must be in its original condition, unopened, unused,
               and in its original packaging.
             </li>
-            <li>The product is purchased from Morzzoo.com only.</li>
+            <li>The product is purchased from Morzze.com only.</li>
             <li>
               The return or exchange request must be initiated within 3 days of
               receiving the product.
@@ -74,7 +74,7 @@ const page = () => {
             these steps:
           </p>
           <p>
-            Contact our customer support team at info@morzzoo.com or call us at
+            Contact our customer support team at info@morzze.com or call us at
             1800 11 0123. Provide details of your purchase, including the order
             number and the reason for your return or exchange request.
           </p>
@@ -151,13 +151,13 @@ const page = () => {
             return and exchange policy, please do not hesitate to contact us at:
           </p>
           <p className="mt-2">Anupam Retail Limited</p>
-          <p>Email: info@morzzoo.com</p>
+          <p>Email: info@morzze.com</p>
           <p>Helpline: 1800 11 0123</p>
         </div>
 
         {/* Footer Note */}
         <p className="text-xs text-gray-400 pt-4 border-t border-gray-700">
-          By shopping at Morzzoo.com, you acknowledge that you have read and
+          By shopping at Morzze.com, you acknowledge that you have read and
           understood this Return & Exchange Policy and agree to its terms and
           conditions. If you do not agree with any aspect of this policy, please
           refrain from making purchases on our website.
