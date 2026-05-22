@@ -1227,3 +1227,81 @@ export async function getProductFilterOptions() {
     sizeOptions: makeOptions("size"),
   };
 }
+
+export async function getSignatureProducts(limit = 8) {
+  try {
+    const products = await db
+      .select({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        bannerImage: product.bannerImage,
+        basePrice: product.basePrice,
+        strikethroughPrice: product.strikethroughPrice,
+        categoryName: category.name,
+      })
+      .from(product)
+      .innerJoin(productCategory, eq(productCategory.productId, product.id))
+      .innerJoin(category, eq(category.id, productCategory.categoryId))
+      .where(eq(category.slug, "signature-pieces"))
+      .orderBy(desc(product.createdAt))
+      .limit(limit);
+
+    return products;
+  } catch (error) {
+    console.error("getSignatureProducts failed:", error);
+    return [];
+  }
+}
+
+export async function getNewArrivalProducts(limit = 8) {
+  try {
+    const products = await db
+      .select({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        bannerImage: product.bannerImage,
+        basePrice: product.basePrice,
+        strikethroughPrice: product.strikethroughPrice,
+        categoryName: category.name,
+      })
+      .from(product)
+      .innerJoin(productCategory, eq(productCategory.productId, product.id))
+      .innerJoin(category, eq(category.id, productCategory.categoryId))
+      .where(eq(category.slug, "new-arrivals"))
+      .orderBy(desc(product.createdAt))
+      .limit(limit);
+
+    return products;
+  } catch (error) {
+    console.error("getNewArrivalProducts failed:", error);
+    return [];
+  }
+}
+
+export async function getTrendingProducts(limit = 8) {
+  try {
+    const products = await db
+      .select({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        bannerImage: product.bannerImage,
+        basePrice: product.basePrice,
+        strikethroughPrice: product.strikethroughPrice,
+        categoryName: category.name,
+      })
+      .from(product)
+      .innerJoin(productCategory, eq(productCategory.productId, product.id))
+      .innerJoin(category, eq(category.id, productCategory.categoryId))
+      .where(eq(category.slug, "trending-now"))
+      .orderBy(desc(product.createdAt))
+      .limit(limit);
+
+    return products;
+  } catch (error) {
+    console.error("getTrendingProducts failed:", error);
+    return [];
+  }
+}

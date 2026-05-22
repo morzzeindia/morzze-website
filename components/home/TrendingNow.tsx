@@ -3,42 +3,27 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconShoppingBag, IconHeart, IconHeartFilled } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 
-const products = [
-  {
-    category: "KITCHEN FAUCETS",
-    name: "Arc Pull-Down Faucet",
-    price: "₹12,500",
-    image: "/piecedemo1.png",
-  },
-  {
-    category: "GRANITE BASINS",
-    name: "Oval Vessel Basin",
-    price: "₹14,200",
-    image: "/piecedemo2.png",
-  },
-  {
-    category: "STEEL SINKS",
-    name: "Luxe Single Bowl Sink",
-    price: "₹18,900",
-    image: "/piecedemo3.png",
-  },
-  {
-    category: "KITCHEN FAUCETS",
-    name: "AeroMix Tall Faucet",
-    price: "₹11,500",
-    image: "/piecedemo4.png",
-  },
-  {
-    category: "TOWEL WARMERS",
-    name: "Curved Chrome Warmer",
-    price: "₹24,000",
-    image: "/piecedemo5.png",
-  },
-];
+interface TrendingProduct {
+  id: string;
+  name: string | null;
+  slug: string | null;
+  bannerImage: string | null;
+  basePrice: number | null;
+  strikethroughPrice: number | null;
+  categoryName: string | null;
+}
 
-const TrendingNow = () => {
+const TrendingNow = ({ products }: { products: TrendingProduct[] }) => {
+  const { addToCart, getItemQuantity } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+
+  if (!products || products.length === 0) return null;
+
   return (
     <section className="bg-black text-white py-20 overflow-hidden">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-10">
@@ -48,7 +33,7 @@ const TrendingNow = () => {
               TRENDING NOW
             </span>
             <h2 className="font-montserrat text-3xl md:text-5xl font-medium tracking-tight text-white">
-              What's Moving
+              What&apos;s Moving
             </h2>
           </div>
           <div className="hidden md:block absolute right-0 bottom-7">
@@ -63,10 +48,11 @@ const TrendingNow = () => {
             </Link>
           </div>
         </div>
+
         <div className="flex gap-6 overflow-x-auto pb-10 no-scrollbar cursor-grab active:cursor-grabbing snap-x snap-mandatory">
           {products.map((product, index) => (
             <motion.div
-              key={index}
+              key={product.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
@@ -75,26 +61,88 @@ const TrendingNow = () => {
                 delay: index * 0.1,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="min-w-70 md:min-w-87.5 flex-none snap-start group"
+              className="min-w-70 md:min-w-87.5 flex-none snap-start group flex flex-col"
             >
-              <div className="relative aspect-square overflow-hidden mb-6 bg-zinc-900">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                />
+              {/* Image + Buttons */}
+              <div className="relative aspect-[4/5] bg-[#111] overflow-hidden mb-4">
+                <Link href={`/products/${product.slug}`}>
+                  <Image
+                    src={product.bannerImage || "/placeholder.png"}
+                    alt={product.name || "Product"}
+                    fill
+                    className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+                  />
+                </Link>
+
+                {/* Add to Cart + Wishlist overlay */}
+                <div className="absolute inset-x-0 bottom-0 z-30 translate-y-0 md:translate-y-full p-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      disabled={getItemQuantity(product.slug || "") > 0}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart(product.slug || "", 1, {
+                          name: product.name ?? undefined,
+                          price: product.basePrice ?? undefined,
+                          oldPrice: product.strikethroughPrice ?? undefined,
+                          image: product.bannerImage ?? undefined,
+                          productId: product.id,
+                        });
+                      }}
+                      className="flex-1 bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
+                    >
+                      {getItemQuantity(product.slug || "") > 0 ? (
+                        <><IconShoppingBag size={18} /> In Cart ✓</>
+                      ) : (
+                        <><IconShoppingBag size={18} /> Add to cart</>
+                      )}
+                    </Button>
+
+                    <Button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleWishlist(product.slug || "", product.id);
+                      }}
+                      className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
+                        isInWishlist(product.slug || "")
+                          ? "bg-[#FFBF3F] hover:bg-white"
+                          : "bg-[#FFBF3F] cursor-pointer"
+                      }`}
+                    >
+                      {isInWishlist(product.slug || "") ? (
+                        <IconHeartFilled size={20} className="text-red-500" />
+                      ) : (
+                        <IconHeart size={20} className="text-white hover:text-black" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <p className="font-montserrat text-[10px] font-bold text-[#928E8780] uppercase tracking-widest">
-                  {product.category}
+
+              {/* Product Info */}
+              <div className="space-y-1.5 px-1 md:px-0">
+                <p className="text-[10px] text-white/80 tracking-[0.1em] font-montserrat uppercase">
+                  {product.categoryName}
                 </p>
-                <h3 className="font-inter text-base md:text-md font-medium text-white/90">
-                  {product.name}
-                </h3>
-                <p className="font-montserrat text-sm font-bold text-[#CBA14D]">
-                  {product.price}
-                </p>
+
+                <Link href={`/products/${product.slug}`}>
+                  <h3 className="text-sm md:text-[15px] font-inter text-[#EDEBE9] group-hover:text-[#FFBF3F] transition-colors line-clamp-1 cursor-pointer">
+                    {product.name}
+                  </h3>
+                </Link>
+
+                <div className="flex items-center gap-3 mt-2">
+                  <span className="font-bold text-white font-inter text-sm md:text-base">
+                    ₹{product.basePrice?.toLocaleString("en-IN")}
+                  </span>
+                  {/* {product.strikethroughPrice && product.strikethroughPrice > (product.basePrice || 0) && (
+                    <span className="text-[11px] md:text-sm text-[#555] line-through">
+                      ₹{product.strikethroughPrice.toLocaleString("en-IN")}
+                    </span>
+                  )} */}
+                </div>
               </div>
             </motion.div>
           ))}

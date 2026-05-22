@@ -19,25 +19,29 @@ import TrendingNow from '@/components/home/TrendingNow'
 import TrustSection from '@/components/home/TrustSection'
 import WhereWaterMeet from '@/components/home/WhereWaterMeet'
 import { getCategories, getCategoriesWithProducts } from '@/helper/category/action'
+import { getSignatureProducts, getNewArrivalProducts, getTrendingProducts } from '@/helper/product/action'
 import React from 'react'
 
 const page = async () => {
   const categories = await getCategories();
   const categoriesWithProducts = await getCategoriesWithProducts(4);
+  const signatureProducts = await getSignatureProducts(8);
+  const newArrivalProducts = await getNewArrivalProducts(8);
+  const trendingProducts = await getTrendingProducts(8);
 
   return (
     <main>
      
       <HeroSection/>
       <TheStory/>
-      <SignaturePieces/>
+      <SignaturePieces products={signatureProducts}/>
       <ShopCategory categories={categories}/>
       <TheARTSection/>
       <TrustSection/>
       <WhereWaterMeet/>
       <CategoryShowcase categories={categoriesWithProducts}/>
-      <TrendingNow/>
-      <JustArrived/>
+      <TrendingNow products={trendingProducts}/>
+      <JustArrived products={newArrivalProducts}/>
       <Craftsmanship/>
       <TouchlessInnovation/>
       <NaturalElegance/>

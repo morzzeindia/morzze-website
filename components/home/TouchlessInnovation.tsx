@@ -115,7 +115,7 @@ const TouchlessInnovation = () => {
               transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1], delay: 1 }}
               className="pt-6"
             >
-              <Link href={"/products"}>
+              <Link href={"products/airtap"}>
               <Button
                 variant="outline"
                 className="rounded-md border-[#CBA14D] text-[#CBA14D] hover:bg-[#CBA14D] hover:text-black font-bold uppercase tracking-widest px-10 h-14 transition-all duration-700 bg-transparent"
