@@ -3,7 +3,7 @@ import CategorySection from '@/components/category/CategorySection'
 import ScrollingRibbon from '@/components/category/ScrollingRibbon'
 import SimpleCategoryBanner from '@/components/category/SimpleCategoryBanner'
 import { getCategories } from '@/helper/category/action'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const page = async () => {
   const categories = await getCategories();
@@ -26,10 +26,12 @@ const page = async () => {
 
   return (
     <div>
-      <CategoryBanner/>
-      <CategorySection categories={filteredCategories}/>
-      <SimpleCategoryBanner/>
-      <ScrollingRibbon/>
+      <CategoryBanner />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CategorySection categories={filteredCategories} />
+      </Suspense>
+      <SimpleCategoryBanner />
+      <ScrollingRibbon />
     </div>
   )
 }

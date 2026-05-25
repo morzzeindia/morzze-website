@@ -291,15 +291,10 @@ const Header = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
-<<<<<<< Updated upstream
     { name: "Shop", href: "/category" },
-    { name: "Kitchen", href: "/category" },
-    { name: "Bathroom", href: "/category" },
-=======
-    { name: "Shop All", href: "/category" },
+    { name: "Shop", href: "/category" },
     { name: "Kitchen", href: "/category?type=kitchen" },
     { name: "Bathroom", href: "/category?type=bathroom" },
->>>>>>> Stashed changes
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -319,23 +314,21 @@ const Header = () => {
         </div>
 
         {/* -- Logo -- */}
-<<<<<<< Updated upstream
-      <div
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="cursor-pointer"
-      >
-       <Link href={"/"}>
-        <Image
-          src="/logo.png"
-          alt="Morzze Logo"
-          width={150}
-          height={50}
-          priority
-          className="w-[120px] md:w-[150px]"
-        />
-       </Link>
-      </div>
-=======
+        <div
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="cursor-pointer"
+        >
+          <Link href={"/"}>
+            <Image
+              src="/logo.png"
+              alt="Morzze Logo"
+              width={150}
+              height={50}
+              priority
+              className="w-[120px] md:w-[150px]"
+            />
+          </Link>
+        </div>
         <div
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="cursor-pointer"
@@ -349,7 +342,6 @@ const Header = () => {
             className="w-[120px] md:w-[150px]"
           />
         </div>
->>>>>>> Stashed changes
 
         {/* -- WEB: Navigation Links -- */}
         <div className="hidden lg:flex items-center ml-15">
@@ -474,222 +466,226 @@ const Header = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav >
 
       {/* -- MOBILE: Slide-down Search Bar with results -- */}
       <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            key="mobile-search"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden border-b border-zinc-900 bg-black"
-          >
-            <div className="px-5 py-3">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-zinc-500">
-                  <IconSearch size={16} stroke={1.5} />
-                </div>
-                <input
-                  ref={mobileInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  placeholder="Search products…"
-                  className="w-full bg-[#141414] border border-zinc-800 text-[13px] font-inter rounded-md pl-9 pr-10 py-2.5 focus:outline-none focus:border-[#B88E2F]/50 transition-all placeholder:text-zinc-600 text-white"
-                />
-                <button
-                  onClick={() => {
-                    clearSearch();
-                    handleMobileSearchToggle();
-                  }}
-                  className="absolute inset-y-0 right-3 flex items-center text-zinc-500 hover:text-[#B88E2F] transition-colors"
-                >
-                  <IconX size={16} stroke={1.5} />
-                </button>
-              </div>
-
-              {/* Mobile search results (inline, not dropdown) */}
-              <AnimatePresence>
-                {searchQuery.trim().length >= 2 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="mt-2 bg-[#111] border border-zinc-800 rounded-lg max-h-[60vh] overflow-y-auto custom-scrollbar"
+        {
+          isSearchOpen && (
+            <motion.div
+              key="mobile-search"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="lg:hidden overflow-hidden border-b border-zinc-900 bg-black"
+            >
+              <div className="px-5 py-3">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-zinc-500">
+                    <IconSearch size={16} stroke={1.5} />
+                  </div>
+                  <input
+                    ref={mobileInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    placeholder="Search products…"
+                    className="w-full bg-[#141414] border border-zinc-800 text-[13px] font-inter rounded-md pl-9 pr-10 py-2.5 focus:outline-none focus:border-[#B88E2F]/50 transition-all placeholder:text-zinc-600 text-white"
+                  />
+                  <button
+                    onClick={() => {
+                      clearSearch();
+                      handleMobileSearchToggle();
+                    }}
+                    className="absolute inset-y-0 right-3 flex items-center text-zinc-500 hover:text-[#B88E2F] transition-colors"
                   >
-                    {isSearching ? (
-                      <div className="flex items-center justify-center py-6 gap-2 text-zinc-500 text-sm">
-                        <IconLoader2 size={18} className="animate-spin" />
-                        Searching…
-                      </div>
-                    ) : searchProducts.length === 0 && searchCategories.length === 0 ? (
-                      <div className="py-6 text-center text-zinc-500 text-sm font-inter">
-                        No results for &quot;{searchQuery}&quot;
-                      </div>
-                    ) : (
-                      <>
-                        {/* Categories */}
-                        {searchCategories.length > 0 && (
-                          <div className="px-3 pt-3 pb-1">
-                            <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-2 font-montserrat">
-                              Categories
-                            </p>
-                            {searchCategories.map((cat) => (
-                              <Link
-                                key={cat.id}
-                                href={`/category`}
-                                onClick={handleResultNavigate}
-                                className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-zinc-800/60 transition-colors group"
-                              >
-                                {cat.bannerImage ? (
-                                  <div className="w-8 h-8 rounded bg-zinc-900 overflow-hidden shrink-0">
-                                    <img src={cat.bannerImage} alt={cat.name} className="w-full h-full object-cover" />
-                                  </div>
-                                ) : (
-                                  <div className="w-8 h-8 rounded bg-zinc-900 shrink-0 flex items-center justify-center text-zinc-700 text-xs font-bold">
-                                    {cat.name.charAt(0)}
-                                  </div>
-                                )}
-                                <span className="text-sm text-zinc-300 group-hover:text-[#FFBF3F] transition-colors font-inter">
-                                  {cat.name}
-                                </span>
-                                <IconArrowRight size={14} className="ml-auto text-zinc-700 group-hover:text-[#FFBF3F] transition-colors" />
-                              </Link>
-                            ))}
-                          </div>
-                        )}
+                    <IconX size={16} stroke={1.5} />
+                  </button>
+                </div>
 
-                        {searchCategories.length > 0 && searchProducts.length > 0 && (
-                          <div className="mx-3 border-t border-zinc-800/60" />
-                        )}
+                {/* Mobile search results (inline, not dropdown) */}
+                <AnimatePresence>
+                  {searchQuery.trim().length >= 2 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="mt-2 bg-[#111] border border-zinc-800 rounded-lg max-h-[60vh] overflow-y-auto custom-scrollbar"
+                    >
+                      {isSearching ? (
+                        <div className="flex items-center justify-center py-6 gap-2 text-zinc-500 text-sm">
+                          <IconLoader2 size={18} className="animate-spin" />
+                          Searching…
+                        </div>
+                      ) : searchProducts.length === 0 && searchCategories.length === 0 ? (
+                        <div className="py-6 text-center text-zinc-500 text-sm font-inter">
+                          No results for &quot;{searchQuery}&quot;
+                        </div>
+                      ) : (
+                        <>
+                          {/* Categories */}
+                          {searchCategories.length > 0 && (
+                            <div className="px-3 pt-3 pb-1">
+                              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-2 font-montserrat">
+                                Categories
+                              </p>
+                              {searchCategories.map((cat) => (
+                                <Link
+                                  key={cat.id}
+                                  href={`/category`}
+                                  onClick={handleResultNavigate}
+                                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-zinc-800/60 transition-colors group"
+                                >
+                                  {cat.bannerImage ? (
+                                    <div className="w-8 h-8 rounded bg-zinc-900 overflow-hidden shrink-0">
+                                      <img src={cat.bannerImage} alt={cat.name} className="w-full h-full object-cover" />
+                                    </div>
+                                  ) : (
+                                    <div className="w-8 h-8 rounded bg-zinc-900 shrink-0 flex items-center justify-center text-zinc-700 text-xs font-bold">
+                                      {cat.name.charAt(0)}
+                                    </div>
+                                  )}
+                                  <span className="text-sm text-zinc-300 group-hover:text-[#FFBF3F] transition-colors font-inter">
+                                    {cat.name}
+                                  </span>
+                                  <IconArrowRight size={14} className="ml-auto text-zinc-700 group-hover:text-[#FFBF3F] transition-colors" />
+                                </Link>
+                              ))}
+                            </div>
+                          )}
 
-                        {/* Products */}
-                        {searchProducts.length > 0 && (
-                          <div className="px-3 pt-3 pb-2">
-                            <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-2 font-montserrat">
-                              Products
-                            </p>
-                            {searchProducts.map((p) => (
-                              <Link
-                                key={p.id}
-                                href={`/products/${p.slug}`}
-                                onClick={handleResultNavigate}
-                                className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-zinc-800/60 transition-colors group"
-                              >
-                                {p.bannerImage ? (
-                                  <div className="w-10 h-10 rounded bg-zinc-900 overflow-hidden shrink-0">
-                                    <img src={p.bannerImage} alt={p.name ?? "Product"} className="w-full h-full object-cover" />
-                                  </div>
-                                ) : (
-                                  <div className="w-10 h-10 rounded bg-zinc-900 shrink-0 flex items-center justify-center text-zinc-700">
-                                    <IconShoppingBag size={16} />
-                                  </div>
-                                )}
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm text-zinc-300 group-hover:text-[#FFBF3F] transition-colors font-inter truncate">
-                                    {p.name ?? p.slug}
-                                  </p>
-                                  <div className="flex items-center gap-2 mt-0.5">
-                                    {p.basePrice != null && (
-                                      <span className="text-xs text-white font-semibold font-inter">
-                                        ₹{p.basePrice.toLocaleString("en-IN")}
-                                      </span>
-                                    )}
-                                    {p.strikethroughPrice != null && (
-                                      <span className="text-[11px] text-zinc-600 line-through font-inter">
-                                        ₹{p.strikethroughPrice.toLocaleString("en-IN")}
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                                <IconArrowRight size={14} className="text-zinc-700 group-hover:text-[#FFBF3F] transition-colors shrink-0" />
-                              </Link>
-                            ))}
-                          </div>
-                        )}
+                          {searchCategories.length > 0 && searchProducts.length > 0 && (
+                            <div className="mx-3 border-t border-zinc-800/60" />
+                          )}
 
-                        {/* View all */}
-                        <Link
-                          href={`/products?q=${encodeURIComponent(searchQuery)}`}
-                          onClick={handleResultNavigate}
-                          className="flex items-center justify-center gap-1.5 py-3 border-t border-zinc-800/60 text-xs text-[#FFBF3F] font-semibold font-montserrat uppercase tracking-widest hover:bg-zinc-800/30 transition-colors"
-                        >
-                          View all results
-                          <IconArrowRight size={13} />
-                        </Link>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                          {/* Products */}
+                          {searchProducts.length > 0 && (
+                            <div className="px-3 pt-3 pb-2">
+                              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-2 font-montserrat">
+                                Products
+                              </p>
+                              {searchProducts.map((p) => (
+                                <Link
+                                  key={p.id}
+                                  href={`/products/${p.slug}`}
+                                  onClick={handleResultNavigate}
+                                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-zinc-800/60 transition-colors group"
+                                >
+                                  {p.bannerImage ? (
+                                    <div className="w-10 h-10 rounded bg-zinc-900 overflow-hidden shrink-0">
+                                      <img src={p.bannerImage} alt={p.name ?? "Product"} className="w-full h-full object-cover" />
+                                    </div>
+                                  ) : (
+                                    <div className="w-10 h-10 rounded bg-zinc-900 shrink-0 flex items-center justify-center text-zinc-700">
+                                      <IconShoppingBag size={16} />
+                                    </div>
+                                  )}
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm text-zinc-300 group-hover:text-[#FFBF3F] transition-colors font-inter truncate">
+                                      {p.name ?? p.slug}
+                                    </p>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                      {p.basePrice != null && (
+                                        <span className="text-xs text-white font-semibold font-inter">
+                                          ₹{p.basePrice.toLocaleString("en-IN")}
+                                        </span>
+                                      )}
+                                      {p.strikethroughPrice != null && (
+                                        <span className="text-[11px] text-zinc-600 line-through font-inter">
+                                          ₹{p.strikethroughPrice.toLocaleString("en-IN")}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <IconArrowRight size={14} className="text-zinc-700 group-hover:text-[#FFBF3F] transition-colors shrink-0" />
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* View all */}
+                          <Link
+                            href={`/products?q=${encodeURIComponent(searchQuery)}`}
+                            onClick={handleResultNavigate}
+                            className="flex items-center justify-center gap-1.5 py-3 border-t border-zinc-800/60 text-xs text-[#FFBF3F] font-semibold font-montserrat uppercase tracking-widest hover:bg-zinc-800/30 transition-colors"
+                          >
+                            View all results
+                            <IconArrowRight size={13} />
+                          </Link>
+                        </>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )
+        }
+      </AnimatePresence >
 
       {/* -- MOBILE: SIDEBAR OVERLAY -- */}
       <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-black z-[100] lg:hidden flex flex-col"
-          >
-            {/* Mobile Menu Header */}
-            <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-900">
-              <Image src="/logo.png" alt="Morzze" width={110} height={35} />
-              <button onClick={() => setIsMenuOpen(false)} className="text-white">
-                <IconX size={28} />
-              </button>
-            </div>
+        {
+          isMenuOpen && (
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-0 bg-black z-[100] lg:hidden flex flex-col"
+            >
+              {/* Mobile Menu Header */}
+              <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-900">
+                <Image src="/logo.png" alt="Morzze" width={110} height={35} />
+                <button onClick={() => setIsMenuOpen(false)} className="text-white">
+                  <IconX size={28} />
+                </button>
+              </div>
 
-            {/* Mobile Nav Links */}
-            <div className="flex flex-col p-8 space-y-8 font-montserrat">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-2xl font-light text-zinc-300 hover:text-[#B88E2F] flex justify-between items-center group"
+              {/* Mobile Nav Links */}
+              <div className="flex flex-col p-8 space-y-8 font-montserrat">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
                   >
-                    {link.name}
-                    <span className="h-[1px] w-0 bg-[#B88E2F] group-hover:w-10 transition-all duration-300"></span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="text-2xl font-light text-zinc-300 hover:text-[#B88E2F] flex justify-between items-center group"
+                    >
+                      {link.name}
+                      <span className="h-[1px] w-0 bg-[#B88E2F] group-hover:w-10 transition-all duration-300"></span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
 
-            {/* Bottom Actions for Mobile */}
-            <div className="mt-auto p-8 border-t border-zinc-900 bg-zinc-950 flex justify-around">
-              <Link href="/dashboard/wishlist" onClick={() => setIsMenuOpen(false)}>
-                <IconHeart size={24} className="text-zinc-400 hover:text-[#B88E2F] transition-colors" />
-              </Link>
-              <Link href="/dashboard/profile" onClick={() => setIsMenuOpen(false)}>
-                <IconUser size={24} className="text-zinc-400 hover:text-[#B88E2F] transition-colors" />
-              </Link>
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setTimeout(() => handleMobileSearchToggle(), 300);
-                }}
-              >
-                <IconSearch size={24} className="text-zinc-400 hover:text-[#B88E2F] transition-colors" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+              {/* Bottom Actions for Mobile */}
+              <div className="mt-auto p-8 border-t border-zinc-900 bg-zinc-950 flex justify-around">
+                <Link href="/dashboard/wishlist" onClick={() => setIsMenuOpen(false)}>
+                  <IconHeart size={24} className="text-zinc-400 hover:text-[#B88E2F] transition-colors" />
+                </Link>
+                <Link href="/dashboard/profile" onClick={() => setIsMenuOpen(false)}>
+                  <IconUser size={24} className="text-zinc-400 hover:text-[#B88E2F] transition-colors" />
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setTimeout(() => handleMobileSearchToggle(), 300);
+                  }}
+                >
+                  <IconSearch size={24} className="text-zinc-400 hover:text-[#B88E2F] transition-colors" />
+                </button>
+              </div>
+            </motion.div>
+          )
+        }
+      </AnimatePresence >
+    </header >
   );
 };
 
