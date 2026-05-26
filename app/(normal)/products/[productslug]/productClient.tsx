@@ -24,11 +24,12 @@ import CareAndMaintenance from "@/components/product/CareAndMaintenance";
 import AteliersGrid from "@/components/product/AteliersGrid";
 import CommonEnquiries from "@/components/product/CommonEnquiries";
 import RelatedProducts from "@/components/product/RelatedProducts";
+import ReviewsTab from "@/components/product/ReviewsTab";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
-const ProductClient = ({ product, slug }: any) => {
+const ProductClient = ({ product, slug, reviews }: any) => {
   const router = useRouter()
   const { isInWishlist, toggleWishlist } = useWishlist()
   const { addToCart, getItemQuantity } = useCart()
@@ -447,6 +448,7 @@ const ProductClient = ({ product, slug }: any) => {
       {/* EXTRA SECTIONS */}
       <DescriptionTabs productAttributeRes={product?.productAttributeRes} pdfDocuments={pdfDocuments} />
       <SpecificationsTabs productAttributeRes={product?.productAttributeRes} />
+      <ReviewsTab reviews={reviews} />
       {/* <ProductComparison /> */}
       <CareAndMaintenance />
       <AteliersGrid />

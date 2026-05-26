@@ -27,7 +27,7 @@ const companyLinks = [
   { name: "About Us", href: "/about" },
   { name: "Coupons", href: "/Promo-offer" },
   // { name: "Find a Store", href: "/stores" },
-
+{ name:"Videos", href:"/videos"},
   { name: "Catalogue", href: "/catalogue" },
   { name: "Media", href: "/mediacenter" },
   { name: "Careers", href: "/career" },

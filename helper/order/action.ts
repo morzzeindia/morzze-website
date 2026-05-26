@@ -15,6 +15,7 @@ export const fetchOrders = async ({
   pageSize = 3,
   search = "",
   status = "",
+  userId = "",
 }) => {
   const filters = [];
 
@@ -24,6 +25,10 @@ export const fetchOrders = async ({
 
   if (status && status.trim() !== "") {
     filters.push(eq(order.status, status));
+  }
+
+  if (userId && userId.trim() !== "") {
+    filters.push(eq(order.userId, userId));
   }
 
   const whereClause = filters.length ? and(...filters) : undefined;
@@ -321,6 +326,7 @@ export async function createOrder({
   userId,
   razorpayPaymentId,
   razorpayOrderId,
+  coupon,
 }: {
   items: any;
   userId: any;
@@ -328,6 +334,7 @@ export async function createOrder({
   address: any;
   razorpayPaymentId: string;
   razorpayOrderId: string;
+  coupon?: { code: string; discountAmount: number; subtotal: number };
 }) {
   try {
     if (!items || items.length === 0) {
@@ -356,6 +363,8 @@ export async function createOrder({
     const productMap = new Map(products.map((p) => [p.id, p]));
 
     const safeAmount = Math.round(fixedAmount);
+    const discountAmount = coupon?.discountAmount ? Math.round(coupon.discountAmount) : 0
+    const subtotalAmount = coupon?.subtotal ? Math.round(coupon.subtotal) : safeAmount
 
     const result = await db.transaction(async (tx) => {
       const insertedOrder = await tx
@@ -364,6 +373,9 @@ export async function createOrder({
           userId,
           status: "paid",
           totalAmount: safeAmount,
+          subtotalAmount: subtotalAmount,
+          discountAmount: discountAmount,
+          couponCode: coupon?.code || null,
           addressLine1: address.street,
           addressLine2: address.locality,
           city: address.city,

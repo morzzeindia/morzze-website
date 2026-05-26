@@ -62,10 +62,10 @@ const ProductTable = ({ products }: any) => {
           <TableRow>
             <TableHead>Product Name</TableHead>
             <TableHead>Base Price</TableHead>
-            <TableHead>Strikethrough Price</TableHead>
-            <TableHead>IsCancelable</TableHead>
-            <TableHead>isReturnable</TableHead>
-            <TableHead>isDeleted</TableHead>
+            {/* <TableHead>Strikethrough Price</TableHead> */}
+            {/* <TableHead>IsCancelable</TableHead> */}
+            {/* <TableHead>isReturnable</TableHead> */}
+            {/* <TableHead>isDeleted</TableHead> */}
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -76,10 +76,10 @@ const ProductTable = ({ products }: any) => {
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>₹{item.basePrice}</TableCell>
-                <TableCell>₹{item.strikethroughPrice}</TableCell>
-                <TableCell>{item.isCancelable ? "Yes" : "No"}</TableCell>
-                <TableCell>{item.isReturnable ? "Yes" : "No"}</TableCell>
-                <TableCell>{item.isDeleted ? "Yes" : "No"}</TableCell>
+                {/* <TableCell>₹{item.strikethroughPrice}</TableCell> */}
+                {/* <TableCell>{item.isCancelable ? "Yes" : "No"}</TableCell> */}
+                {/* <TableCell>{item.isReturnable ? "Yes" : "No"}</TableCell> */}
+                {/* <TableCell>{item.isDeleted ? "Yes" : "No"}</TableCell> */}
 
                 <TableCell className="flex gap-2">
                   <Button

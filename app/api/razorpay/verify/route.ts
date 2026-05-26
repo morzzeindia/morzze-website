@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     items,
     address,
     amount,
-
+    coupon,
   } = body;
 
   // 1️⃣ Verify signature
@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     address,
     razorpayPaymentId: razorpay_payment_id,
     razorpayOrderId: razorpay_order_id,
+    coupon: coupon || undefined,
   });
 
   const currentDate = new Date().toLocaleDateString();

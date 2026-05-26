@@ -65,8 +65,22 @@ export default async function OrderDetailPage({
     (s, i) => s + (i.productPrice ?? 0) * (i.quantity ?? 0),
     0,
   )
+  
+  // Use database values if available, fallback to calculated values
+  const subtotalAmount = dbOrder.subtotalAmount ?? linesSubtotal
+  const discountAmount = dbOrder.discountAmount ?? 0
+  const couponCode = dbOrder.couponCode ?? null
   const total = dbOrder.totalAmount ?? 0
-  const tax = Math.max(0, total - linesSubtotal)
+  
+  // Calculate GST as 18% of the ORIGINAL subtotal (before discount)
+  const gstAmount = Math.round(subtotalAmount * 0.18)
+  const discountedSubtotal = subtotalAmount - discountAmount
+  
+  // For display
+  const subtotalFormatted = formatINR(subtotalAmount)
+  const discountFormatted = discountAmount > 0 ? formatINR(discountAmount) : null
+  const gstFormatted = formatINR(gstAmount)
+  const taxFormatted = formatINR(gstAmount)
 
   const lineItems = items.map((i, idx) => ({
     id: i.id ?? `${dbOrder.id}-line-${idx}`,
@@ -77,10 +91,6 @@ export default async function OrderDetailPage({
     lineTotalFormatted: formatINR((i.productPrice ?? 0) * (i.quantity ?? 0)),
     image: i.productImage ?? null,
   }))
-
-  const subtotalFormatted =
-    linesSubtotal > 0 ? formatINR(linesSubtotal) : formatINR(total)
-  const taxFormatted = linesSubtotal > 0 ? formatINR(tax) : "Included"
 
   const viewModel: OrderDetailViewModel = {
     id: dbOrder.id,
@@ -101,6 +111,8 @@ export default async function OrderDetailPage({
     paymentRef: dbOrder.payment?.paymentId ?? null,
     lineItems,
     subtotalFormatted,
+    discountFormatted,
+    couponCode,
     taxFormatted,
   }
 

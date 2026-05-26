@@ -24,7 +24,7 @@ const SpecificationsTabs = ({ productAttributeRes }: any) => {
   const tabs = [
     "SPECIFICATIONS",
     "FEATURES & BOX",
-    "REVIEWS",
+    // "REVIEWS",
   ];
 
   // =================================================

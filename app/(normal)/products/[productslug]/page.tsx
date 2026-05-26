@@ -3,6 +3,7 @@ import ProductClient from "./productClient";
 import { notFound } from "next/navigation";
 // Direct wahi helper use kar rahe hain jo aapne sample code mein dikhaya
 import { getFullProductDetails } from "@/helper/product/action";
+import { getProductReviews } from "@/helper/review/action";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ const page = async ({
 
   try {
     const product = await getFullProductDetails(productslug);
-
+    const reviews = await getProductReviews(productslug);
 
     // 3. Agar data nahi mila toh direct 404
     if (!product || Object.keys(product).length === 0) {
@@ -25,7 +26,7 @@ const page = async ({
     }
 
     // 4. Client component ko data pass karein
-    return <ProductClient product={product} slug={productslug} />;
+    return <ProductClient product={product} slug={productslug} reviews={reviews} />;
 
   } catch (error) {
     console.error("Fetch Error:", error);

@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FileText, Loader2, Upload } from "lucide-react";
+import { Select } from "@/components/select";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -85,6 +86,22 @@ export default function CatalogueForm({ mode, initialData }: Props) {
   const router = useRouter();
   const { upload, uploading } = useFileUpload();
   const [loading, setLoading] = useState(false);
+  const [coverPreview, setCoverPreview] = useState<string | null>(
+    () => (initialData ? initialData.image : null),
+  );
+  const blobRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (blobRef.current) {
+        try {
+          URL.revokeObjectURL(blobRef.current);
+        } catch (e) {
+          /* ignore */
+        }
+      }
+    };
+  }, []);
 
   const defaults = useMemo(
     () => ({
@@ -110,7 +127,14 @@ export default function CatalogueForm({ mode, initialData }: Props) {
           slug: initialData.slug,
           shortDescription: initialData.shortDescription,
           image: initialData.image,
-          pdfFile: initialData.pdfFile,
+          pdfFile: (() => {
+            try {
+              const v = initialData.pdfFile || "";
+              return v.includes("/") ? v.split("/").pop() || v : v;
+            } catch (e) {
+              return initialData.pdfFile;
+            }
+          })(),
           totalPages: String(initialData.totalPages),
           fileSize: initialData.fileSize,
           publishYear: initialData.publishYear,
@@ -121,6 +145,22 @@ export default function CatalogueForm({ mode, initialData }: Props) {
       : { ...defaults },
   );
 
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const data = await (await import("@/helper")).getCategories();
+        setCategories(
+          data.map((c: any) => ({ value: c.slug, label: c.name })) || [],
+        );
+      } catch (e) {
+        // ignore
+      }
+    }
+    loadCategories();
+  }, []);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -129,8 +169,34 @@ export default function CatalogueForm({ mode, initialData }: Props) {
       return;
     }
     try {
-      const { fileUrl } = await upload(file, "catalogue");
-      setForm((prev) => ({ ...prev, image: fileUrl }));
+      // show local preview immediately
+      const local = URL.createObjectURL(file);
+      // cleanup previous blob url
+      if (blobRef.current) {
+        try {
+          URL.revokeObjectURL(blobRef.current);
+        } catch (e) {
+          /* ignore */
+        }
+      }
+      blobRef.current = local;
+      setCoverPreview(local);
+
+      const { fileUrl, preview } = await upload(file, "catalogue");
+      // prefer returned remote URL when available
+      const finalUrl = fileUrl ?? preview ?? local;
+      setForm((prev) => ({ ...prev, image: finalUrl }));
+      // revoke local blob if we switched to remote
+      if (blobRef.current && finalUrl !== blobRef.current) {
+        try {
+          URL.revokeObjectURL(blobRef.current);
+        } catch (e) {
+          /* ignore */
+        }
+        blobRef.current = null;
+      }
+
+      setCoverPreview(finalUrl);
       toast.success("Cover image uploaded");
     } catch {
       toast.error("Image upload failed");
@@ -149,10 +215,15 @@ export default function CatalogueForm({ mode, initialData }: Props) {
       return;
     }
     try {
-      const { fileUrl } = await upload(file, "catalogue");
+      const { fileUrl, fileKey, preview } = await upload(file, "catalogue");
+      // store only the filename (basename) in the form and database
+      const basename = (fileUrl ?? fileKey ?? file.name)
+        .toString()
+        .split("/")
+        .pop();
       setForm((prev) => ({
         ...prev,
-        pdfFile: fileUrl,
+        pdfFile: basename ?? file.name,
         fileSize: formatFileSize(file.size),
       }));
       toast.success("PDF uploaded");
@@ -272,7 +343,15 @@ export default function CatalogueForm({ mode, initialData }: Props) {
                   onChange={handleImageUpload}
                   disabled={uploading || loading}
                 />
-                <Upload className="mx-auto h-10 w-10 text-slate-300" />
+                {coverPreview ? (
+                  <img
+                    src={coverPreview}
+                    alt="cover preview"
+                    className="mx-auto h-40 object-contain"
+                  />
+                ) : (
+                  <Upload className="mx-auto h-10 w-10 text-slate-300" />
+                )}
                 <p className="text-sm text-slate-500 mt-2">
                   {form.image
                     ? "Cover uploaded — click to replace"
@@ -280,9 +359,14 @@ export default function CatalogueForm({ mode, initialData }: Props) {
                 </p>
                 {form.image ? (
                   <p className="text-xs text-slate-400 mt-1 truncate max-w-full px-2">
-                    {form.image}
+                    {/* {form.image} */}
                   </p>
                 ) : null}
+                {uploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/60">
+                    <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -351,13 +435,14 @@ export default function CatalogueForm({ mode, initialData }: Props) {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="category">Category</Label>
-                <Input
-                  id="category"
-                  value={form.category}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, category: e.target.value }))
+                <Select
+                  placeholder="Select Category"
+                  label="Category"
+                  selectItems={categories}
+                  value={form.category || undefined}
+                  onValueChange={(val) =>
+                    setForm((p) => ({ ...p, category: val ?? "" }))
                   }
-                  required
                 />
               </div>
             </div>

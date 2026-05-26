@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,19 @@ export default function VideoForm() {
     videoCategory: "",
     isVisible: true,
   });
+  const blobRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (blobRef.current) {
+        try {
+          URL.revokeObjectURL(blobRef.current);
+        } catch (e) {
+          /* ignore */
+        }
+      }
+    };
+  }, []);
 
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -36,11 +50,29 @@ export default function VideoForm() {
         id: "thumbnail-upload",
       });
 
-      const { fileUrl } = await upload(file, "videos");
+      // show local preview immediately
+      const local = URL.createObjectURL(file);
+      if (blobRef.current) {
+        try {
+          URL.revokeObjectURL(blobRef.current);
+        } catch (e) {}
+      }
+      blobRef.current = local;
+      setFormData((prev) => ({ ...prev, [field]: local }));
+
+      const { fileUrl, preview } = await upload(file, "videos");
+      const finalUrl = fileUrl ?? preview ?? local;
+
+      if (blobRef.current && finalUrl !== blobRef.current) {
+        try {
+          URL.revokeObjectURL(blobRef.current);
+        } catch (e) {}
+        blobRef.current = null;
+      }
 
       setFormData((prev) => ({
         ...prev,
-        [field]: fileUrl,
+        [field]: finalUrl,
       }));
 
       toast.success("Thumbnail uploaded successfully!", {
@@ -160,6 +192,17 @@ export default function VideoForm() {
                   ? "Thumbnail Uploaded ✅"
                   : "Click or drag to upload thumbnail"}
               </p>
+              {formData.thumbnail && (
+                <div className="mt-3 relative h-40 w-full rounded-lg overflow-hidden border">
+                  <Image
+                    src={formData.thumbnail}
+                    alt="Thumbnail Preview"
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              )}
             </div>
           </div>
 

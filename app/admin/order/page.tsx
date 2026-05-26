@@ -8,6 +8,7 @@ interface PageProps {
     page_size?: string;
     search?: string;
     status?: string;
+    userId?: string;
   }>;
 }
 
@@ -25,12 +26,14 @@ const Page = async ({ searchParams }: PageProps) => {
   const pageSize = toInt(params.page_size, PAGE_SIZE);
   const search = params.search ?? "";
 const status = params.status ?? "";
+const userId = params.userId ?? "";
 
 const result = await fetchOrders({
   page,
   pageSize,
   search,
   status,
+  userId,
 });
 
   return (

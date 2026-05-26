@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { users } from "@/db/schema";
 import { desc } from "drizzle-orm";
+import Link from "next/link";
 
 export default async function Page() {
   const allUsers = await db
@@ -41,7 +42,14 @@ export default async function Page() {
             <tbody>
               {allUsers.map((u) => (
                 <tr key={u.id} className="border-t">
-                  <td className="px-4 py-3">{u.name}</td>
+                  <td className="px-4 py-3">
+                    <Link 
+                      href={`/admin/order?userId=${u.id}`}
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      {u.name}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3">{u.email}</td>
                   <td className="px-4 py-3">{u.phone}</td>
                   <td className="px-4 py-3">{u.emailVerified ? "Yes" : "No"}</td>

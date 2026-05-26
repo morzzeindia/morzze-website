@@ -62,11 +62,11 @@ export function Sidebar() {
   const currentPath = pathname.replace(/\/$/, "");
 
   return (
-    <aside className="w-64 h-screen   bg-white border-r p-6 font-sans">
+    <aside className="w-64 h-screen bg-zinc-950 border-r border-zinc-800 p-6 font-sans">
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
-        <p className="text-sm text-gray-500">Manage your account details</p>
+        <h2 className="text-2xl font-bold text-white">Admin Panel</h2>
+        <p className="text-sm text-zinc-400">Manage your account details</p>
       </div>
 
       {/* Navigation */}
@@ -82,7 +82,7 @@ export function Sidebar() {
           return (
             <Link key={href} href={href}>
               <SidebarItem
-                icon={<Icon size={24} className="text-orange-400" />}
+                icon={<Icon size={24} className="text-yellow-400" />}
                 label={label}
                 active={active}
               />
@@ -94,7 +94,7 @@ export function Sidebar() {
       <button
         type="button"
         onClick={() => void signOutAdmin()}
-        className="mt-4 w-full rounded-full hover:text-white border border-red-300 px-4 py-2 text-sm text-red-500 transition hover:bg-red-500 cursor-pointer"
+        className="mt-4 w-full rounded-lg border border-red-500/50 px-4 py-2 text-sm text-red-400 transition hover:bg-red-500/20 hover:text-red-300 cursor-pointer font-medium"
       >
         Sign out of admin
       </button>
@@ -113,11 +113,11 @@ function SidebarItem({
 }) {
   return (
     <div
-      className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer
-      ${active
-          ? "bg-[#FFF9EE] text-gray-800 font-semibold border-l-4 border-[#D4A056]"
-          : "hover:bg-gray-50 text-gray-500"
-        }`}
+      className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+        active
+          ? "bg-yellow-500/20 text-yellow-400 font-semibold border-l-4 border-yellow-400"
+          : "hover:bg-zinc-900 text-zinc-400 hover:text-white"
+      }`}
     >
       <span className={active ? "opacity-100" : "opacity-70"}>{icon}</span>
       <span className="text-base">{label}</span>

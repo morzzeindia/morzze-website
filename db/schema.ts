@@ -353,6 +353,9 @@ export const order = pgTable("order", {
   state: varchar("state"),
   pincode: varchar("pincode"),
 
+  subtotalAmount: integer("subtotal_amount"),
+  discountAmount: integer("discount_amount").default(0),
+  couponCode: varchar("coupon_code"),
   totalAmount: integer("total_amount"),
 
   createdAt: timestamp("created_at").defaultNow(),

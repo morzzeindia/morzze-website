@@ -2,11 +2,11 @@
 
 import { db } from "@/db";
 import { videos } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function getVideos() {
   try {
-    const data = await db.select().from(videos);
+    const data = await db.select().from(videos).orderBy(desc(videos.createdAt));
     return data;
   } catch (error) {
     console.error("Error fetching videos:", error);

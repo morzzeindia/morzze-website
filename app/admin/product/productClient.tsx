@@ -138,7 +138,7 @@ const ProductClient = ({ products, total, currentPage }: Props) => {
             />
 
             {/* STOCK */}
-            <Select
+            {/* <Select
               placeholder="Select Stock Status"
               label="Stock Status"
               selectItems={[
@@ -149,10 +149,10 @@ const ProductClient = ({ products, total, currentPage }: Props) => {
               onValueChange={(val) =>
                 startTransition(() => updateQuery("stock", val))
               }
-            />
+            /> */}
 
             {/* VISIBILITY */}
-            <Select
+            {/* <Select
               placeholder="Select Visibility"
               label="Visibility"
               selectItems={[
@@ -163,7 +163,7 @@ const ProductClient = ({ products, total, currentPage }: Props) => {
               onValueChange={(val) =>
                 startTransition(() => updateQuery("visibility", val))
               }
-            />
+            /> */}
           </div>
 
           {/* TABLE + OVERLAY LOADER */}

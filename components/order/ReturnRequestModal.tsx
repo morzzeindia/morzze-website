@@ -20,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { UploadCloud } from "lucide-react";
 import { toast } from "sonner";
 
-const ReturnRequestModal = () => {
+const ReturnRequestModal = ({ disabled = false }: { disabled?: boolean }) => {
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -62,7 +62,10 @@ const ReturnRequestModal = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex-1 border border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800]/5 px-12 py-2 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all">
+      <DialogTrigger
+        disabled={disabled}
+        className="flex-1 border border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800]/5 px-12 py-2 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+      >
         Request Return
       </DialogTrigger>
 

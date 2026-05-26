@@ -4,13 +4,13 @@ import { DashboardCards } from "@/components/admin/dashboardCard"
 export default async function DashboardPage() {
   // const data = await db.select().from(productTable)
   return (
-    <div className="space-y-6 p-3">
+    <div className="space-y-6 p-3 bg-black min-h-screen">
       {/* Page Header */}
       <header className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">
+        <h1 className="text-2xl font-bold text-white">
           Dashboard Overview
         </h1>
-        <p className="text-slate-500">
+        <p className="text-zinc-400">
           Welcome back! Here's what's happening with your store today
         </p>
       </header>

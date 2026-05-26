@@ -18,7 +18,6 @@ type Props = {
 const TABS = [
   "SPECIFICATIONS",
   "FEATURES & BOX",
-  "REVIEWS",
 ];
 
 export default function ProductSpecificationSection({
@@ -187,27 +186,7 @@ export default function ProductSpecificationSection({
           </div>
         )}
 
-        {/* ================================================= */}
-        {/* REVIEWS */}
-        {/* ================================================= */}
-
-        {activeTab === "REVIEWS" && (
-          <div className="bg-[#f8f9fa] p-5 rounded-xl">
-            <Label className="text-xl font-bold mb-4 block">
-              Reviews
-            </Label>
-
-            <RichTextEditor
-              value={productSpecifications.reviews?.value ?? ""}
-              onChange={(val) =>
-                handleSpecificationChange(
-                  "reviews",
-                  val,
-                )
-              }
-            />
-          </div>
-        )}
+        {/* REVIEWS tab removed */}
       </CardContent>
     </Card>
   );

@@ -53,7 +53,7 @@ export default async function MyOrdersPage() {
         </h1>
 
         <div className="flex gap-3 overflow-x-auto no-scrollbar pb-6">
-          {["All", "Delivered", "Shipped", "Pending"].map((tab, idx) => (
+          {["All", "Delivered", "Paid","Shipped", "Pending"].map((tab, idx) => (
             <button
               key={tab}
               type="button"
@@ -93,9 +93,9 @@ export default async function MyOrdersPage() {
 
 
                 <div className="flex gap-4 items-start">
-                  <div className="w-20 h-20 md:w-24 md:h-24 bg-[#181818] border border-zinc-800 rounded-lg shrink-0 overflow-hidden">
+                  {/* <div className="w-20 h-20 md:w-24 md:h-24 bg-[#181818] border border-zinc-800 rounded-lg shrink-0 overflow-hidden">
                     <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-black opacity-50" />
-                  </div>
+                  </div> */}
 
                   <div className="flex-1 min-w-0 flex flex-col justify-between min-h-[80px] md:min-h-[96px]">
                     <div className="space-y-1">

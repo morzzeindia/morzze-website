@@ -22,6 +22,7 @@ const ShippingDetails = ({ onNext }: { onNext: (data: any) => void }) => {
   const [savedAddresses, setSavedAddresses] = useState<AddressData[]>([])
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null)
   const [useNewAddress, setUseNewAddress] = useState(false)
+  const [loadingAddresses, setLoadingAddresses] = useState(true)
 
   const [form, setForm] = useState({
     fullName: "",
@@ -35,28 +36,43 @@ const ShippingDetails = ({ onNext }: { onNext: (data: any) => void }) => {
 
   // Check login and load saved addresses
   useEffect(() => {
-    isUserLoggedIn().then((status) => {
-      setLoggedIn(status)
-      if (status) {
-        getAddresses()
-          .then((data) => {
-            const addrs = data as AddressData[]
-            setSavedAddresses(addrs)
-            // Auto-select default address
-            const defaultAddr = addrs.find((a) => a.isDefault)
-            if (defaultAddr) {
-              setSelectedAddressId(defaultAddr.id)
-            } else if (addrs.length > 0) {
-              setSelectedAddressId(addrs[0].id)
-            } else {
-              setUseNewAddress(true)
-            }
-          })
-          .catch(() => setUseNewAddress(true))
-      } else {
+    setLoadingAddresses(true)
+    isUserLoggedIn()
+      .then((status) => {
+        setLoggedIn(status)
+        if (!status) {
+          setUseNewAddress(true)
+          return [] as AddressData[]
+        }
+
+        return getAddresses()
+          .then((data) => data as AddressData[])
+          .catch(() => [])
+      })
+      .catch(() => {
+        setLoggedIn(false)
         setUseNewAddress(true)
-      }
-    })
+        return [] as AddressData[]
+      })
+      .then((addrs) => {
+        if (addrs.length > 0) {
+          setSavedAddresses(addrs)
+          const defaultAddr = addrs.find((a) => a.isDefault)
+          if (defaultAddr) {
+            setSelectedAddressId(defaultAddr.id)
+            setUseNewAddress(false)
+          } else {
+            setSelectedAddressId(addrs[0].id)
+            setUseNewAddress(false)
+          }
+        } else {
+          setSavedAddresses([])
+          setUseNewAddress(true)
+        }
+      })
+      .finally(() => {
+        setLoadingAddresses(false)
+      })
   }, [])
 
   const handleChange = (field: string, value: string) => {
@@ -109,8 +125,13 @@ const ShippingDetails = ({ onNext }: { onNext: (data: any) => void }) => {
       <h2 className="text-white text-2xl font-medium mb-8 font-montserrat">Shipping Details</h2>
 
       {/* Saved Addresses (only for logged-in users) */}
-      {loggedIn && savedAddresses.length > 0 && (
-        <div className="mb-8 space-y-3">
+      {loadingAddresses ? (
+        <div className="mb-8 rounded-xl border border-dashed border-zinc-700 bg-[#0B0B0B] p-8 text-center text-zinc-400">
+          Loading addresses...
+        </div>
+      ) : (
+        loggedIn && savedAddresses.length > 0 && (
+          <div className="mb-8 space-y-3">
           <p className="text-[10px] text-zinc-500 font-bold tracking-[0.2em] uppercase mb-4 font-inter">
             Saved Addresses
           </p>
@@ -163,10 +184,10 @@ const ShippingDetails = ({ onNext }: { onNext: (data: any) => void }) => {
             <span className="text-zinc-300 text-sm">Use a different address</span>
           </label>
         </div>
-      )}
+      ))}
 
       {/* New Address Form */}
-      {(useNewAddress || !loggedIn || savedAddresses.length === 0) && (
+      {(!loadingAddresses && (useNewAddress || loggedIn === false || savedAddresses.length === 0)) && (
         <div className="space-y-4 font-montserrat">
           {loggedIn && savedAddresses.length > 0 && (
             <p className="text-[10px] text-zinc-500 font-bold tracking-[0.2em] uppercase mb-2 font-inter">

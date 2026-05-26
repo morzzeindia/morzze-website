@@ -28,6 +28,8 @@ export type OrderDetailViewModel = {
   paymentRef: string | null
   lineItems: OrderDetailLineItem[]
   subtotalFormatted: string
+  discountFormatted: string | null
+  couponCode: string | null
   taxFormatted: string
 }
 
@@ -94,13 +96,20 @@ export default function OrderDetails({ order }: { order: OrderDetailViewModel })
               <span className="text-white">{order.subtotalFormatted}</span>
             </div>
 
+            {order.couponCode && order.discountFormatted && (
+              <div className="flex justify-between">
+                <span>Discount <span className="text-emerald-400 text-xs">({order.couponCode})</span></span>
+                <span className="text-emerald-400">-{order.discountFormatted}</span>
+              </div>
+            )}
+
             <div className="flex justify-between">
               <span>Shipping</span>
               <span className="text-green-500">Free</span>
             </div>
 
             <div className="flex justify-between">
-              <span>GST</span>
+              <span>GST (18%)</span>
               <span className="text-white">{order.taxFormatted}</span>
             </div>
 
@@ -204,7 +213,7 @@ export default function OrderDetails({ order }: { order: OrderDetailViewModel })
         </div>
 
         <div className="p-6 flex flex-col sm:flex-row gap-4 justify-end border-t border-zinc-800/50">
-          <ReturnRequestModal />
+          <ReturnRequestModal disabled={order.status.toLowerCase() !== "delivered"} />
           <button
             type="button"
             disabled={downloading}

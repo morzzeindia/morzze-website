@@ -61,7 +61,7 @@ const Page = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-end">
+    <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-end bg-black">
 
       
       <Image
@@ -69,12 +69,12 @@ const Page = () => {
         alt="background"
         fill
         priority
-        className="object-cover -z-10"
+        className="object-cover -z-10 opacity-20"
       />
 
       
       <div className="w-full md:w-1/2 flex items-center justify-center p-4">
-<div className="bg-white shadow-lg rounded-2xl w-full max-w-sm md:max-w-lg lg:max-w-md p-4">
+<div className="bg-zinc-950 border border-zinc-800 shadow-lg rounded-2xl w-full max-w-sm md:max-w-lg lg:max-w-md p-4">
 
         <div className="flex justify-center mb-4 mt-5">
   <Image
@@ -105,11 +105,11 @@ const Page = () => {
 />
           </div>
 
-          <h2 className="text-center text-2xl font-semibold text-[#168ba0] mb-2">
-            Login
+          <h2 className="text-center text-2xl font-semibold text-white mb-2">
+            Admin Login
           </h2>
 
-          <p className="text-center text-sm font-semibold text-[#168ba0] mt-1 mb-3">
+          <p className="text-center text-sm font-semibold text-zinc-400 mt-1 mb-3">
             Enter your details below
           </p>
 
@@ -121,10 +121,10 @@ const Page = () => {
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border-b border-gray-400 bg-transparent px-1 py-2 text-sm outline-none focus:border-gray-600"
+                className="w-full border-b border-zinc-600 bg-transparent px-1 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-yellow-400"
               />
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.email}</p>
               )}
             </div>
 
@@ -135,20 +135,20 @@ const Page = () => {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full border-b border-gray-400 bg-transparent px-1 py-2 text-sm outline-none focus:border-gray-600"
+                className="w-full border-b border-zinc-600 bg-transparent px-1 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-yellow-400"
               />
               {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.password}</p>
               )}
             </div>
 
             {errors.general && (
-              <p className="text-red-500 text-xs mt-1">{errors.general}</p>
+              <p className="text-red-400 text-xs mt-1">{errors.general}</p>
             )}
 
             <div className="text-right text-xs mt-2">
               <Link href="/reset-password-email">
-                <button className="text-black font-semibold mb-5">
+                <button className="text-yellow-400 font-semibold mb-5 hover:text-yellow-300">
                   Forgot Password?
                 </button>
               </Link>
@@ -156,13 +156,13 @@ const Page = () => {
 
             <button
               type="submit"
-              className="w-full bg-cyan-700 text-white py-2 text-sm rounded-lg mt-2 mb-2 font-medium"
+              className="w-full bg-yellow-400 text-black py-2 text-sm rounded-lg mt-2 mb-2 font-medium hover:bg-yellow-500 transition"
             >
               Login
             </button>
           </form>
 
-         <button className="w-full border border-cyan-700 text-cyan-700 py-2 text-sm rounded-full mt-1 font-medium flex items-center justify-center gap-2 bg-white ">
+         <button className="w-full border border-yellow-400 text-yellow-400 py-2 text-sm rounded-full mt-1 font-medium flex items-center justify-center gap-2 bg-transparent hover:bg-yellow-400/10 transition">
   
   <Image
     src="/google.svg"   
@@ -171,14 +171,14 @@ const Page = () => {
     height={15}
   />
 
-  <span>Sign up with Google</span>
+  <span>Sign in with Google</span>
 </button>
 
-          <p className="text-center text-xs mt-4 mb-6">
-            Don’t have an account?{" "}
-<Link href="/signup" className="underline cursor-pointer">
-  Register
-</Link>
+          <p className="text-center text-xs mt-4 mb-6 text-zinc-400">
+            Need assistance?{" "}
+            <span className="text-yellow-400 cursor-pointer hover:underline">
+              Contact Support
+            </span>
           </p>
         </div>
       </div>

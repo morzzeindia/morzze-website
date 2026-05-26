@@ -20,14 +20,14 @@ export function StatCard({
   
 }: StatCardProps) {
   return (
-    <Card className="border shadow-sm hover:shadow-md transition-shadow">
+    <Card className="border border-zinc-800 bg-zinc-950 hover:border-zinc-700 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="flex items-center justify-between px-3">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-muted-foreground">
+          <p className="text-sm font-medium text-zinc-400">
             {title}
           </p>
 
-          <p className="text-2xl font-semibold tracking-tight">
+          <p className="text-2xl font-semibold tracking-tight text-white">
             {value}
           </p>
 
@@ -35,11 +35,11 @@ export function StatCard({
             className={cn(
               "text-xs font-medium",
               subtitleVariant === "positive" &&
-                "text-emerald-600 dark:text-emerald-500",
+                "text-emerald-400",
               subtitleVariant === "negative" &&
-                "text-red-600 dark:text-red-500",
+                "text-red-400",
               subtitleVariant === "neutral" &&
-                "text-muted-foreground"
+                "text-zinc-500"
             )}
           >
             {subtitle}

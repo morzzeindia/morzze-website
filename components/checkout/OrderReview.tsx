@@ -99,6 +99,11 @@ const OrderReview = ({ shippingData }: { shippingData?: any }) => {
         description: `Order of ${cartItems.length} item(s)`,
         items,
         address,
+        coupon: appliedCoupon ? {
+          code: appliedCoupon.code,
+          discountAmount,
+          subtotal,
+        } : undefined,
       })
 
       // Payment successful — clear cart and redirect
