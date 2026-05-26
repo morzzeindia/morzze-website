@@ -25,38 +25,38 @@ export default function BlogForm() {
     image: "",
     userImage: "",
     userName: "",
-    textArea:"",
+    textArea: "",
     tags: "",
   });
 
-//   const handleFileUpload = async (
-//   e: React.ChangeEvent<HTMLInputElement>,
-//   field: string
-// ) => {
-//   const file = e.target.files?.[0];
-//   if (!file) return;
+  //   const handleFileUpload = async (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   field: string
+  // ) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-//   const formDataUpload = new FormData();
-//   formDataUpload.append("file", file);
+  //   const formDataUpload = new FormData();
+  //   formDataUpload.append("file", file);
 
-//   try {
-//     const res = await fetch("/api/upload", {
-//       method: "POST",
-//       body: formDataUpload,
-//     });
+  //   try {
+  //     const res = await fetch("/api/upload", {
+  //       method: "POST",
+  //       body: formDataUpload,
+  //     });
 
-//     const data = await res.json();
+  //     const data = await res.json();
 
-//     if (data.url) {
-//       setFormData((prev) => ({
-//         ...prev,
-//         [field]: data.url, // ImageKit URL save
-//       }));
-//     }
-//   } catch (error) {
-//     console.error("Upload failed", error);
-//   }
-// };
+  //     if (data.url) {
+  //       setFormData((prev) => ({
+  //         ...prev,
+  //         [field]: data.url, // ImageKit URL save
+  //       }));
+  //     }
+  //   } catch (error) {
+  //     console.error("Upload failed", error);
+  //   }
+  // };
 
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -65,17 +65,17 @@ export default function BlogForm() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-  try {
-    const { fileUrl } = await upload(file, "blog");
+    try {
+      const { fileUrl } = await upload(file, "blog");
 
-    setFormData((prev) => ({
-      ...prev,
-      [field]: fileUrl, // ✅ DB + preview same
-    }));
-  } catch (error) {
-    console.error("Upload failed", error);
-  }
-};
+      setFormData((prev) => ({
+        ...prev,
+        [field]: fileUrl, // ✅ DB + preview same
+      }));
+    } catch (error) {
+      console.error("Upload failed", error);
+    }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -122,26 +122,26 @@ export default function BlogForm() {
             </div>
             <div className="space-y-2">
               <Label className="font-medium">Category</Label>
-            
-                <select
-                  value={formData.blogCategory}
-                  onChange={(e) =>
-                    setFormData({ ...formData, blogCategory: e.target.value })
-                  }
-                  required
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <option value="">Select category</option>
-                  <option value="Air Taps">Air Taps</option>
-                  <option value="Bathroom Faucet">Bathroom Faucet</option>
-                  <option value="Food Waste Disposers">Food Waste Disposers</option>
-                  <option value="Floor Drainer">Floor Drainer</option>
-                  <option value="Granite Wash Basin">Granite Wash Basin</option>
-                  <option value="Kitchen Accessories">Kitchen Accessories</option>
-                  <option value="Kitchen Faucet">Kitchen Faucet</option>
-                  <option value="Steel Sinks">Steel Sinks</option>
-                  <option value="Towel Warmer">Towel Warmer</option>
-                </select>
+
+              <select
+                value={formData.blogCategory}
+                onChange={(e) =>
+                  setFormData({ ...formData, blogCategory: e.target.value })
+                }
+                required
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="">Select category</option>
+                <option value="Air Taps">Air Taps</option>
+                <option value="Bathroom Faucet">Bathroom Faucet</option>
+                <option value="Food Waste Disposers">Food Waste Disposers</option>
+                <option value="Floor Drainer">Floor Drainer</option>
+                <option value="Granite Wash Basin">Granite Wash Basin</option>
+                <option value="Kitchen Accessories">Kitchen Accessories</option>
+                <option value="Kitchen Faucet">Kitchen Faucet</option>
+                <option value="Steel Sinks">Steel Sinks</option>
+                <option value="Towel Warmer">Towel Warmer</option>
+              </select>
 
             </div>
           </div>
@@ -180,13 +180,18 @@ export default function BlogForm() {
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={(e) => handleFileUpload(e, "image")}
               />
-              <Upload className="mx-auto h-10 w-10 text-slate-300" />
+              {!formData.image && <Upload className="mx-auto h-10 w-10 text-slate-300" />}
               <p className="text-sm text-slate-500 mt-2">
                 {formData.image
                   ? "Banner Uploaded ✅"
                   : "Click or drag to upload banner"}
               </p>
             </div>
+
+            {
+              formData.image &&
+              <img src={formData.image} className=" h-80 w-full object-contain" />
+            }
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-100">
@@ -213,21 +218,21 @@ export default function BlogForm() {
                   {formData.userImage ? "Photo Ready" : "Upload Photo"}
                 </span>
               </div>
-              
+
             </div>
-           
+
           </div>
-           <div className="space-y-2 w-full">
-              <Label className="font-medium w-full">Author Description</Label>
-             <Textarea
+          <div className="space-y-2 w-full">
+            <Label className="font-medium w-full">Author Description</Label>
+            <Textarea
               placeholder="Write a brief summary for author"
               value={formData.textArea}
               onChange={(e) =>
                 setFormData({ ...formData, textArea: e.target.value })
               }
-              
+
             />
-            </div>
+          </div>
 
           <div className="space-y-2">
             <Label className="font-medium">

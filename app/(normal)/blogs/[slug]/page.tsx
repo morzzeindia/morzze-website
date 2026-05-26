@@ -1,6 +1,9 @@
 import BlogDetailPage from "@/components/blogs/blogData";
 import MoreToExploreSection from "@/components/blogs/exploreMore";
+import { db } from "@/db";
+import { blog } from "@/db/schema";
 import { getBlogBySlug, getBlogs } from "@/helper/blog/action";
+import { eq, ne } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 const page = async ({
@@ -10,24 +13,24 @@ const page = async ({
 }) => {
   const { slug } = await params;
 
-  const blog = await getBlogBySlug(slug);
+  const currentBlog = await getBlogBySlug(slug);
 
-  if (!blog) {
+  if (!currentBlog) {
     notFound();
   }
 
-  const allBlogs = await getBlogs();
+  const allBlogs = await db.select().from(blog).where(ne(blog.slug, slug)).limit(3);
 
   const sameCategoryBlogs = allBlogs.filter(
     (item: any) =>
-      item.blogCategory === blog.blogCategory &&
-      item.slug !== blog.slug &&
+      item.blogCategory === currentBlog.blogCategory &&
+      item.slug !== currentBlog.slug &&
       item.isVisible !== false
   );
 
   const fallbackBlogs = allBlogs.filter(
     (item: any) =>
-      item.slug !== blog.slug &&
+      item.slug !== currentBlog.slug &&
       item.isVisible !== false
   );
 
@@ -43,11 +46,11 @@ const page = async ({
   return (
     <div>
       <BlogDetailPage
-        blog={blog}
-        relatedBlogs={relatedBlogs.slice(0, 3)}
+        blog={currentBlog}
+        relatedBlogs={allBlogs}
       />
 
-      <MoreToExploreSection />
+      {/* <MoreToExploreSection /> */}
     </div>
   );
 };

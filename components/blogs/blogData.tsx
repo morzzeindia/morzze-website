@@ -172,7 +172,7 @@ export default function BlogDetailPage({
             </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-5 sticky md:top-28 ">
             <div className="bg-[#121212] border border-[#1e1e1e] rounded-[8px] p-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-[#333333] overflow-hidden">

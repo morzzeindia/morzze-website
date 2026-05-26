@@ -17,6 +17,7 @@ import {
 } from "@tabler/icons-react";
 import RichTextEditor from "../ui/rich-text-editor";
 import { useFileUpload } from "@/helper";
+import { getImageUrl } from "@/helper/getimageUrl";
 
 export default function EditBlogForm({ initialData }: { initialData: any }) {
   const router = useRouter();
@@ -68,23 +69,23 @@ export default function EditBlogForm({ initialData }: { initialData: any }) {
   // };
 
   const handleFileUpload = async (
-  e: React.ChangeEvent<HTMLInputElement>,
-  field: string
-) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  try {
-    const { fileUrl } = await upload(file, "blog");
+    try {
+      const { fileUrl } = await upload(file, "blog");
 
-    setFormData((prev) => ({
-      ...prev,
-      [field]: fileUrl, // ✅ DB + preview same
-    }));
-  } catch (error) {
-    console.error("Upload failed", error);
-  }
-};
+      setFormData((prev) => ({
+        ...prev,
+        [field]: fileUrl, // ✅ DB + preview same
+      }));
+    } catch (error) {
+      console.error("Upload failed", error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,10 +179,10 @@ export default function EditBlogForm({ initialData }: { initialData: any }) {
             {formData.image && (
               <div className="mt-3 relative h-40 w-full rounded-lg overflow-hidden border">
                 <Image
-                  src={formData.image}
+                  src={getImageUrl(formData.image)}
                   alt="Preview"
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   unoptimized
                 />
               </div>
