@@ -1,6 +1,7 @@
 import ProductBanner from "@/components/product/ProductBanner";
 import FilterSidebar from "@/components/product/FilterSidebar";
 import ProductGrid from "@/components/product/ProductGrid";
+import SortDropdown from "@/components/product/SortDropdown";
 import React from "react";
 import Link from "next/link";
 import {
@@ -15,15 +16,16 @@ interface PageProps {
   searchParams: Promise<{
     page?: string;
     search?: string;
-    category?: string;
-    type?: string;
-    material?: string;
-    finish?: string;
-    size?: string;
+    category?: string | string[];
+    type?: string | string[];
+    material?: string | string[];
+    finish?: string | string[];
+    size?: string | string[];
     min?: string;
     max?: string;
     brand?: string;
     stock?: string;
+    sort?: string;
   }>;
 }
 
@@ -48,6 +50,7 @@ const page = async ({ searchParams }: PageProps) => {
     max: params.max,
     brand: params.brand,
     stock: params.stock,
+    sort: params.sort,
   });
 
   const products = result?.items || [];
@@ -94,12 +97,7 @@ const page = async ({ searchParams }: PageProps) => {
                 products
               </div>
 
-              <div className="text-sm text-zinc-400 font-inter">
-                Sort by:{" "}
-                <span className="text-white border-b border-[#FFBF3F] pb-1 ml-2 cursor-pointer">
-                  Featured
-                </span>
-              </div>
+              <SortDropdown />
             </div>
 
             <ProductGrid

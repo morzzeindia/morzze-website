@@ -103,12 +103,15 @@ const FilterSidebar = ({
       return;
     }
 
-    const current = params.get(sectionId);
+    const currentValues = params.getAll(sectionId);
 
-    if (current === value) {
+    if (currentValues.includes(value)) {
       params.delete(sectionId);
+      currentValues
+        .filter((v) => v !== value)
+        .forEach((v) => params.append(sectionId, v));
     } else {
-      params.set(sectionId, value);
+      params.append(sectionId, value);
     }
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
@@ -138,7 +141,7 @@ const FilterSidebar = ({
       return currentMin === min && currentMax === max;
     }
 
-    return searchParams.get(sectionId) === value;
+    return searchParams.getAll(sectionId).includes(value);
   };
 
   return (

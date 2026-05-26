@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 
 import { revalidatePath } from "next/cache";
-import { and, desc, eq, gte, ilike, inArray, lte, ne, sql } from "drizzle-orm";
+import { and, desc, asc, eq, gte, ilike, inArray, lte, ne, sql } from "drizzle-orm";
 import { generateUniqueSlug } from "../slug/generateUniqueSlug";
 
 import {
@@ -27,18 +27,19 @@ interface GetProductsOptions {
   page?: number;
   pageSize?: number;
   search?: string;
-  category?: string;
-  type?: string;
-  material?: string;
-  finish?: string;
-  size?: string;
-  flow?: string;
-  cramps?: string;
-  allergies?: string;
+  category?: string | string[];
+  type?: string | string[];
+  material?: string | string[];
+  finish?: string | string[];
+  size?: string | string[];
+  flow?: string | string[];
+  cramps?: string | string[];
+  allergies?: string | string[];
   min?: any;
   max?: any;
   stock?: any;
   brand?: any;
+  sort?: string;
 }
 
 function str(fd: FormData, key: string) {
@@ -781,6 +782,7 @@ export async function getProducts({
   max = "",
   stock = "",
   brand = "",
+  sort = "",
 }: GetProductsOptions) {
   const filters = [];
 
@@ -798,7 +800,7 @@ export async function getProducts({
     flow,
     cramps,
     allergies,
-  ].filter(Boolean);
+  ].flat().filter(Boolean);
 
   if (filterValues.length > 0) {
     filters.push(
@@ -836,26 +838,34 @@ export async function getProducts({
     filters.push(eq(product.brand, brand));
   }
 
-  let categoryId;
   if (categorySlug) {
-    [categoryId] = await db
+    const slugs = Array.isArray(categorySlug) ? categorySlug : [categorySlug];
+    const categoryIds = await db
       .select({ id: category.id })
       .from(category)
-      .where(eq(category.slug, categorySlug));
-    // categoryId?.id &&
-    //   filters.push(eq(productCategory.categoryId, categoryId.id));
+      .where(inArray(category.slug, slugs));
 
-    if (categoryId?.id) {
+    if (categoryIds.length > 0) {
       filters.push(
         sql`exists (
       select 1 from ${productCategory}
       where ${productCategory.productId} = ${product.id}
-      and ${productCategory.categoryId} = ${categoryId.id}
+      and ${productCategory.categoryId} in (${sql.join(
+        categoryIds.map(c => sql`${c.id}`),
+        sql`,`,
+      )})
     )`,
       );
     }
   }
   const whereClause = filters.length ? and(...filters) : undefined;
+
+  let orderByClause: any = desc(product.createdAt);
+  if (sort === "price_asc") {
+    orderByClause = asc(product.basePrice);
+  } else if (sort === "price_desc") {
+    orderByClause = desc(product.basePrice);
+  }
 
   const [items, total] = await Promise.all([
     db
@@ -876,7 +886,7 @@ export async function getProducts({
       .from(product)
       // .leftJoin(productCategory, eq(productCategory.productId, product.id))
       .where(whereClause)
-      .orderBy(desc(product.createdAt))
+      .orderBy(orderByClause)
       .limit(pageSize)
       .offset(offset),
 
