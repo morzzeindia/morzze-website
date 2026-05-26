@@ -48,7 +48,7 @@ export const AddressCard = () => {
   if (!address) {
     return (
       <div className="bg-[#141414] rounded-2xl border border-zinc-900 p-8 h-full">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between space-x-2 items-center mb-6">
           <h2 className="text-white text-sm font-medium uppercase tracking-wider">Default Address</h2>
           <Link href="/dashboard/address" className="text-[10px] text-[#FFB800] underline">Add</Link>
         </div>
@@ -62,7 +62,7 @@ export const AddressCard = () => {
 
   return (
     <div className="bg-[#141414] rounded-2xl border border-zinc-900 p-8 h-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between space-x-2 items-center mb-6">
         <h2 className="text-white text-sm font-medium uppercase tracking-wider">Default Address</h2>
         <Link href="/dashboard/address" className="text-[10px] text-[#FFB800] underline">Manage</Link>
       </div>

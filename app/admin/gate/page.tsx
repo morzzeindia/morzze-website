@@ -36,13 +36,13 @@ export default function AdminGatePage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-6 bg-muted/60">
-      <div className="w-full max-w-md rounded-2xl border bg-background p-8 shadow-sm">
+    <div className="relative text-white bg-black min-h-screen w-full flex items-center justify-center p-6 ">
+      <div className="w-full max-w-md bg-gray-950  rounded-2xl border  p-8 shadow-sm">
         <div className="mb-6 flex justify-center">
           <Image src="/logo.png" alt="Logo" width={90} height={50} className="object-contain" />
         </div>
         <h1 className="text-center text-xl font-semibold text-foreground">Admin sign-in</h1>
-        <p className="mt-1 text-center text-sm text-muted-foreground">
+        <p className="mt-1 text-center text-sm  ">
           Only the configured admin ID and password can open the admin panel.
         </p>
 

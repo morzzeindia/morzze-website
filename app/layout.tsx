@@ -51,7 +51,7 @@ export default function RootLayout({
           <WishlistProvider>
             {children}
             <Toaster theme="dark" position="top-right" richColors />
-            <FloatingWhatsappButton />
+
           </WishlistProvider>
         </CartProvider>
       </body>

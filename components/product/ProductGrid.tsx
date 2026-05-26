@@ -89,7 +89,7 @@ const ProductGrid = ({
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
         {products.map((product: any) => (
           <div key={product.id} className="group flex flex-col">
-            <div className="relative aspect-[4/5] bg-[#111] overflow-hidden mb-4">
+            <div className="relative bg-[#111] overflow-hidden mb-4">
               <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 font-montserrat">
                 {product.isNew && (
                   <Badge className="bg-[#CBA14D] text-black hover:bg-[#CBA14D] rounded-none px-2 py-0.5 text-[9px] font-semibold">
@@ -108,13 +108,13 @@ const ProductGrid = ({
                 <motion.img
                   src={product.bannerImage}
                   alt={product.name}
-                  className="w-full h-full object-fit cursor-pointer"
+                  className="w-full h-full object-contain cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.6 }}
                 />
               </Link>
 
-              <div className="absolute inset-x-0 bottom-0 z-30 translate-y-0 md:translate-y-full p-2 group-hover:translate-y-0 transition-transform duration-300">
+              <div className="absolute inset-x-0 bottom-0 z-30 translate-y-0 md:translate-y-full p-1 sm:p-2 group-hover:translate-y-0 transition-transform duration-300">
                 <div className="flex gap-2">
                   <Button
                     type="button"
@@ -130,7 +130,7 @@ const ProductGrid = ({
                         productId: product.id,
                       });
                     }}
-                    className="flex-1 bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
+                    className="flex-1 p-1! sm:p-2! h-8! sm:h-10! bg-[#FFBF3F] hover:bg-[#e5ac37] font-inter text-black rounded-sm h-10 md:h-12 font-bold text-[11px] md:text-sm uppercase flex items-center justify-center gap-1 disabled:opacity-90 disabled:cursor-not-allowed"
                   >
                     {getItemQuantity(product.slug) > 0 ? (
                       <>
@@ -138,7 +138,8 @@ const ProductGrid = ({
                       </>
                     ) : (
                       <>
-                        <IconShoppingBag size={18} /> Add to cart
+                        <IconShoppingBag className=" size-4 sm:size-5" />
+                        <span className=" text-[8px] sm:text-xs">Add to cart</span>
                       </>
                     )}
                   </Button>
@@ -149,18 +150,16 @@ const ProductGrid = ({
                       e.preventDefault();
                       toggleWishlist(product.slug, product.id);
                     }}
-                    className={`shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${
-                      isInWishlist(product.slug)
-                        ? "bg-[#FFBF3F] hover:bg-white "
-                        : "bg-[#FFBF3F] cursor-pointer"
-                    }`}
+                    className={` p-1! sm:p-2! h-8! sm:h-10! shrink-0 rounded-sm h-10 md:h-12 w-10 md:w-10 flex items-center justify-center transition-all ${isInWishlist(product.slug)
+                      ? "bg-[#FFBF3F] hover:bg-white "
+                      : "bg-[#FFBF3F] cursor-pointer"
+                      }`}
                   >
                     {isInWishlist(product.slug) ? (
-                      <IconHeartFilled size={20} className="text-red-500" />
+                      <IconHeartFilled className=" size-4 sm:size-5 text-red-500" />
                     ) : (
                       <IconHeart
-                        size={20}
-                        className="text-white hover:text-black"
+                        className=" size-4 sm:size-5 text-white hover:text-black"
                       />
                     )}
                   </Button>

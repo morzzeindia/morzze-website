@@ -3,14 +3,26 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
-  IconLayoutDashboard, IconUser, IconShoppingBag,
-  IconAddressBook, IconHeart, IconStar,
-  IconBell, IconLogout, IconChevronRight
+  IconLayoutDashboard,
+  IconUser,
+  IconShoppingBag,
+  IconAddressBook,
+  IconHeart,
+  IconStar,
+  IconBell,
+  IconLogout,
+  IconChevronRight,
+  IconMenu2,
 } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { logout } from "@/helper"
 import { getProfile } from "@/helper/user/action"
 import { toast } from "sonner"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 const navItems = [
   { title: "Dashboard", icon: IconLayoutDashboard, href: "/dashboard" },
@@ -25,13 +37,22 @@ const navItems = [
 export default function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+
   const [loggingOut, setLoggingOut] = React.useState(false)
-  const [user, setUser] = React.useState<{ fullName: string; email: string } | null>(null)
+  const [open, setOpen] = React.useState(false)
+
+  const [user, setUser] = React.useState<{
+    fullName: string
+    email: string
+  } | null>(null)
 
   React.useEffect(() => {
     getProfile()
       .then((data) => {
-        setUser({ fullName: data.fullName ?? "", email: data.email ?? "" })
+        setUser({
+          fullName: data.fullName ?? "",
+          email: data.email ?? "",
+        })
       })
       .catch(() => {
         setUser(null)
@@ -40,6 +61,7 @@ export default function AppSidebar() {
 
   const handleLogout = async () => {
     if (loggingOut) return
+
     setLoggingOut(true)
 
     const toastId = toast.loading("Signing out...")
@@ -49,24 +71,31 @@ export default function AppSidebar() {
       toast.success("Signed out successfully", { id: toastId })
       router.push("/login")
     } catch (error: any) {
-      toast.error(error.message || "Failed to sign out", { id: toastId })
+      toast.error(error.message || "Failed to sign out", {
+        id: toastId,
+      })
     } finally {
       setLoggingOut(false)
     }
   }
 
-  return (
-    <aside className="w-full lg:w-[280px] flex flex-col gap-4 p-4  lg:sticky lg:top-0 border-b lg:border-b-0 lg:border-r border-zinc-900 bg-[#141414]">
-
-      {/* Profile Section - Centered Like Image */}
-      <div className="bg-[#141414] rounded-xl p-6 text-center border border-zinc-900 shadow-sm">
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full bg-[#141414]">
+      {/* Profile */}
+      <div className="rounded-xl p-6 text-center border border-zinc-900 shadow-sm">
         <div className="w-14 h-14 bg-zinc-800 rounded-full mx-auto mb-3 flex items-center justify-center border border-zinc-700/50">
           <IconUser className="text-[#FFB800]" size={28} />
         </div>
+
         {user ? (
           <>
-            <h3 className="text-white font-medium text-sm">{user.fullName || "User"}</h3>
-            <p className="text-zinc-500 text-[11px] mt-0.5">{user.email}</p>
+            <h3 className="text-white font-medium text-sm">
+              {user.fullName || "User"}
+            </h3>
+
+            <p className="text-zinc-500 text-[11px] mt-0.5">
+              {user.email}
+            </p>
           </>
         ) : (
           <>
@@ -76,9 +105,9 @@ export default function AppSidebar() {
         )}
       </div>
 
-      {/* Navigation - Vertical List Style */}
-      <nav className="flex-1">
-        <div className="bg-[#141414] lg:bg-transparent rounded-xl lg:rounded-none border lg:border-0 border-zinc-900 overflow-hidden space-y-1">
+      {/* Navigation */}
+      <nav className=" mt-4">
+        <div className="rounded-xl border border-zinc-900 overflow-hidden space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href
 
@@ -86,42 +115,88 @@ export default function AppSidebar() {
               <Link
                 key={item.title}
                 href={item.href}
+                onClick={() => setOpen(false)}
                 className={cn(
-                  "w-full flex items-center justify-between px-4 md:py-2.5 py-3.5 transition-all group border-b lg:border-b-0 border-zinc-900/50 last:border-0",
+                  "w-full flex items-center justify-between px-4 md:py-2.5 py-3.5 transition-all group border-b border-zinc-900/50 last:border-0",
                   isActive
-                    ? "bg-[#FFB800]/10 text-[#FFB800] lg:border lg:border-[#FFB800]/20 lg:rounded-lg"
-                    : "text-zinc-400 hover:text-white lg:hover:bg-zinc-900 lg:rounded-lg"
+                    ? "bg-[#FFB800]/10 text-[#FFB800]"
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-900"
                 )}
               >
                 <div className="flex items-center gap-3">
                   <item.icon
                     size={19}
-                    className={cn("transition-colors", isActive ? "text-[#FFB800]" : "text-zinc-500 group-hover:text-zinc-300")}
+                    className={cn(
+                      "transition-colors",
+                      isActive
+                        ? "text-[#FFB800]"
+                        : "text-zinc-500 group-hover:text-zinc-300"
+                    )}
                   />
-                  <span className="text-[13px] font-medium">{item.title}</span>
+
+                  <span className="text-[13px] font-medium">
+                    {item.title}
+                  </span>
                 </div>
+
                 <IconChevronRight
                   size={14}
-                  className={cn("opacity-30 transition-transform group-hover:translate-x-0.5", isActive && "opacity-100")}
+                  className={cn(
+                    "opacity-30 transition-transform group-hover:translate-x-0.5",
+                    isActive && "opacity-100"
+                  )}
                 />
               </Link>
             )
           })}
         </div>
-        <div className="mt-auto pt-4 lg:border-t lg:border-zinc-900">
+
+        {/* Logout */}
+        <div className="pt-4 border-t border-zinc-900 mt-4">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
             className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/5 rounded-lg transition-all group disabled:opacity-50"
           >
-            <IconLogout size={19} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-[13px] font-medium">{loggingOut ? "Signing Out..." : "Sign Out"}</span>
+            <IconLogout
+              size={19}
+              className="group-hover:-translate-x-1 transition-transform"
+            />
+
+            <span className="text-[13px] font-medium">
+              {loggingOut ? "Signing Out..." : "Sign Out"}
+            </span>
           </button>
         </div>
       </nav>
+    </div>
+  )
 
-      {/* Sign Out - Bottom Section */}
+  return (
+    <>
+      {/* Mobile Sidebar */}
+      <div className="lg:hidden p-4 border-b border-zinc-900 bg-[#141414]">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <button className="flex items-center gap-2 text-white">
+              <IconMenu2 size={24} />
+              <span className="text-sm font-medium">Menu</span>
+            </button>
+          </SheetTrigger>
 
-    </aside>
+          <SheetContent
+            side="left"
+            className="w-[300px] border-zinc-900 bg-[#141414] p-4"
+          >
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-[280px] flex-col gap-4 p-4 sticky top-0 border-r border-zinc-900 bg-[#141414]">
+        <SidebarContent />
+      </aside>
+    </>
   )
 }

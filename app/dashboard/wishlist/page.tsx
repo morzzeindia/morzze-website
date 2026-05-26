@@ -6,6 +6,7 @@ import { IconShoppingBag, IconStarFilled, IconX, IconHeart } from "@tabler/icons
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { getProductsBySlugList } from "@/helper/product/action";
+import Image from "next/image";
 
 type WishlistProduct = {
   id: string;
@@ -108,10 +109,12 @@ const WishlistPage = () => {
 
                 <Link href={`/products/${item.slug}`}>
                   {item.bannerImage ? (
-                    <img
+                    <Image
                       src={item.bannerImage}
                       alt={item.name ?? "Product"}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      width={300}
+                      height={300}
+                      className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-zinc-700">
@@ -156,11 +159,11 @@ const WishlistPage = () => {
                   <span className="text-base font-bold">
                     ₹{item.basePrice?.toLocaleString("en-IN")}
                   </span>
-                  {item.strikethroughPrice && (
+                  {/* {item.strikethroughPrice && (
                     <span className="text-xs text-gray-600 line-through">
                       ₹{item.strikethroughPrice.toLocaleString("en-IN")}
                     </span>
-                  )}
+                  )} */}
                 </div>
 
                 {/* Add to Cart Button */}

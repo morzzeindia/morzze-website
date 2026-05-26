@@ -37,7 +37,7 @@ const EditAddressPage = ({ address, onSave, onCancel, saving }: EditAddressPageP
     city: address?.city ?? "",
     state: address?.state ?? "",
     pincode: address?.pincode ?? "",
-    country: address?.country ?? "India",
+    country: "India",
     isDefault: address?.isDefault ?? false,
   });
 
@@ -52,7 +52,7 @@ const EditAddressPage = ({ address, onSave, onCancel, saving }: EditAddressPageP
     if (!form.city.trim()) return;
     if (!form.state.trim()) return;
     if (!form.pincode.trim()) return;
-    onSave(form);
+    onSave({ ...form, country: "India" });
   };
 
   return (
@@ -144,9 +144,9 @@ const EditAddressPage = ({ address, onSave, onCancel, saving }: EditAddressPageP
           <div className="md:col-span-2 space-y-2">
             <label className="text-[11px] text-zinc-500 uppercase font-medium">Country</label>
             <Input
-              value={form.country}
-              onChange={(e) => handleChange("country", e.target.value)}
-              placeholder="Enter country"
+              value={"India"}
+              onChange={(e) => handleChange("country", "India")}
+              disabled
               className="bg-[#454545] border-zinc-800 focus:border-zinc-700 h-11 text-sm rounded-sm"
             />
           </div>
