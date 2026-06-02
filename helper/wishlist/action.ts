@@ -4,63 +4,58 @@ import {
   wishlist,
   wishlistItem,
   product,
-  users,
 } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { requireUserWithRefresh } from "../user/action";
 
-// Helper to resolve the DB user ID from email
 async function getDbUserId(): Promise<string> {
-  const { email }: any = await requireUserWithRefresh();
-  if (!email) throw new Error("UNAUTHORIZED");
-
-  const result = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (!result.length) throw new Error("User not found");
-  return result[0].id;
+  const { userId } = await requireUserWithRefresh();
+  if (!userId) throw new Error("UNAUTHORIZED");
+  return userId;
 }
 
 export async function addToWishlistDB(productId: string) {
   const userId = await getDbUserId();
 
-  const userWishlist = await db
-    .select()
-    .from(wishlist)
-    .where(eq(wishlist.userId, userId))
-    .limit(1);
+  await db.transaction(async (tx) => {
+    let userWishlist = await tx
+      .select()
+      .from(wishlist)
+      .where(eq(wishlist.userId, userId))
+      .limit(1)
+      .then((r) => r[0]);
 
-  let wishlistId: string;
+    if (!userWishlist) {
+      userWishlist = await tx
+        .insert(wishlist)
+        .values({ userId })
+        .returning()
+        .then((r) => r[0]);
+    }
 
-  if (userWishlist.length === 0) {
-    const newWishlist = await db
-      .insert(wishlist)
-      .values({ userId })
-      .returning({ id: wishlist.id });
+    if (!userWishlist) {
+      throw new Error("Unable to create wishlist");
+    }
 
-    wishlistId = newWishlist[0].id;
-  } else {
-    wishlistId = userWishlist[0].id;
-  }
+    await tx.execute(sql`SELECT id FROM wishlist WHERE id = ${userWishlist.id} FOR UPDATE`);
 
-  const existing = await db
-    .select()
-    .from(wishlistItem)
-    .where(
-      and(
-        eq(wishlistItem.wishlistId, wishlistId),
-        eq(wishlistItem.productId, productId)
+    const existing = await tx
+      .select({ id: wishlistItem.id })
+      .from(wishlistItem)
+      .where(
+        and(
+          eq(wishlistItem.wishlistId, userWishlist.id),
+          eq(wishlistItem.productId, productId)
+        )
       )
-    );
+      .limit(1);
 
-  if (existing.length > 0) return;
+    if (existing.length > 0) return;
 
-  await db.insert(wishlistItem).values({
-    wishlistId,
-    productId,
+    await tx.insert(wishlistItem).values({
+      wishlistId: userWishlist.id,
+      productId,
+    });
   });
 }
 

@@ -25,8 +25,6 @@ export const addToWishlist = async (item: any) => {
 
     try {
         await addToWishlistDB(item.productId);
-
-        toast.success("Item Added to wishlist");
     } catch (error) {
         console.error("DB failed:", error);
 
@@ -43,8 +41,6 @@ export const removeFromWishlist = async (productId: string) => {
 
     try {
         await removeFromWishlistDB(productId);
-
-        toast.success("Item removed from wishlist");
     } catch (error) {
         console.error(error);
         toast.error("Failed to remove wishlist");

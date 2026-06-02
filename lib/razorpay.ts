@@ -5,7 +5,6 @@ import {
   CreatePaymentGatewaySubscription,
   createSubscription,
 } from "@/helper";
-import { getCurrentUser } from "@/helper/user/action";
 
 declare global {
   interface Window {
@@ -61,7 +60,6 @@ export const loadRazorpayScript = (): Promise<boolean> => {
   );
 
   if (subscriptionItems.length > 0) {
-    const { userId }: any = await getCurrentUser()
     const plan = await fetch("/api/razorpay/plans", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -98,7 +96,7 @@ export const loadRazorpayScript = (): Promise<boolean> => {
     );
 
     await CreatePaymentGatewaySubscription(subscriptions);
-    await createSubscription({ userId, items });
+    await createSubscription({ items });
 
   }
 

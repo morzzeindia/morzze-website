@@ -7,6 +7,167 @@ import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 import { requireUserWithRefresh } from "../user/action";
 
+type CartMutationInput = {
+  productId?: string;
+  productVarientBox?: string | null;
+  quantity?: number;
+  isTypeSubscription?: boolean;
+  frequencyInMonths?: number | null;
+  clientCartItemId?: string | null;
+};
+
+type CartTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+class CartMutationError extends Error {}
+
+function normalizeRequestedQuantity(quantity?: number) {
+  const numericQuantity = Number(quantity ?? 1);
+
+  if (!Number.isFinite(numericQuantity)) {
+    return null;
+  }
+
+  return Math.trunc(numericQuantity);
+}
+
+async function getCurrentUserIdForCart() {
+  try {
+    const { userId } = await requireUserWithRefresh();
+    return userId ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function getOrCreateLockedCart(tx: CartTransaction, userId: string) {
+  let userCart = await tx
+    .select()
+    .from(cart)
+    .where(eq(cart.userId, userId))
+    .limit(1)
+    .then((r) => r[0]);
+
+  if (!userCart) {
+    userCart = await tx
+      .insert(cart)
+      .values({
+        id: uuidv4(),
+        userId,
+      })
+      .returning()
+      .then((r) => r[0]);
+  }
+
+  if (!userCart) {
+    throw new Error("Unable to create cart");
+  }
+
+  await tx.execute(sql`SELECT id FROM cart WHERE id = ${userCart.id} FOR UPDATE`);
+
+  return userCart;
+}
+
+function getCartItemWhere(
+  cartId: string,
+  productId: string,
+  productVarientBox?: string | null,
+) {
+  return and(
+    eq(cartItem.cartId, cartId),
+    eq(cartItem.productId, productId),
+    productVarientBox
+      ? eq(cartItem.productVarientBox, productVarientBox)
+      : sql`${cartItem.productVarientBox} IS NULL`,
+  );
+}
+
+export async function setUserCartItemQuantity(input: CartMutationInput) {
+  const userId = await getCurrentUserIdForCart();
+
+  if (!userId) {
+    return { success: true, userIsNotLoggedIn: true };
+  }
+
+  if (!input.productId) {
+    return { success: false, message: "Product id is required" };
+  }
+
+  const quantity = normalizeRequestedQuantity(input.quantity);
+
+  if (quantity === null) {
+    return { success: false, message: "Quantity is required" };
+  }
+
+  try {
+    await db.transaction(async (tx) => {
+      const [existingProduct] = await tx
+        .select({ id: product.id })
+        .from(product)
+        .where(eq(product.id, input.productId!))
+        .limit(1);
+
+      if (!existingProduct) {
+        throw new CartMutationError("Product not found");
+      }
+
+      const userCart = await getOrCreateLockedCart(tx, userId);
+      const where = getCartItemWhere(
+        userCart.id,
+        input.productId!,
+        input.productVarientBox ?? null,
+      );
+
+      if (quantity <= 0) {
+        await tx.delete(cartItem).where(where);
+        return;
+      }
+
+      const [existingItem] = await tx
+        .select()
+        .from(cartItem)
+        .where(where)
+        .limit(1);
+
+      if (existingItem) {
+        await tx
+          .update(cartItem)
+          .set({
+            quantity,
+            isTypeSubscription: input.isTypeSubscription ?? existingItem.isTypeSubscription,
+            frequencyInMonths:
+              input.frequencyInMonths ?? existingItem.frequencyInMonths,
+            clientCartItemId:
+              input.clientCartItemId ?? existingItem.clientCartItemId,
+          })
+          .where(eq(cartItem.id, existingItem.id));
+        return;
+      }
+
+      await tx.insert(cartItem).values({
+        id: uuidv4(),
+        cartId: userCart.id,
+        productId: input.productId!,
+        productVarientBox: input.productVarientBox ?? null,
+        quantity,
+        isTypeSubscription: input.isTypeSubscription ?? false,
+        frequencyInMonths: input.frequencyInMonths ?? null,
+        clientCartItemId: input.clientCartItemId ?? null,
+      });
+    });
+
+    revalidatePath("/cart");
+    return { success: true };
+  } catch (error) {
+    console.error("Cart quantity sync failed:", error);
+
+    if (error instanceof CartMutationError) {
+      return { success: false, message: error.message };
+    }
+
+    return { success: false, message: "Failed to update cart" };
+  }
+}
+
 export async function getCart() {
   try {
     const { userId } = await requireUserWithRefresh();

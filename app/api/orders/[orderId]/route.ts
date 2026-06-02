@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { order } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { requireUserWithRefresh } from "@/helper/user/action";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -9,6 +10,18 @@ export async function GET(
 ) {
     try {
         const { orderId } = await params;
+        const { userId } = await requireUserWithRefresh();
+
+
+        if (!userId) {
+            return NextResponse.json(
+                {
+                    message: "Unauthorized",
+                },
+                { status: 401 }
+            );
+        }
+
         if (!orderId) {
             return NextResponse.json(
                 {
@@ -19,12 +32,30 @@ export async function GET(
         }
 
         const data = await db.query.order.findFirst({
-            where: eq(order.id, orderId),
+            where: and(eq(order.id, orderId), eq(order.userId, userId)),
         });
+
+        if (!data) {
+            return NextResponse.json(
+                {
+                    message: "Order not found",
+                },
+                { status: 404 }
+            );
+        }
 
         return NextResponse.json(data);
     } catch (error) {
         console.log(error);
+
+        if (error instanceof Error && error.message === "UNAUTHORIZED") {
+            return NextResponse.json(
+                {
+                    message: "Unauthorized",
+                },
+                { status: 401 }
+            );
+        }
 
         return NextResponse.json(
             {

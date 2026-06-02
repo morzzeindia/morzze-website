@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { review } from "@/db/schema";
+import { getProfile } from "@/helper/user/action";
 
 
 // GET REVIEWS
@@ -32,13 +33,14 @@ export async function POST(req: NextRequest) {
   try {
 
     const body = await req.json();
+    const { userId, fullName, email } = await getProfile();
 
     const newReview = await db
       .insert(review)
       .values({
-        userId: body.userId,
-        name: body.name,
-        email: body.email,
+        userId,
+        name: fullName,
+        email,
         productId: body.productId,
         rating: body.rating,
         message: body.message,
@@ -50,6 +52,13 @@ export async function POST(req: NextRequest) {
   } catch (error) {
 
     console.error(error);
+
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
 
     return NextResponse.json(
       { error: "Failed to create review" },
