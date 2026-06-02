@@ -60,14 +60,14 @@ export default function ProductSpecificationSection({
 
         {activeTab === "SPECIFICATIONS" && (
           <div className="bg-[#f8f9fa] p-5 rounded-xl">
-            <Label className="text-xl font-bold mb-6 block">
-              Product Specifications
+            <Label className="text-xl text-black font-bold mb-6 block">
+              <p className="text-black">Specifications</p>
             </Label>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Material */}
               <div className="space-y-2">
-                <Label>Material</Label>
+                <Label className="text-black"> <p className="text-black">Material</p> </Label>
 
                 <Input
                   placeholder="Enter Material"
@@ -83,7 +83,7 @@ export default function ProductSpecificationSection({
 
               {/* Finish */}
               <div className="space-y-2">
-                <Label>Finish</Label>
+                <Label className="text-black"> <p className="text-black">Finish</p> </Label>
 
                 <Input
                   placeholder="Enter Finish"
@@ -99,7 +99,7 @@ export default function ProductSpecificationSection({
 
               {/* Dimensions */}
               <div className="space-y-2">
-                <Label>Dimensions</Label>
+                <Label className="text-black"> <p className="text-black">Dimensions</p> </Label>
 
                 <Input
                   placeholder="Enter Dimensions"
@@ -115,7 +115,7 @@ export default function ProductSpecificationSection({
 
               {/* Weight */}
               <div className="space-y-2">
-                <Label>Weight</Label>
+                <Label className="text-black"> <p className="text-black">Weight</p> </Label>
 
                 <Input
                   placeholder="Enter Weight"
@@ -131,7 +131,7 @@ export default function ProductSpecificationSection({
 
               {/* Warranty */}
               <div className="space-y-2">
-                <Label>Warranty</Label>
+                <Label className="text-black"> <p className="text-black">Warranty</p> </Label>
 
                 <Input
                   placeholder="Enter Warranty"
@@ -147,7 +147,7 @@ export default function ProductSpecificationSection({
 
               {/* SKU */}
               <div className="space-y-2">
-                <Label>SKU</Label>
+                <Label className="text-black"> <p className="text-black">SKU</p> </Label>
 
                 <Input
                   placeholder="Enter SKU"
@@ -171,7 +171,7 @@ export default function ProductSpecificationSection({
         {activeTab === "FEATURES & BOX" && (
           <div className="bg-[#f8f9fa] p-5 rounded-xl">
             <Label className="text-xl font-bold mb-4 block">
-              Features & Box
+             <p className="text-black"> Features & Box </p>
             </Label>
 
             <RichTextEditor

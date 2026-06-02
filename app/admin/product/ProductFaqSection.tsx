@@ -76,7 +76,7 @@ export default function ProductFaqSection({
           >
             {/* TOP BAR */}
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-sm text-gray-700">
+              <h3 className="font-semibold text-sm text-black">
                 FAQ #{index + 1}
               </h3>
 
@@ -92,8 +92,8 @@ export default function ProductFaqSection({
 
             {/* QUESTION */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">
-                Question
+              <label className="text-sm font-medium text-black">
+                <p className="text-black">Question</p>
               </label>
 
               <Input
@@ -111,8 +111,8 @@ export default function ProductFaqSection({
 
             {/* ANSWER */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">
-                Answer
+              <label className="text-sm font-medium text-black">
+                <p className="text-black">Answer</p>
               </label>
 
               <Textarea

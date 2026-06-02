@@ -65,7 +65,7 @@ export default function AttributeSection({
               className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
                 activeTab === tab
                   ? "bg-[#1f8297] text-white"
-                  : "border bg-white text-gray-700 hover:bg-gray-50"
+                  : "border bg-white text-black hover:bg-gray-50"
               }`}
             >
               {tab}
@@ -75,8 +75,8 @@ export default function AttributeSection({
 
         {/* Tab Content */}
         <div className="mt-4 bg-[#f8f9fa] p-4 rounded-xl min-h-[300px]">
-          <Label className="text-xl font-bold mb-4 block text-gray-800">
-            {activeTab}
+          <Label className="text-xl font-bold mb-4 block text-black">
+           <p className="text-black"> {activeTab} </p>
           </Label>
 
           {activeTab === "Documentation" ? (
