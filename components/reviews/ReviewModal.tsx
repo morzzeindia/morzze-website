@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useTransition } from "react";
 import {
   Dialog,
@@ -126,9 +127,11 @@ const ReviewModal = ({
           <div className="flex gap-3 items-center">
             <div className="w-12 h-12 bg-[#0A0A0A] border border-zinc-800 rounded-sm overflow-hidden shrink-0">
               {image ? (
-                <img
+                <Image
                   src={image}
                   alt=""
+                  width={120}
+                  height={120}
                   className="w-full h-full object-cover"
                 />
               ) : (

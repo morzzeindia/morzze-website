@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { db } from "@/db";
 import { careerEnquiries } from "@/db/schema";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { renderTemplate, sendEmail, sendEmailWithAttachments } from "@/lib/email";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -56,17 +56,6 @@ export async function POST(req: Request) {
       );
     }
 
-    if (
-      !process.env.CAREER_EMAIL_USER ||
-      !process.env.CAREER_EMAIL_PASS ||
-      !process.env.CAREER_RECEIVER_EMAIL
-    ) {
-      return NextResponse.json(
-        { success: false, message: "Career email env variables are missing" },
-        { status: 500 }
-      );
-    }
-
     const bytes = await resume.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
@@ -92,47 +81,53 @@ export async function POST(req: Request) {
       resumeUrl,
     });
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.CAREER_EMAIL_USER,
-        pass: process.env.CAREER_EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.CAREER_EMAIL_USER,
-      to: process.env.CAREER_RECEIVER_EMAIL,
-      subject: `New Career Enquiry - ${subject}`,
-      html: `
+    try {
+      await sendEmailWithAttachments({
+        to: process.env.CAREER_RECEIVER_EMAIL || process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
+        subject: `New Career Enquiry - ${subject}`,
+        html: renderTemplate(
+          `
         <h2>New General Application Enquiry</h2>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Mobile Number:</b> ${mobileNumber}</p>
-        <p><b>Subject:</b> ${subject}</p>
-        <p><b>Description:</b> ${description}</p>
+        <p><b>Name:</b> {{Name}}</p>
+        <p><b>Email:</b> {{Email}}</p>
+        <p><b>Mobile Number:</b> {{Mobile Number}}</p>
+        <p><b>Subject:</b> {{Subject}}</p>
+        <p><b>Description:</b> {{Description}}</p>
         <p>
           <b>Resume:</b>
-          <a href="${resumeUrl}" target="_blank">
+          <a href="{{Resume URL}}" target="_blank">
             Open Resume
           </a>
         </p>
       `,
-      attachments: [
-        {
-          filename: resume.name,
-          content: buffer,
-          contentType: "application/pdf",
-        },
-      ],
-    });
+          {
+            Name: name,
+            Email: email,
+            "Mobile Number": mobileNumber,
+            Subject: subject,
+            Description: description,
+            "Resume URL": resumeUrl,
+          },
+        ),
+        attachments: [
+          {
+            filename: resume.name,
+            content: buffer,
+            contentType: "application/pdf",
+          },
+        ],
+      });
+    } catch (emailError) {
+      console.error("Unable to send career enquiry admin email:", emailError);
+    }
 
-    await transporter.sendMail({
-      from: process.env.CAREER_EMAIL_USER,
-      to: email,
-      subject: "Application Received",
-      html: `
-        <h2>Hello ${name},</h2>
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Application Received",
+        html: renderTemplate(
+          `
+        <h2>Hello {{Name}},</h2>
         <p>Thank you for submitting your application.</p>
         <p>
           We have received your details successfully.
@@ -144,7 +139,14 @@ export async function POST(req: Request) {
         <p>Regards,</p>
         <p>HR Team</p>
       `,
-    });
+          {
+            Name: name,
+          },
+        ),
+      });
+    } catch (emailError) {
+      console.error("Unable to send career enquiry confirmation email:", emailError);
+    }
 
     return NextResponse.json({
       success: true,

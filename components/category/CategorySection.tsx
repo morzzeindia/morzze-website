@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -85,9 +86,11 @@ const CategorySection = ({ categories }: CategorySectionProps) => {
                   className={`relative group cursor-pointer overflow-hidden rounded-sm bg-zinc-900 ${spanClass}`}
                 >
                   {cat.bannerImage ? (
-                    <img
+                    <Image
                       src={cat.bannerImage}
                       alt={cat.name}
+                      width={900}
+                      height={600}
                       className="w-full h-full object-cover opacity-60 transition-transform duration-1000 ease-out group-hover:scale-110 group-hover:opacity-100"
                     />
                   ) : (

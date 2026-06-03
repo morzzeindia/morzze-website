@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllProductsByCategorySlug, getCategoryBySlug } from "@/helper/category/action";
 import CategoryProductsClient from "./CategoryProductsClient";
@@ -24,9 +25,11 @@ export default async function CategoryPage({
       {/* Hero Banner */}
       <section className="relative h-[340px] md:h-[420px] overflow-hidden">
         {categoryData.bannerImage ? (
-          <img
+          <Image
             src={categoryData.bannerImage}
             alt={categoryData.name ?? "Category"}
+            width={1600}
+            height={700}
             className="w-full h-full object-cover opacity-50"
           />
         ) : (

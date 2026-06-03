@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
@@ -8,9 +9,11 @@ const StoreLocator = () => {
   return (
     <section className="relative w-full  py-8 md:py-24  flex items-center ">
       <div className="absolute inset-0 z-0">
-        <img 
+        <Image 
           src="/store.png" 
           alt="World Store Map"
+          width={1600}
+          height={600}
           className="w-full h-full object-cover " 
         />
         <div className="absolute inset-0 bg-black/40" />

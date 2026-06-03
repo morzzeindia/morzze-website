@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -344,9 +345,11 @@ export default function CatalogueForm({ mode, initialData }: Props) {
                   disabled={uploading || loading}
                 />
                 {coverPreview ? (
-                  <img
+                  <Image
                     src={coverPreview}
                     alt="cover preview"
+                    width={400}
+                    height={500}
                     className="mx-auto h-40 object-contain"
                   />
                 ) : (

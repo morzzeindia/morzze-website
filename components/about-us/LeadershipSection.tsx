@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 import { IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
@@ -19,9 +20,11 @@ const LeadershipSection = () => {
               className="relative w-full max-w-150"
             >
               <div className="aspect-square rounded-[20px] overflow-hidden border border-white/5 shadow-2xl">
-                <img
+                <Image
                   src="/Leadership.jpg"
                   alt="Rajesh Sharma"
+                  width={800}
+                  height={800}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-80" />

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 import { motion } from "framer-motion";
@@ -146,9 +147,11 @@ const ReviewsTab = ({ reviews = [] }: any) => {
                           key={i}
                           className="relative w-20 h-20 rounded border border-zinc-800 overflow-hidden hover:border-zinc-700 transition cursor-pointer"
                         >
-                          <img
+                          <Image
                             src={media.mediaURL}
                             alt={`Review media ${i}`}
+                            width={200}
+                            height={200}
                             className="w-full h-full object-cover"
                           />
                         </div>

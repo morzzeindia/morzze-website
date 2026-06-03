@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { checkUserFirstOrder, createOrder, createSubscription, sendFirstPurchaseEmail, sendOrderConfirmationEmail } from "@/helper";
+import { checkUserFirstOrder, createOrder } from "@/helper";
 import { RAZORPAY_KEY_SECRET } from "@/env";
-import { getCurrentUser, getProfile, requireUserWithRefresh } from "@/helper/user/action";
+import { getProfile } from "@/helper/user/action";
+import {
+  notifyFirstOrderEmail,
+  notifyOrderConfirmationEmail,
+} from "@/lib/email-notifications";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -30,8 +34,14 @@ export async function POST(req: Request) {
 
   const existingOrder = await checkUserFirstOrder(userId);
   if (existingOrder.length === 0) {
-    // This is the user's first order
-     await sendFirstPurchaseEmail(email, fullName);
+    try {
+      await notifyFirstOrderEmail({
+        email,
+        customerName: fullName,
+      });
+    } catch (emailError) {
+      console.error("Unable to send first order email:", emailError);
+    }
   }
 
 
@@ -47,7 +57,25 @@ export async function POST(req: Request) {
 
   const currentDate = new Date().toLocaleDateString();
 
-   await sendOrderConfirmationEmail(email,fullName,result?.orderId,currentDate,amount)
+  try {
+    const productNames = Array.isArray(items)
+      ? items
+          .map((item: any) => item?.name || item?.productName || item?.title)
+          .filter(Boolean)
+          .join(", ")
+      : "";
+
+    await notifyOrderConfirmationEmail({
+      email,
+      customerName: fullName,
+      orderId: result?.orderId,
+      orderDate: currentDate,
+      productNames,
+      orderTotal: amount,
+    });
+  } catch (emailError) {
+    console.error("Unable to send order confirmation email:", emailError);
+  }
 
   return NextResponse.json(result);
 }

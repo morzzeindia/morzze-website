@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { notifyNewsletterSignupEmail } from "@/lib/email-notifications";
+import { renderTemplate, sendEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -15,59 +16,32 @@ export async function POST(req: Request) {
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Admin Mail
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      subject: "New Newsletter Subscription - Morzze",
-      html: `
+    try {
+      await sendEmail({
+        to: process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
+        subject: "New Newsletter Subscription - Morzze",
+        html: renderTemplate(
+          `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2>New Newsletter Subscriber</h2>
 
           <p>
-            <strong>Email:</strong> ${email}
+            <strong>Email:</strong> {{Email}}
           </p>
         </div>
       `,
-    });
+          { Email: email },
+        ),
+      });
+    } catch (emailError) {
+      console.error("Unable to send newsletter admin email:", emailError);
+    }
 
-    // Confirmation Mail to User
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Welcome to Morzze",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 30px;">
-          
-          <h1 style="color: #CBA14D; margin-bottom: 20px;">
-            Welcome to Morzze
-          </h1>
-
-          <p style="font-size: 15px; line-height: 1.7;">
-            Thank you for subscribing to the Morzze newsletter.
-          </p>
-
-          <p style="font-size: 15px; line-height: 1.7;">
-            You'll now receive updates, insights, offers, and exclusive content directly in your inbox.
-          </p>
-
-          <div style="margin-top: 30px;">
-            <p style="color: #888888;">
-              — Team Morzze
-            </p>
-          </div>
-
-        </div>
-      `,
-    });
+    try {
+      await notifyNewsletterSignupEmail({ email });
+    } catch (emailError) {
+      console.error("Unable to send newsletter signup email:", emailError);
+    }
 
     return NextResponse.json({
       success: true,

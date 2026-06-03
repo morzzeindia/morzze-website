@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import React from 'react'
 
 const AteliersGrid = () => {
@@ -21,9 +22,11 @@ const AteliersGrid = () => {
           
           {/* 1. Left Big Image (Occupies 6 columns) */}
           <div className="md:col-span-6 relative rounded-2xl overflow-hidden group h-[400px] md:h-full">
-            <img 
+            <Image 
               src="/detailpage-1.png" // Replace with your image name
               alt="Kitchen environment 1"
+              width={900}
+              height={700}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </div>
@@ -32,17 +35,21 @@ const AteliersGrid = () => {
           <div className="md:col-span-3 grid grid-rows-2 gap-4 h-[500px] md:h-full">
             {/* Top Small */}
             <div className="relative rounded-2xl overflow-hidden group">
-              <img 
+              <Image 
                 src="/detailpage-2.png" 
                 alt="Kitchen environment 2"
+                width={500}
+                height={350}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
             {/* Bottom Small */}
             <div className="relative rounded-2xl overflow-hidden group">
-              <img 
+              <Image 
                 src="/detailpage-3.png" 
                 alt="Kitchen environment 3"
+                width={500}
+                height={350}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
@@ -50,9 +57,11 @@ const AteliersGrid = () => {
 
           {/* 3. Right Portrait Image (Occupies 3 columns) */}
           <div className="md:col-span-3 relative rounded-2xl overflow-hidden group h-[500px] md:h-full">
-            <img 
+            <Image 
               src="/detailpage-4.png" 
               alt="Kitchen environment 4"
+              width={500}
+              height={700}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </div>

@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer"
 import { NextResponse } from "next/server"
+import { renderTemplate, sendEmail, sendEmailWithAttachments } from "@/lib/email"
 
 export const runtime = "nodejs"
 
@@ -33,16 +33,6 @@ export async function POST(req: Request) {
         })
     )
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    })
-
     let subject = ""
     let html = ""
 
@@ -61,17 +51,29 @@ export async function POST(req: Request) {
 
       html = `
         <h2>Warranty Registration</h2>
-        <p><strong>Serial Number:</strong> ${serialNumber}</p>
-        <p><strong>Purchase Date:</strong> ${purchaseDate}</p>
-        <p><strong>Product Category:</strong> ${productCategory}</p>
-        <p><strong>Product Name:</strong> ${productName}</p>
-        <p><strong>Invoice Number:</strong> ${invoiceNumber}</p>
-        <p><strong>Dealer Name:</strong> ${dealerName}</p>
-        <p><strong>Full Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Installation Address:</strong> ${address}</p>
+        <p><strong>Serial Number:</strong> {{Serial Number}}</p>
+        <p><strong>Purchase Date:</strong> {{Purchase Date}}</p>
+        <p><strong>Product Category:</strong> {{Product Category}}</p>
+        <p><strong>Product Name:</strong> {{Product Name}}</p>
+        <p><strong>Invoice Number:</strong> {{Invoice Number}}</p>
+        <p><strong>Dealer Name:</strong> {{Dealer Name}}</p>
+        <p><strong>Full Name:</strong> {{Full Name}}</p>
+        <p><strong>Email:</strong> {{Email}}</p>
+        <p><strong>Phone:</strong> {{Phone}}</p>
+        <p><strong>Installation Address:</strong> {{Address}}</p>
       `
+      html = renderTemplate(html, {
+        "Serial Number": serialNumber,
+        "Purchase Date": purchaseDate,
+        "Product Category": productCategory,
+        "Product Name": productName,
+        "Invoice Number": invoiceNumber,
+        "Dealer Name": dealerName,
+        "Full Name": fullName,
+        Email: email,
+        Phone: phone,
+        Address: address,
+      })
     }
 
     if (type === "claim") {
@@ -87,16 +89,26 @@ export async function POST(req: Request) {
 
       html = `
         <h2>Warranty Claim</h2>
-        <p><strong>Serial Number:</strong> ${serialNumber}</p>
-        <p><strong>Product Category:</strong> ${productCategory}</p>
-        <p><strong>Issue Type:</strong> ${issueType}</p>
+        <p><strong>Serial Number:</strong> {{Serial Number}}</p>
+        <p><strong>Product Category:</strong> {{Product Category}}</p>
+        <p><strong>Issue Type:</strong> {{Issue Type}}</p>
         <p><strong>Issue Description:</strong></p>
-        <p>${issueDescription}</p>
-        <p><strong>Full Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Installation Address:</strong> ${address}</p>
+        <p>{{Issue Description}}</p>
+        <p><strong>Full Name:</strong> {{Full Name}}</p>
+        <p><strong>Email:</strong> {{Email}}</p>
+        <p><strong>Phone:</strong> {{Phone}}</p>
+        <p><strong>Installation Address:</strong> {{Address}}</p>
       `
+      html = renderTemplate(html, {
+        "Serial Number": serialNumber,
+        "Product Category": productCategory,
+        "Issue Type": issueType,
+        "Issue Description": issueDescription,
+        "Full Name": fullName,
+        Email: email,
+        Phone: phone,
+        Address: address,
+      })
     }
 
     if (type === "status") {
@@ -104,17 +116,24 @@ export async function POST(req: Request) {
 
       html = `
         <h2>Warranty Status Check</h2>
-        <p><strong>Serial Number:</strong> ${serialNumber}</p>
+        <p><strong>Serial Number:</strong> {{Serial Number}}</p>
       `
+      html = renderTemplate(html, {
+        "Serial Number": serialNumber,
+      })
     }
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
+    const emailPayload = {
+      to: process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
       subject,
       html,
-      attachments,
-    })
+    }
+
+    if (attachments.length > 0) {
+      await sendEmailWithAttachments({ ...emailPayload, attachments })
+    } else {
+      await sendEmail(emailPayload)
+    }
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -661,8 +662,10 @@ export default function AddProductForm() {
                     {!variants.banner ? (
                       <p>Click to upload banner</p>
                     ) : (
-                      <img
+                      <Image
                         src={variants.banner.preview}
+                        width={800}
+                        height={400}
                         className="w-full h-full object-contain"
                         alt="Banner Preview"
                       />
@@ -678,8 +681,10 @@ export default function AddProductForm() {
                   />
 
                   {variants.banner && (
-                    <img
+                    <Image
                       src={variants.banner.preview}
+                      width={300}
+                      height={400}
                       className="h-32 w-24 object-cover rounded-md border mt-2"
                       alt="Preview"
                     />
@@ -752,8 +757,10 @@ export default function AddProductForm() {
                           className="h-20 w-20 border rounded-md overflow-hidden flex items-center justify-center bg-gray-100 cursor-pointer hover:opacity-80"
                         >
                           {item.image ? (
-                            <img
+                            <Image
                               src={item.image}
+                              width={200}
+                              height={200}
                               className="h-full w-full object-cover"
                               alt="Variant"
                             />

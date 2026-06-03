@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -190,7 +191,13 @@ export default function BlogForm() {
 
             {
               formData.image &&
-              <img src={formData.image} className=" h-80 w-full object-contain" />
+              <Image
+                src={formData.image}
+                alt="Blog banner preview"
+                width={1200}
+                height={600}
+                className="h-80 w-full object-contain"
+              />
             }
           </div>
 

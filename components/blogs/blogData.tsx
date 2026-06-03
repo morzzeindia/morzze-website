@@ -177,9 +177,11 @@ export default function BlogDetailPage({
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-[#333333] overflow-hidden">
                   {blog.userImage && (
-                    <img
+                    <Image
                       src={blog.userImage}
                       alt={blog.userName || "Author"}
+                      width={80}
+                      height={80}
                       className="w-full h-full object-cover"
                     />
                   )}

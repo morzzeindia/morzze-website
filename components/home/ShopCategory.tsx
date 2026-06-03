@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -87,9 +88,11 @@ const ShopCategory = ({ categories = [] }: ShopCategoryProps) => {
                     className="block w-full h-full"
                   >
                     {cat.bannerImage ? (
-                      <img
+                      <Image
                         src={cat.bannerImage}
                         alt={cat.name}
+                        width={900}
+                        height={600}
                         className="w-full h-full object-cover opacity-60 transition-transform duration-1000 ease-out group-hover:scale-110 group-hover:opacity-100"
                       />
                     ) : (

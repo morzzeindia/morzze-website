@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import React, { useState } from "react"
 import { toast } from "sonner"
 import ReturnRequestModal from "./ReturnRequestModal"
@@ -198,7 +199,13 @@ export default function OrderDetails({ order }: { order: OrderDetailViewModel })
                 <div className="flex items-center gap-6 w-full">
                   <div className="w-24 h-24 bg-[#181818] border border-zinc-800 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
                     {line.image ? (
-                      <img src={line.image} alt={line.name} className="w-full h-full object-cover" />
+                      <Image
+                        src={line.image}
+                        alt={line.name}
+                        width={300}
+                        height={300}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="w-12 h-16 bg-zinc-800 rounded opacity-40 shadow-2xl rotate-6" />
                     )}
