@@ -75,9 +75,11 @@ export default function InstagramCarousel() {
                   key={index}
                   className="min-w-60 md:min-w-72 h-[230px] md:h-[250px] bg-[#111] border border-white/10 group overflow-hidden"
                 >
-                  <img
+                  <Image
                     src={src}
                     alt="insta post"
+                    width={288}
+                    height={250}
                     className="w-full h-full object-cover transition-all duration-700 hover:scale-110"
                   />
                 </div>

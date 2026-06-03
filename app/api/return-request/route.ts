@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { renderTemplate, sendEmail, sendEmailWithAttachments } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       );
     }
 
-    let attachments = [];
+    const attachments = [];
 
     if (file && file.size > 0) {
       if (file.size > 5 * 1024 * 1024) {
@@ -35,26 +35,28 @@ export async function POST(req: Request) {
       });
     }
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+    const emailPayload = {
+      to: process.env.EMAIL_TO || process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
       subject: "New Return Request",
-      html: `
+      html: renderTemplate(
+        `
         <h2>New Return Request</h2>
-        <p><strong>Reason:</strong> ${reason}</p>
+        <p><strong>Reason:</strong> {{Reason}}</p>
         <p><strong>Description:</strong></p>
-        <p>${description}</p>
+        <p>{{Description}}</p>
       `,
-      attachments,
-    });
+        {
+          Reason: reason,
+          Description: description,
+        },
+      ),
+    };
+
+    if (attachments.length > 0) {
+      await sendEmailWithAttachments({ ...emailPayload, attachments });
+    } else {
+      await sendEmail(emailPayload);
+    }
 
     return NextResponse.json({
       success: true,

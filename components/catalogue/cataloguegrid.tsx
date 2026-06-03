@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, HardDrive, CalendarDays, Download } from "lucide-react";
@@ -85,10 +86,11 @@ export default function CatalogueGridDownloads({ items }: Props) {
                   className="group"
                 >
                   <div className="relative w-full h-[260px] overflow-hidden rounded-[2px] mb-4 bg-[#efefef]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={item.image || PLACEHOLDER_IMG}
                       alt={item.title}
+                      width={600}
+                      height={800}
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
                       onError={(e) => {
                         e.currentTarget.src = PLACEHOLDER_IMG;

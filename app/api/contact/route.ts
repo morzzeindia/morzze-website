@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer"
 import { NextResponse } from "next/server"
+import { renderTemplate, sendEmail } from "@/lib/email"
 
 export async function POST(req: Request) {
   try {
@@ -31,41 +31,36 @@ export async function POST(req: Request) {
       )
     }
 
-    // Transporter
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    })
-
-    // Email Template
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
+    await sendEmail({
+      to: process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
       subject: `New Contact Form Submission - ${subject}`,
-
-      html: `
+      html: renderTemplate(
+        `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2>New Contact Form Submission</h2>
 
-          <p><strong>Full Name:</strong> ${fullName}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-          <p><strong>Category:</strong> ${category}</p>
-          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Full Name:</strong> {{Full Name}}</p>
+          <p><strong>Email:</strong> {{Email}}</p>
+          <p><strong>Phone:</strong> {{Phone}}</p>
+          <p><strong>Category:</strong> {{Category}}</p>
+          <p><strong>Subject:</strong> {{Subject}}</p>
 
           <div style="margin-top:20px;">
             <strong>Message:</strong>
-            <p>${message}</p>
+            <p>{{Message}}</p>
           </div>
         </div>
       `,
-    }
-
-    // Send Mail
-    await transporter.sendMail(mailOptions)
+        {
+          "Full Name": fullName,
+          Email: email,
+          Phone: phone || "Not provided",
+          Category: category,
+          Subject: subject,
+          Message: message,
+        },
+      ),
+    })
 
     return NextResponse.json({
       success: true,

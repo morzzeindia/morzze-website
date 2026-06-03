@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Image from "next/image";
 
 
 import { Button } from "@/components/ui/button";
@@ -64,8 +65,10 @@ export default function GallerySection({
                   key={i}
                   className="relative group aspect-square border rounded-lg overflow-hidden bg-muted"
                 >
-                  <img
+                  <Image
                     src={img.preview}
+                    width={500}
+                    height={500}
                     className="h-full w-full object-cover"
                     alt="preview"
                   />

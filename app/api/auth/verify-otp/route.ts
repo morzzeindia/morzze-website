@@ -5,7 +5,7 @@ import {
   cognitoConfirmSignUp,
   cognitoUpdateUserAttribute,
 } from "@/helper/cognito";
-import { sendWelcomeEmail } from "@/helper/emailTemplates/action";
+import { notifyWelcomeEmail } from "@/lib/email-notifications";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -60,7 +60,10 @@ export async function POST(req: Request) {
     }
 
     try {
-      await sendWelcomeEmail(email, dbUser.name);
+      await notifyWelcomeEmail({
+        email,
+        customerName: dbUser.name,
+      });
     } catch (emailErr: any) {
       console.error("Failed to send welcome email:", emailErr.message);
     }

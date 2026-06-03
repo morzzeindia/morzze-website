@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link"
 import React from "react"
 
@@ -54,9 +55,11 @@ export function RecentOrders({ orders = [] }: RecentOrdersProps) {
               <div className="flex items-center gap-4 mt-6">
                 <div className="w-20 h-20 bg-zinc-900 rounded-lg overflow-hidden shrink-0 border border-zinc-800/50">
                   {order.image ? (
-                    <img
+                    <Image
                       src={order.image}
                       alt=""
+                      width={200}
+                      height={200}
                       className="w-full h-full object-cover opacity-90"
                     />
                   ) : (

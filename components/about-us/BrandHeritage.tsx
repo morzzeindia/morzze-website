@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import { motion, Variants } from "framer-motion";
 
@@ -35,9 +36,11 @@ const BrandHeritage = () => {
             className="w-full lg:w-1/2"
           >
             <div className="relative aspect-4/5 lg:aspect-square  overflow-hidden border border-white/5 shadow-2xl group">
-              <img
+              <Image
                 src="/green-about.png"
                 alt="Morzze Heritage"
+                width={900}
+                height={900}
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
             </div>

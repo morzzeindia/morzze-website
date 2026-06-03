@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useTransition, useState } from "react";
 
@@ -135,9 +136,11 @@ const ReviewTable = ({ page, reviews }: ReviewTableProps) => {
                     >
                       {review.productImage ? (
                         <div className="w-9 h-9 rounded-md overflow-hidden shrink-0 border border-muted">
-                          <img
+                          <Image
                             src={review.productImage}
                             alt={review.productName ?? ""}
+                            width={80}
+                            height={80}
                             className="w-full h-full object-cover"
                           />
                         </div>

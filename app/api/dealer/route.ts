@@ -1,7 +1,7 @@
 // app/api/dealer/route.ts
 
-import nodemailer from "nodemailer"
 import { NextResponse } from "next/server"
+import { renderTemplate, sendEmail } from "@/lib/email"
 
 export async function POST(req: Request) {
   try {
@@ -34,31 +34,35 @@ export async function POST(req: Request) {
       )
     }
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    })
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
+    await sendEmail({
+      to: process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
       subject: `New Dealer Application - ${businessName}`,
-      html: `
+      html: renderTemplate(
+        `
         <h2>New Dealer Application</h2>
-        <p><strong>Full Name:</strong> ${fullName}</p>
-        <p><strong>Business Name:</strong> ${businessName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>City:</strong> ${city}</p>
-        <p><strong>Business Type:</strong> ${businessType}</p>
-        <p><strong>Address:</strong> ${address || "Not provided"}</p>
-        <p><strong>Years in Business:</strong> ${yearsInBusiness || "Not provided"}</p>
+        <p><strong>Full Name:</strong> {{Full Name}}</p>
+        <p><strong>Business Name:</strong> {{Business Name}}</p>
+        <p><strong>Email:</strong> {{Email}}</p>
+        <p><strong>Phone:</strong> {{Phone}}</p>
+        <p><strong>City:</strong> {{City}}</p>
+        <p><strong>Business Type:</strong> {{Business Type}}</p>
+        <p><strong>Address:</strong> {{Address}}</p>
+        <p><strong>Years in Business:</strong> {{Years in Business}}</p>
         <p><strong>Business Details:</strong></p>
-        <p>${businessDetails}</p>
+        <p>{{Business Details}}</p>
       `,
+        {
+          "Full Name": fullName,
+          "Business Name": businessName,
+          Email: email,
+          Phone: phone,
+          City: city,
+          "Business Type": businessType,
+          Address: address || "Not provided",
+          "Years in Business": yearsInBusiness || "Not provided",
+          "Business Details": businessDetails,
+        },
+      ),
     })
 
     return NextResponse.json({
