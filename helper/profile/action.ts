@@ -6,14 +6,14 @@ import { eq , desc} from "drizzle-orm";
 import { requireUserWithRefresh } from "@/helper/user/action";
 
 export async function getUserProfile() {
-  const { email } = await requireUserWithRefresh();
+  const { userId } = await requireUserWithRefresh();
 
-  if (!email) throw new Error("UNAUTHORIZED");
+  if (!userId) throw new Error("UNAUTHORIZED");
 
   const userResult = await db
     .select()
     .from(users)
-    .where(eq(users.email, email))
+    .where(eq(users.id, userId))
     .limit(1);
 
   if (!userResult.length) throw new Error("USER_NOT_FOUND");
@@ -23,7 +23,7 @@ export async function getUserProfile() {
   const userOrders = await db
     .select()
     .from(order)
-    .where(eq(order.userId, user.id)) 
+    .where(eq(order.userId, userId)) 
     .orderBy(desc(order.createdAt))
     .limit(5);
 
@@ -50,9 +50,9 @@ export async function getUserProfile() {
 export async function updateUserProfile(fullName: string, phone: string) {
   if (!fullName || !phone) throw new Error("INVALID_INPUT");
 
-  const { email } = await requireUserWithRefresh();
+  const { userId } = await requireUserWithRefresh();
 
-  if (!email) throw new Error("UNAUTHORIZED");
+  if (!userId) throw new Error("UNAUTHORIZED");
 
   const updated = await db
     .update(users)
@@ -60,7 +60,7 @@ export async function updateUserProfile(fullName: string, phone: string) {
       name: fullName,
       phone,
     })
-    .where(eq(users.email, email))
+    .where(eq(users.id, userId))
     .returning();
 
   if (!updated.length) throw new Error("USER_NOT_FOUND");

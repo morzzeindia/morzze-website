@@ -8,17 +8,20 @@ import {
 } from "@/helper/cognito";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { v4 as uuidv4 } from "uuid";
 
 async function ensureDbUser({
   email,
   name,
   phone,
   ref,
+  userId,
 }: {
   email: string;
   name?: string;
   phone?: string;
   ref?: string;
+  userId?: string;
 }) {
   const [existingDbUser] = await db
     .select()
@@ -30,6 +33,7 @@ async function ensureDbUser({
   const [userRes] = await db
     .insert(users)
     .values({
+      ...(userId ? { id: userId } : {}),
       name: name || "New User",
       email,
       phone: phone || "0000000000",
@@ -79,13 +83,17 @@ export async function POST(req: Request) {
   } catch (error: any) {
     if (error.name === "UserNotFoundException" || error.__type === "UserNotFoundException") {
       try {
+        const userId = uuidv4();
+        const userRes = await ensureDbUser({ email, name, phone, ref, userId });
+
         await cognitoSignUp({
           email,
           password,
-          userAttribute: [{ Name: "email", Value: email }],
+          userAttribute: [
+            { Name: "email", Value: email },
+            { Name: "custom:userId", Value: userRes.id },
+          ],
         });
-
-        const userRes = await ensureDbUser({ email, name, phone, ref });
 
         return NextResponse.json(
           {

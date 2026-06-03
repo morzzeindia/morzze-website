@@ -42,20 +42,20 @@ export async function POST(req: Request) {
       .where(eq(users.email, email));
 
     // putting user id in cognito user attributes
-    // Wrapped in try-catch: if custom:user_id attribute is not in the Cognito schema,
+    // Wrapped in try-catch: if custom:userId attribute is not in the Cognito schema,
     // OTP verification should still succeed.
     try {
       await cognitoUpdateUserAttribute({
         email,
         userAttribute: [
           {
-            Name: "custom:user_id",
+            Name: "custom:userId",
             Value: dbUser.id,
           },
         ],
       });
     } catch (attrErr: any) {
-      console.error("Failed to set custom:user_id attribute:", attrErr.message);
+      console.error("Failed to set custom:userId attribute:", attrErr.message);
       // Non-fatal: verification still succeeds
     }
 

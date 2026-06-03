@@ -9,6 +9,18 @@ type ApiResponse<T = any> = {
   code?: string;
 };
 
+export type AuthSessionResponse = {
+  authenticated: boolean;
+  accessToken?: string;
+  idToken?: string;
+  refreshToken?: string;
+  userId?: string;
+  user?: {
+    userId?: string;
+    email?: string;
+  };
+};
+
 async function request<T>(
   endpoint: string,
   options: RequestInit
@@ -149,15 +161,15 @@ export async function logout() {
   });
 
 }
-export async function session() {
+export async function session(): Promise<AuthSessionResponse> {
   return request('/session' ,{
     method: "GET"
-  })
+  }) as Promise<AuthSessionResponse>;
 }
 
 export async function isUserLoggedIn(): Promise<boolean> {
   try {
-    const res: any = await session();
+    const res = await session();
 
     return res?.authenticated ?? false;
   } catch (error) {

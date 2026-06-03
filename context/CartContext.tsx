@@ -1,29 +1,47 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { toast } from "sonner";
+import {
+  clearCart as clearCartDB,
+  getCart,
+  setUserCartItemQuantity,
+} from "@/helper/cart/action";
+import { isUserLoggedIn } from "@/helper/auth/action";
+import { useRouter } from "next/navigation";
 
 const CART_STORAGE_KEY = "morzze_cart";
+const CART_SYNC_DEBOUNCE_MS = 500;
 
 export type CartItem = {
   slug: string;
   quantity: number;
-  // Rich product snapshot (set at add-to-cart time)
   name?: string;
-  price?: number;        // basePrice in ₹
-  oldPrice?: number;     // strikethroughPrice in ₹
-  image?: string;        // bannerImage URL
+  price?: number;
+  oldPrice?: number;
+  image?: string;
   sku?: string;
-  productId?: string;    // DB uuid
+  productId?: string;
+  productVarientBox?: string | null;
+  isTypeSubscription?: boolean;
+  frequencyInMonths?: number | null;
+  clientCartItemId?: string | null;
 };
 
 export type AppliedCoupon = {
   code: string;
-  discountValue: string; // e.g. "10" or "500" (always percentage from admin)
+  discountValue: string;
   title?: string;
-  discountPercent?: number; // parsed % if applicable
-  upto?: string | null;        // max discount cap e.g. "₹1000"
-  minimumOrder?: string | null; // min order value e.g. "₹15000"
+  discountPercent?: number;
+  upto?: string | null;
+  minimumOrder?: string | null;
 };
 
 type CartContextType = {
@@ -39,6 +57,8 @@ type CartContextType = {
   clearCoupon: () => void;
 };
 
+type PendingSync = ReturnType<typeof setTimeout>;
+
 const CartContext = createContext<CartContextType>({
   cartItems: [],
   addToCart: () => {},
@@ -51,6 +71,9 @@ const CartContext = createContext<CartContextType>({
   setAppliedCoupon: () => {},
   clearCoupon: () => {},
 });
+
+const pendingSyncs = new Map<string, PendingSync>();
+const syncVersions = new Map<string, number>();
 
 export const useCart = () => useContext(CartContext);
 
@@ -69,69 +92,270 @@ function setLocalCart(items: CartItem[]) {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
+function getItemKey(item: Pick<CartItem, "slug" | "productId" | "productVarientBox">) {
+  return `${item.productId ?? item.slug}:${item.productVarientBox ?? "default"}`;
+}
+
+function normalizeQuantity(quantity: number) {
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.max(0, Math.trunc(quantity));
+}
+
+function mapDbCartItems(items: unknown[]): CartItem[] {
+  return items.reduce<CartItem[]>((mappedItems, item) => {
+    const row = item as {
+      productId?: string;
+      productVarientBox?: string | null;
+      isTypeSubscription?: boolean;
+      frequencyInMonths?: number | null;
+      quantity?: number | null;
+      title?: string | null;
+      image?: string | null;
+      price?: number | null;
+      originalPrice?: number | null;
+      slug?: string | null;
+      sku?: string | null;
+    };
+
+    if (!row.productId) return mappedItems;
+
+    mappedItems.push({
+        productId: row.productId,
+        productVarientBox: row.productVarientBox ?? null,
+        isTypeSubscription: row.isTypeSubscription,
+        frequencyInMonths: row.frequencyInMonths ?? null,
+        slug: row.slug || row.productId,
+        name: row.title || "Product",
+        image: row.image || "/product.png",
+        price: row.price || 0,
+        oldPrice: row.originalPrice || undefined,
+        sku: row.sku || undefined,
+        quantity: row.quantity ?? 1,
+      });
+
+    return mappedItems;
+  }, []);
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [cartLoaded, setCartLoaded] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
 
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    setCartItems(getLocalCart());
-    setLoaded(true);
+  const syncCartFromDb = useCallback(async () => {
+    const result = await getCart();
+
+    if (result.success && result.items) {
+      setCartItems(mapDbCartItems(result.items));
+    }
   }, []);
 
-  // Persist to localStorage whenever cart changes (after initial load)
-  useEffect(() => {
-    if (loaded) {
-      setLocalCart(cartItems);
-    }
-  }, [cartItems, loaded]);
+  const syncItemNow = useCallback(
+    async (item: CartItem, quantity: number) => {
+      if (!item.productId) {
+        toast.error("Unable to sync this cart item");
+        return false;
+      }
 
-  const addToCart = useCallback(
-    (slug: string, quantity: number = 1, productData?: Partial<CartItem>) => {
-      setCartItems((prev) => {
-        const existing = prev.find((item) => item.slug === slug);
-        if (existing) {
-          toast.success("Cart updated");
-          return prev.map((item) =>
-            item.slug === slug
-              ? {
-                  ...item,
-                  quantity: item.quantity + quantity,
-                  // Refresh rich data if provided
-                  ...(productData ? productData : {}),
-                }
-              : item
-          );
-        } else {
-          toast.success("Added to cart");
-          return [...prev, { slug, quantity, ...(productData ?? {}) }];
+      const key = getItemKey(item);
+      const existingTimer = pendingSyncs.get(key);
+
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+        pendingSyncs.delete(key);
+      }
+
+      const version = (syncVersions.get(key) ?? 0) + 1;
+      syncVersions.set(key, version);
+
+      try {
+        const result = await setUserCartItemQuantity({
+          productId: item.productId,
+          productVarientBox: item.productVarientBox ?? null,
+          quantity,
+          isTypeSubscription: item.isTypeSubscription,
+          frequencyInMonths: item.frequencyInMonths ?? null,
+          clientCartItemId: item.clientCartItemId ?? null,
+        });
+
+        if (syncVersions.get(key) !== version) {
+          return true;
         }
-      });
+
+        if (result.userIsNotLoggedIn) {
+          await syncCartFromDb();
+          return false;
+        }
+
+        if (!result.success) {
+          toast.error(result.message ?? "Unable to update cart");
+          await syncCartFromDb();
+          return false;
+        }
+
+        return true;
+      } catch (error) {
+        console.error(error);
+        toast.error("Unable to update cart");
+        await syncCartFromDb();
+        return false;
+      }
     },
-    []
+    [syncCartFromDb],
   );
 
-  const removeFromCart = useCallback((slug: string) => {
-    setCartItems((prev) => prev.filter((item) => item.slug !== slug));
-    toast.success("Removed from cart");
-  }, []);
+  const debouncedSyncItem = useCallback(
+    (item: CartItem, quantity: number) => {
+      if (!item.productId) {
+        toast.error("Unable to sync this cart item");
+        return false;
+      }
 
-  const updateQuantity = useCallback((slug: string, quantity: number) => {
-    if (quantity <= 0) {
-      setCartItems((prev) => prev.filter((item) => item.slug !== slug));
-      return;
-    }
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.slug === slug ? { ...item, quantity } : item
-      )
-    );
-  }, []);
+      const key = getItemKey(item);
+      const existingTimer = pendingSyncs.get(key);
+
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+      }
+
+      const version = (syncVersions.get(key) ?? 0) + 1;
+      syncVersions.set(key, version);
+
+      const timer = setTimeout(async () => {
+        pendingSyncs.delete(key);
+
+        try {
+          const result = await setUserCartItemQuantity({
+            productId: item.productId,
+            productVarientBox: item.productVarientBox ?? null,
+            quantity,
+            isTypeSubscription: item.isTypeSubscription,
+            frequencyInMonths: item.frequencyInMonths ?? null,
+            clientCartItemId: item.clientCartItemId ?? null,
+          });
+
+          if (syncVersions.get(key) !== version) {
+            return;
+          }
+
+          if (result.userIsNotLoggedIn) {
+            await syncCartFromDb();
+            return;
+          }
+
+          if (!result.success) {
+            toast.error(result.message ?? "Unable to update cart");
+            await syncCartFromDb();
+          }
+        } catch (error) {
+          console.error(error);
+          toast.error("Unable to update cart");
+          await syncCartFromDb();
+        }
+      }, CART_SYNC_DEBOUNCE_MS);
+
+      pendingSyncs.set(key, timer);
+      return true;
+    },
+    [syncCartFromDb],
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCartItems(getLocalCart());
+      setCartLoaded(true);
+      void syncCartFromDb();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [syncCartFromDb]);
+
+  useEffect(() => {
+    if (!cartLoaded) return;
+    setLocalCart(cartItems);
+  }, [cartItems, cartLoaded]);
+
+  const addToCart = useCallback(
+    async (slug: string, quantity: number = 1, productData?: Partial<CartItem>) => {
+      const loggedIn = await isUserLoggedIn();
+
+      if (!loggedIn) {
+        router.push("/login");
+        return;
+      }
+
+      const safeQuantity = normalizeQuantity(quantity || 1);
+      let nextSyncTarget: CartItem | undefined;
+
+      setCartItems((prev) => {
+        const candidate: CartItem = {
+          slug,
+          quantity: safeQuantity,
+          ...(productData ?? {}),
+        };
+        const existing = prev.find((item) => getItemKey(item) === getItemKey(candidate));
+
+        if (existing) {
+          nextSyncTarget = {
+            ...existing,
+            ...(productData ?? {}),
+            quantity: existing.quantity + safeQuantity,
+          };
+
+          return prev.map((item) =>
+            getItemKey(item) === getItemKey(candidate) ? nextSyncTarget! : item,
+          );
+        }
+
+        nextSyncTarget = candidate;
+        return [...prev, candidate];
+      });
+
+      if (nextSyncTarget) {
+        debouncedSyncItem(nextSyncTarget, nextSyncTarget.quantity);
+      }
+    },
+    [debouncedSyncItem, router],
+  );
+
+  const removeFromCart = useCallback(
+    (slug: string) => {
+      const item = cartItems.find((cartItem) => cartItem.slug === slug);
+      if (!item) return;
+
+      setCartItems((prev) => prev.filter((cartItem) => cartItem.slug !== slug));
+      void syncItemNow(item, 0);
+    },
+    [cartItems, syncItemNow],
+  );
+
+  const updateQuantity = useCallback(
+    (slug: string, quantity: number) => {
+      const item = cartItems.find((cartItem) => cartItem.slug === slug);
+      if (!item) return;
+
+      const safeQuantity = normalizeQuantity(quantity);
+      const updatedItem = { ...item, quantity: safeQuantity };
+
+      if (safeQuantity <= 0) {
+        setCartItems((prev) => prev.filter((cartItem) => cartItem.slug !== slug));
+        void syncItemNow(item, 0);
+        return;
+      }
+
+      setCartItems((prev) =>
+        prev.map((cartItem) => (cartItem.slug === slug ? updatedItem : cartItem)),
+      );
+      debouncedSyncItem(updatedItem, safeQuantity);
+    },
+    [cartItems, debouncedSyncItem, syncItemNow],
+  );
 
   const clearCart = useCallback(() => {
     setCartItems([]);
     setAppliedCoupon(null);
+    void clearCartDB();
   }, []);
 
   const clearCoupon = useCallback(() => {
@@ -142,10 +366,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (slug: string) => {
       return cartItems.find((item) => item.slug === slug)?.quantity ?? 0;
     },
-    [cartItems]
+    [cartItems],
   );
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = useMemo(
+    () => cartItems.reduce((sum, item) => sum + item.quantity, 0),
+    [cartItems],
+  );
 
   return (
     <CartContext.Provider

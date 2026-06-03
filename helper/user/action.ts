@@ -20,20 +20,64 @@ type NewAddressInput = {
   isDefault?: boolean;
 };
 
+type DecodedAuthToken = {
+  email?: string;
+  "custom:userId"?: string;
+  "custom:user_id"?: string;
+};
+
+function isJwtLike(token: string) {
+  return token.split(".").length === 3;
+}
+
 const verifier = CognitoJwtVerifier.create({
   userPoolId: process.env.USER_POOL_ID!,
   tokenUse: "access",
   clientId: process.env.COGNITO_CLIENT_ID!,
 });
 
-async function refreshUserTokens() {
+async function getUserFromDecodedToken(decoded: DecodedAuthToken | null) {
+  const tokenUserId = decoded?.["custom:userId"] ?? decoded?.["custom:user_id"];
+  const email = decoded?.email;
 
+  if (tokenUserId) {
+    return {
+      userId: tokenUserId,
+      email,
+    };
+  }
+
+  if (!email) {
+    return null;
+  }
+
+  const [user] = await db
+    .select({
+      id: users.id,
+      email: users.email,
+    })
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (!user?.id) {
+    return null;
+  }
+
+  return {
+    userId: user.id,
+    email: user.email ?? email,
+  };
+}
+
+async function refreshUserTokens() {
   const cookieStore = await cookies();
 
   const refreshToken = cookieStore.get("refreshToken")?.value;
   const idToken = cookieStore.get("idToken")?.value;
 
   if (!refreshToken || !idToken) return null;
+
   try {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_AUTH_API_URL}/refersh-token`, {
@@ -61,7 +105,7 @@ export async function requireUserWithRefresh() {
 
   const user = await getCurrentUser();
 
-  if (user) {
+  if (user?.userId) {
     return user;
   }
 
@@ -74,11 +118,14 @@ export async function requireUserWithRefresh() {
   const idToken =
     refreshed?.response?.AuthenticationResult?.IdToken;
 
-  const decoded: any = jwt.decode(idToken);
-  return {
-    userId: decoded?.["custom:user_id"],
-    email: decoded?.email,
-  };
+  const decoded = idToken ? jwt.decode(idToken) as DecodedAuthToken | null : null;
+  const refreshedUser = await getUserFromDecodedToken(decoded);
+
+  if (!refreshedUser?.userId) {
+    throw new Error("USER_ID_MISSING");
+  }
+
+  return refreshedUser;
 }
 export async function getCurrentUser() {
 
@@ -90,33 +137,33 @@ export async function getCurrentUser() {
 
     if (!accessToken || !idToken) return null;
 
+    if (!isJwtLike(accessToken)) return null;
 
     await verifier.verify(accessToken);
 
-    const decoded: any = jwt.decode(idToken);
-    const userId = decoded?.["custom:user_id"];
-    const email = decoded?.email;
-    if (!userId) {
-      throw new Error("USER_ID_MISSING");
-    }
-    return {
-      userId,
-      email,
-    };
+    const decoded = jwt.decode(idToken) as DecodedAuthToken | null;
+    return await getUserFromDecodedToken(decoded);
   } catch (error) {
-    console.error(error)
+    const message = (error as Error)?.message;
+    if (
+      message !== "USER_ID_MISSING" &&
+      !message?.includes("JWT string does not consist of exactly 3 parts")
+    ) {
+      console.error(error)
+    }
+    return null;
   }
 }
 
 export async function getProfile() {
-  const { email }: any = await requireUserWithRefresh();
+  const { userId }: any = await requireUserWithRefresh();
 
-  if (!email) throw new Error("Unauthorized");
+  if (!userId) throw new Error("Unauthorized");
 
   const result = await db
     .select()
     .from(users)
-    .where(eq(users.email, email))
+    .where(eq(users.id, userId))
     .limit(1);
 
   if (!result.length) throw new Error("User not found");
@@ -137,9 +184,9 @@ export async function updateProfile(data: {
   fullName: string;
   phone: string;
 }) {
-  const { email }: any = await requireUserWithRefresh();
+  const { userId }: any = await requireUserWithRefresh();
 
-  if (!email) throw new Error("Unauthorized");
+  if (!userId) throw new Error("Unauthorized");
 
   const updated = await db
     .update(users)
@@ -147,7 +194,7 @@ export async function updateProfile(data: {
       name: data.fullName,
       phone: data.phone,
     })
-    .where(eq(users.email, email))
+    .where(eq(users.id, userId))
     .returning();
 
   if (!updated.length) throw new Error("User not found");
@@ -162,19 +209,10 @@ export async function updateProfile(data: {
 }
 
 
-// Helper to resolve the DB user ID from email (avoids relying on custom:user_id JWT attribute)
 async function getDbUserId(): Promise<string> {
-  const { email }: any = await requireUserWithRefresh();
-  if (!email) throw new Error("UNAUTHORIZED");
-
-  const result = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (!result.length) throw new Error("User not found");
-  return result[0].id;
+  const { userId }: any = await requireUserWithRefresh();
+  if (!userId) throw new Error("UNAUTHORIZED");
+  return userId;
 }
 
 export async function getUsersCount() {

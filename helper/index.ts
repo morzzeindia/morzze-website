@@ -40,6 +40,7 @@ export {
   removeFromCart,
   syncCartWithDatabase,
   updateCartItemQuantity,
+  setUserCartItemQuantity,
   clearCart,
 } from "./cart/action";
 

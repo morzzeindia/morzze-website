@@ -68,13 +68,11 @@ export const addToCart = async (item: CartItem) => {
 
   if(item.isQuantityChangable){
   // ✅ DB sync
-  toast.success("Item added to cart");
   addToCartDB(item.productId, item.quantity, item.selectedPlan, item.isSubscribed).catch((error) => {
     console.error("Failed to sync with DB:", error);
   });
   }else{
      // ✅ DB sync
-  toast.success("Item added to cart");
   addToCartDB(item.productId, item.quantity, item.selectedPlan, item.isSubscribed, item.cartSizes,item.uuid).catch((error) => {
     console.error("Failed to sync with DB:", error);
   });
@@ -92,12 +90,10 @@ export const removeFromCart = async (productId: string, sku?: string,uuid?:strin
   removeFromCartDB(productId, sku).catch((error) => {
     console.error("Failed to remove from DB:", error);
   });
-  toast.success("Item removed from cart");
   }else{
     removeFromCartDB(productId, uuid,cartSizes).catch((error) => {
       console.error("Failed to remove from DB:", error);
     });
-    toast.success("Item removed from cart");
 
   }
 };

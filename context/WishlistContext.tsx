@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { addToWishlistDB, removeFromWishlistDB, getWishlistDB } from "@/helper";
 import { isUserLoggedIn } from "@/helper/auth/action";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const WISHLIST_STORAGE_KEY = "morzze_wishlist";
 
@@ -12,6 +13,10 @@ type WishlistContextType = {
   isInWishlist: (slug: string) => boolean;
   toggleWishlist: (slug: string, productId?: string) => void;
   loading: boolean;
+};
+
+type WishlistDbItem = {
+  slug?: string | null;
 };
 
 const WishlistContext = createContext<WishlistContextType>({
@@ -40,6 +45,7 @@ function setLocalWishlist(slugs: string[]) {
 }
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [wishlistSlugs, setWishlistSlugs] = useState<string[]>([]);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
@@ -74,8 +80,8 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
           // dbItems have productId and product details, but we need slugs
           // Since the DB join returns product info, we can extract slugs
           const slugs = dbItems
-            .map((item: any) => item.slug)
-            .filter(Boolean);
+            .map((item: WishlistDbItem) => item.slug)
+            .filter((slug): slug is string => Boolean(slug));
           setWishlistSlugs(slugs);
         } else {
           // Load from localStorage
@@ -113,27 +119,27 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
         try {
           if (isCurrentlyInWishlist) {
             await removeFromWishlistDB(productId);
-            toast.success("Removed from wishlist");
           } else {
             await addToWishlistDB(productId);
-            toast.success("Added to wishlist");
           }
-        } catch (error: any) {
+        } catch (error) {
           // Revert optimistic update
           setWishlistSlugs(wishlistSlugs);
-          toast.error(error.message || "Failed to update wishlist");
+          const message = error instanceof Error ? error.message : "Failed to update wishlist";
+          if (message.toUpperCase().includes("UNAUTHORIZED")) {
+            setLoggedIn(false);
+            router.push("/login");
+            return;
+          }
+
+          toast.error(message);
         }
       } else {
         // Not logged in → localStorage
         setLocalWishlist(newSlugs);
-        if (isCurrentlyInWishlist) {
-          toast.success("Removed from wishlist");
-        } else {
-          toast.success("Added to wishlist");
-        }
       }
     },
-    [wishlistSlugs, loggedIn]
+    [wishlistSlugs, loggedIn, router]
   );
 
   return (

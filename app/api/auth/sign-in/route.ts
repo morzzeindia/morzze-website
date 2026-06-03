@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { authSingIn, cognitoResendConfirmationCode } from "@/helper/cognito";
+import jwt from "jsonwebtoken";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -23,6 +24,9 @@ export async function POST(req: Request) {
     }
 
     // 🍪 secure cookie (IMPORTANT)
+    const decoded: any = jwt.decode(result.idToken ?? "");
+    const userId = decoded?.["custom:userId"] ?? decoded?.["custom:user_id"];
+
     const response = NextResponse.json(
       {
         message: "Login successful",
@@ -30,6 +34,8 @@ export async function POST(req: Request) {
           accessToken: result.accessToken,
           idToken: result.idToken,
           refreshToken: result.refreshToken,
+          userId,
+          email: decoded?.email,
         },
       },
       { status: 200 }
