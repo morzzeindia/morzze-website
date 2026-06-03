@@ -195,6 +195,7 @@ export default function EditProduct({ productDetails }: any) {
     isExisting: true,
     name: product.name || "",
     sku: product.sku || "",
+    slug: product.slug || "",
     price: product.basePrice || 0,
     strikethroughPrice: product.strikethroughPrice || 0,
     description: product.description || "",
@@ -628,6 +629,15 @@ export default function EditProduct({ productDetails }: any) {
                       }
                     />
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Slug</Label>
+                  <Input
+                    value={variants.slug}
+                    onChange={(e) =>
+                      setVariants({ ...variants, slug: e.target.value })
+                    }
+                  />
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-4">

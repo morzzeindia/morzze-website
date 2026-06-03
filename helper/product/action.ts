@@ -381,6 +381,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
             name: variants.name,
             brand: variants.brand,
             sku: variants.sku,
+            slug: variants.slug,
             description: variants.description,
             basePrice: variants.price,
             strikethroughPrice: variants.strikethroughPrice,
