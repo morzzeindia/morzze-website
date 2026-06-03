@@ -4,9 +4,24 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoveRight, Upload, X } from "lucide-react";
 import GeneralApplicationPopup from "./GeneralApplicationPopup";
-import { ContactLink } from "@/components/ContactLink";
 
-const jobs = [
+type Job = {
+  dept: string;
+  location: string;
+  type: string;
+  title: string;
+  exp: string;
+};
+
+type FieldProps = {
+  label: string;
+  placeholder: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const jobs: Job[] = [
   {
     dept: "DESIGN",
     location: "Gurugram, Haryana",
@@ -45,7 +60,7 @@ const jobs = [
 ];
 
 export default function CareersPositionsModal() {
-  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [applicationOpen, setApplicationOpen] = useState(false);
 
   const [error, setError] = useState("");
@@ -140,6 +155,11 @@ export default function CareersPositionsModal() {
 
     if (formData.coverLetter.trim().split(/\s+/).length > 500) {
       setError("Cover letter must be under 500 words");
+      return;
+    }
+
+    if (!selectedJob) {
+      setError("Please select a role before submitting");
       return;
     }
 
@@ -245,11 +265,13 @@ export default function CareersPositionsModal() {
           resume and we&apos;ll be in touch.
         </p>
 
-        <ContactLink
-          type="email"
-          value="info@morzze.com"
+        <button
+          type="button"
+          onClick={() => setApplicationOpen(true)}
           className="inline-flex items-center px-10 h-11 bg-[#e6aa12] text-black text-[13px] font-medium"
-        />
+        >
+          Send Application
+        </button>
       </div>
 
       <AnimatePresence>
@@ -382,7 +404,7 @@ export default function CareersPositionsModal() {
   );
 }
 
-function Field({ label, placeholder, name, value, onChange }: any) {
+function Field({ label, placeholder, name, value, onChange }: FieldProps) {
   return (
     <div className="mt-5">
       <label className="text-[12px] mb-2 block">{label}</label>

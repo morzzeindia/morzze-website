@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -157,7 +158,13 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                       : "border-white/10"
                   )}
                 >
-                  <img src={img} className="w-full h-full object-cover" />
+                  <Image
+                    src={img}
+                    alt={`${product.name ?? "Product"} thumbnail ${i + 1}`}
+                    width={500}
+                    height={500}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
 
@@ -241,9 +248,11 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                     >
                       {variant.image && (
                         <div className="w-8 h-8 rounded overflow-hidden border border-white/10">
-                          <img
+                          <Image
                             src={variant.image}
                             alt={variant.name}
+                            width={80}
+                            height={80}
                             className="w-full h-full object-cover"
                           />
                         </div>

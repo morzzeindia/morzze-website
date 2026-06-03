@@ -13,11 +13,12 @@ import CallbackForm from "./CallbackForm";
 import FAQSection from "./FAQSection";
 import ServiceRequest from "./ServiceRequest";
 import WhatsappChat from "./WhatsappChat";
+import Link from "next/link";
 
 const SupportTabs = () => {
   const searchParams = useSearchParams();
 
-  const defaultTab = searchParams.get("tab") || "callback";
+  const defaultTab = searchParams.get("tab") || "";
 
   return (
     <section className="bg-black py-16 px-6 font-montserrat ">
@@ -33,22 +34,23 @@ const SupportTabs = () => {
     p-0"
         >
           {/* Tab 1: Callback */}
+          <Link href="/call-request" className="flex w-full">
           <TabsTrigger
             value="callback"
-            className="group p-0 border-none data-active:ring-2 data-active:ring-[#559CFF] "
+            className="group p-0 border-none  "
           >
             <div
               className="
       bg-[#111] w-full aspect-square p-6 flex flex-col justify-between  relative overflow-hidden
       transition-colors
-      group-data-active:bg-[#559CFF]
+      
     "
             >
               {/* TEXT */}
               <span
                 className="
           text-white text-lg md:text-xl font-bold z-10
-          group-data-active:text-black
+          
         "
               >
                 1. Request a <br /> Callback
@@ -61,15 +63,17 @@ const SupportTabs = () => {
     absolute -bottom-20 -left-20
     text-white/30
     pointer-events-none
-    z-0
-    group-data-active:text-black
+    z-0 group-hover:scale-105
+    
   "
                 stroke={2.5}
               />
             </div>
           </TabsTrigger>
+          </Link>
 
           {/* Tab 2: FAQ */}
+          <Link href="/faq" className="flex w-full">
           <TabsTrigger
             value="faq"
             className="group p-0 border-none data-active:ring-0"
@@ -97,14 +101,17 @@ const SupportTabs = () => {
         transition-all
         group-data-active:text-black
         group-data-active:opacity-20
+        group-hover:scale-105
       "
               >
                 FAQ
               </span>
             </div>
           </TabsTrigger>
+          </Link>
 
           {/* Tab 3: Service Request */}
+          <Link href="/service-request" className="flex w-full">
           <TabsTrigger
             value="service"
             className="group p-0 border-none data-active:ring-0 transition-all"
@@ -143,8 +150,10 @@ const SupportTabs = () => {
               />
             </div>
           </TabsTrigger>
+          </Link>
 
           {/* Tab 4: Whatsapp */}
+          <Link href="/whatsapp-chat" className="flex w-full">
           <TabsTrigger
             value="whatsapp"
             className="group p-0 border-none data-active:ring-0 transition-all"
@@ -183,24 +192,27 @@ const SupportTabs = () => {
               />
             </div>
           </TabsTrigger>
+          </Link>
         </TabsList>
 
         {/* --- TABS CONTENT --- */}
         <div className="md:mt-50 mt-70 ">
           <TabsContent value="callback">
-            <CallbackForm />
+            {/* <CallbackForm /> */}
           </TabsContent>
 
+          <Link href="/faq">
           <TabsContent value="faq">
-            <FAQSection />
+            {/* <FAQSection /> */}
           </TabsContent>
 
+          </Link>
           <TabsContent value="service">
-            <ServiceRequest />
+            {/* <ServiceRequest /> */}
           </TabsContent>
 
           <TabsContent value="whatsapp">
-            <WhatsappChat />
+            {/* <WhatsappChat /> */}
           </TabsContent>
         </div>
       </Tabs>

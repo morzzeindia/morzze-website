@@ -87,9 +87,11 @@ function SearchResults({
                   >
                     {cat.bannerImage ? (
                       <div className="w-8 h-8 rounded bg-zinc-900 overflow-hidden shrink-0">
-                        <img
+                        <Image
                           src={cat.bannerImage}
                           alt={cat.name}
+                          width={80}
+                          height={80}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -131,9 +133,11 @@ function SearchResults({
                   >
                     {p.bannerImage ? (
                       <div className="w-10 h-10 rounded bg-zinc-900 overflow-hidden shrink-0">
-                        <img
+                        <Image
                           src={p.bannerImage}
                           alt={p.name ?? "Product"}
+                          width={100}
+                          height={100}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -547,7 +551,13 @@ const Header = () => {
                                 >
                                   {cat.bannerImage ? (
                                     <div className="w-8 h-8 rounded bg-zinc-900 overflow-hidden shrink-0">
-                                      <img src={cat.bannerImage} alt={cat.name} className="w-full h-full object-cover" />
+                                      <Image
+                                        src={cat.bannerImage}
+                                        alt={cat.name}
+                                        width={80}
+                                        height={80}
+                                        className="w-full h-full object-cover"
+                                      />
                                     </div>
                                   ) : (
                                     <div className="w-8 h-8 rounded bg-zinc-900 shrink-0 flex items-center justify-center text-zinc-700 text-xs font-bold">
@@ -582,7 +592,13 @@ const Header = () => {
                                 >
                                   {p.bannerImage ? (
                                     <div className="w-10 h-10 rounded bg-zinc-900 overflow-hidden shrink-0">
-                                      <img src={p.bannerImage} alt={p.name ?? "Product"} className="w-full h-full object-cover" />
+                                      <Image
+                                        src={p.bannerImage}
+                                        alt={p.name ?? "Product"}
+                                        width={100}
+                                        height={100}
+                                        className="w-full h-full object-cover"
+                                      />
                                     </div>
                                   ) : (
                                     <div className="w-10 h-10 rounded bg-zinc-900 shrink-0 flex items-center justify-center text-zinc-700">

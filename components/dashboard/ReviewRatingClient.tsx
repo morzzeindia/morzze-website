@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -139,9 +140,11 @@ const ReviewRatingClient = ({ purchases, reviewsByProductId }: Props) => {
                   <div className="flex gap-5 items-center w-full">
                     <div className="w-24 h-24 bg-[#111] rounded-sm overflow-hidden border border-zinc-800 shrink-0">
                       {item.image ? (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.productName}
+                          width={300}
+                          height={300}
                           className="w-full h-full object-cover grayscale-[10%]"
                         />
                       ) : (

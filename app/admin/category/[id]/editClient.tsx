@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   Card,
@@ -187,8 +188,11 @@ export default function EditCategory({ categoryInfo }: any) {
                     {!preview ? (
                       <p>Click to upload category image</p>
                     ) : (
-                      <img
+                      <Image
                         src={preview}
+                        alt="Category banner preview"
+                        width={800}
+                        height={400}
                         className="w-full h-full object-contain"
                       />
                     )}

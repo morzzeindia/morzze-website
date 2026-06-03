@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { getProductSimilarProducts } from "@/helper";
 import Link from "next/link";
@@ -65,9 +66,11 @@ const RelatedProducts = ({ slug }: { slug: string }) => {
               <Link href={`/product/${product.slug}`} key={product.id} className="group flex flex-col">
                 {/* Image Container */}
                 <div className="relative aspect-square bg-[#1A1A1A] overflow-hidden mb-4">
-                  <img
+                  <Image
                     src={product.bannerImage || "/placeholder.png"}
                     alt={product.name}
+                    width={600}
+                    height={600}
                     className="w-full h-full object-contain  group-hover:scale-105 transition-transform duration-300"
                   />
 

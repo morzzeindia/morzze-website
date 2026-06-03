@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-/* eslint-disable react-hooks/purity */
 import {
   Table,
   TableBody,
@@ -15,7 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Select } from "@/components/select";
 import { sendDeliveryConfirmationEmail, sendShippingConfirmationEmail, sendUserExperienceEmail, updateOrderStatus } from "@/helper/index";
-import { getProfile, requireUserWithRefresh } from "@/helper/user/action";
+import { getProfile } from "@/helper/user/action";
 
 interface OrderTableProps {
   page: number;
@@ -47,10 +46,18 @@ const OrderTable = ({ page, orders, pageSize }: OrderTableProps) => {
         const currentDate = new Date().toLocaleDateString();
 
      if(value == 'delivered'){
-      await sendDeliveryConfirmationEmail(email,fullName,order.id,currentDate,"https://www.potenthygiene.com/dashboard/orders");
-      await sendUserExperienceEmail(email,fullName,"https://www.potenthygiene.com/dashboard/reviews")
+      try {
+        await sendDeliveryConfirmationEmail(email,fullName,order.id,currentDate,"https://www.potenthygiene.com/dashboard/orders");
+        await sendUserExperienceEmail(email,fullName,"https://www.potenthygiene.com/dashboard/reviews")
+      } catch (emailError) {
+        console.error("Unable to send delivery status emails:", emailError);
+      }
      }else if (value == 'shipped') {
-     await sendShippingConfirmationEmail(email,order.id,fullName,"https://www.potenthygiene.com/dashboard/orders","FedEx")
+      try {
+        await sendShippingConfirmationEmail(email,order.id,fullName,"https://www.potenthygiene.com/dashboard/orders","FedEx")
+      } catch (emailError) {
+        console.error("Unable to send shipping status email:", emailError);
+      }
      }
   }
 

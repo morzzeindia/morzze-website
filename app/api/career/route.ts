@@ -1,7 +1,7 @@
 // app/api/career/route.ts
 
-import nodemailer from "nodemailer"
 import { NextResponse } from "next/server"
+import { renderTemplate, sendEmailWithAttachments } from "@/lib/email"
 
 export async function POST(req: Request) {
   try {
@@ -25,32 +25,34 @@ export async function POST(req: Request) {
     const bytes = await resume.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    })
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
+    await sendEmailWithAttachments({
+      to: process.env.RECEIVER_EMAIL || process.env.EMAIL_FROM!,
       subject: `New Job Application - ${jobTitle}`,
-      html: `
+      html: renderTemplate(
+        `
         <h2>New Job Application</h2>
-        <p><strong>Applied For:</strong> ${jobTitle}</p>
-        <p><strong>Full Name:</strong> ${fullName}</p>
-        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>LinkedIn / Portfolio:</strong> ${portfolio || "Not provided"}</p>
+        <p><strong>Applied For:</strong> {{Job Title}}</p>
+        <p><strong>Full Name:</strong> {{Full Name}}</p>
+        <p><strong>Phone:</strong> {{Phone}}</p>
+        <p><strong>Email:</strong> {{Email}}</p>
+        <p><strong>LinkedIn / Portfolio:</strong> {{Portfolio}}</p>
         <p><strong>Cover Letter:</strong></p>
-        <p>${coverLetter || "Not provided"}</p>
+        <p>{{Cover Letter}}</p>
       `,
+        {
+          "Job Title": jobTitle,
+          "Full Name": fullName,
+          Phone: phone || "Not provided",
+          Email: email,
+          Portfolio: portfolio || "Not provided",
+          "Cover Letter": coverLetter || "Not provided",
+        },
+      ),
       attachments: [
         {
           filename: resume.name,
           content: buffer,
+          contentType: resume.type || "application/octet-stream",
         },
       ],
     })

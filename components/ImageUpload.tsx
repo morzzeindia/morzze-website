@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ImagePlus, Loader2 } from "lucide-react";
 import { apiFetch } from "@/lib/apiFetch";
@@ -66,9 +67,11 @@ export default function ImageUpload({
 
         {preview ? (
           <div className="relative w-full h-full flex items-center justify-center">
-            <img
+            <Image
               src={preview}
               alt="Preview"
+              width={500}
+              height={500}
               className="max-h-40 object-contain rounded-md"
             />
             <div className="absolute inset-0 bg-black/5 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">

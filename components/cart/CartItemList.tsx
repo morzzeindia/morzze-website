@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
@@ -50,9 +51,11 @@ const CartItemList = () => {
                   className="w-24 h-24 bg-zinc-900 rounded-md overflow-hidden shrink-0"
                 >
                   {item.image ? (
-                    <img
+                    <Image
                       src={item.image}
                       alt={item.name ?? "Product"}
+                      width={300}
+                      height={300}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -130,9 +133,11 @@ const CartItemList = () => {
                 className="w-32 h-32 bg-zinc-900 rounded-lg overflow-hidden shrink-0"
               >
                 {item.image ? (
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.name ?? "Product"}
+                    width={300}
+                    height={300}
                     className="w-full h-full object-cover"
                   />
                 ) : (

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   Card,
@@ -151,8 +152,11 @@ export default function AddCategoryForm() {
                     {!bannerUrl ? (
                       <p>Click to upload category image</p>
                     ) : (
-                      <img
+                      <Image
                         src={bannerUrl}
+                        alt="Category banner preview"
+                        width={800}
+                        height={400}
                         className="w-full h-full object-contain"
                       />
                     )}

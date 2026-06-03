@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import React, { useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import { useRouter } from 'next/navigation'
@@ -172,9 +173,11 @@ const OrderReview = ({ shippingData }: { shippingData?: any }) => {
             <div key={item.slug} className="flex items-center gap-6">
               <div className="w-16 h-16 bg-zinc-900 rounded overflow-hidden shrink-0">
                 {item.image ? (
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.name ?? "Product"}
+                    width={200}
+                    height={200}
                     className="w-full h-full object-cover"
                   />
                 ) : (

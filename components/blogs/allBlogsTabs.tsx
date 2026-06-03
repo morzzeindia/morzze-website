@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,7 +77,7 @@ export default function BlogGridTabs() {
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10"
           >
             {filtered.map((blog, i) => (
-              <Link href={`/blogs/${blog.slug}`} key={blog.id || i}>
+              <Link href={`/article/${blog.slug}`} key={blog.id || i}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -85,9 +86,11 @@ export default function BlogGridTabs() {
                 >
                   <div className="relative w-full h-[210px] md:h-[230px] overflow-hidden rounded-[6px] mb-5 bg-[#141414]">
                     {blog.image && (
-                      <img
+                      <Image
                         src={getImageUrl(blog.image)}
                         alt={blog.title || "Blog image"}
+                        width={800}
+                        height={500}
                         className="w-full h-full object-contain  group-hover:scale-105 transition duration-700"
                       />
                     )}
@@ -108,9 +111,11 @@ export default function BlogGridTabs() {
                   <div className="flex items-center gap-3">
                     <div className="relative w-7 h-7 rounded-full bg-[#222222] overflow-hidden">
                       {blog.userImage && (
-                        <img
+                        <Image
                           src={blog.userImage}
                           alt={blog.userName || "Author"}
+                          width={80}
+                          height={80}
                           className="w-full h-full object-cover"
                         />
                       )}
