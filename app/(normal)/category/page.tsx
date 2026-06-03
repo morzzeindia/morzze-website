@@ -10,25 +10,24 @@ const page = async () => {
   const allowedCategoryNames = new Set([
     "granite sink",
     "steel sinks",
-    "floor drainer",
-    "food waste disposer",
+    "kitchen faucet",
     "bathroom faucets",
-    "bathroom faucet",
-    "electric towel warmer",
-    "kitchen accessories",
-    "airtap",
+    "wash basin",
+    "towel warmer",
+    "food waste disposers",
+    "floor drainer",
     "air tap",
   ]);
 
-  const filteredCategories = categories.filter((cat) =>
-    allowedCategoryNames.has(cat.name.trim().toLowerCase()),
+  const filteredCategories = categories.filter((category) =>
+    allowedCategoryNames.has(category.name.toLowerCase())
   );
 
   return (
     <div>
       <CategoryBanner />
       <Suspense fallback={<div>Loading...</div>}>
-        <CategorySection categories={categories} />
+        <CategorySection categories={filteredCategories} />
       </Suspense>
       <SimpleCategoryBanner />
       <ScrollingRibbon />
