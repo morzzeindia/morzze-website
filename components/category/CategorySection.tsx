@@ -1,4 +1,5 @@
 "use client";
+import { allowedCategoryNames } from "@/const/globalconst";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -31,42 +32,7 @@ const SPAN_PATTERNS = [
 ];
 
 const CategorySection = ({ categories }: CategorySectionProps) => {
-  const searchParams = useSearchParams();
-  const catType = searchParams?.get("type");
 
-
-  const allowedCategoryNames = new Set([
-    "granite-sink",
-    "stainless-steel-sinks",
-    "kitchen-faucet",
-    "bathroom-faucet",
-    "wash-basin",
-    "towel-warmer",
-    "food-waste-disposers",
-    "floor-drainer",
-    "air-tap",
-  ]);
-
-  const restrictKitchenCat = new Set([
-    "hand-shower"
-  ]);
-
-  const filteredCategories = categories.filter((category) =>
-    catType ? category.type?.toLowerCase() === catType.toLowerCase() : allowedCategoryNames.has(category.slug)
-  );
-
-
-  // const [filterCat, setFilterCat] = useState(filteredCategories);
-  // useEffect(() => {
-  //   if (catType) {
-  //     const filtered = filteredCategories.filter(
-  //       (cat: any) => cat?.type?.toLowerCase() === catType.toLowerCase()
-  //     );
-  //     setFilterCat(filtered);
-  //   } else {
-  //     setFilterCat(filteredCategories);
-  //   }
-  // }, [filteredCategories, catType]);
   return (
     <section
       id="category-section"
@@ -92,22 +58,22 @@ const CategorySection = ({ categories }: CategorySectionProps) => {
           </h2>
         </div>
 
-        {filteredCategories.length === 0 ? (
+        {categories.length === 0 ? (
           <p className="text-white/50 text-center py-20 text-lg">
             No categories found.
           </p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 auto-rows-[300px]">
-            {filteredCategories.map((cat, index) => {
+            {categories.map((cat, index) => {
               const spanClass =
                 SPAN_PATTERNS[index % SPAN_PATTERNS.length] ??
                 "lg:col-span-3 md:col-span-6";
 
               return (
                 <Link
-                  href={`/category/${cat.slug}`}
+                  href={`/${cat.type}/${cat.slug}`}
                   key={cat.id}
-                  className={`relative group cursor-pointer overflow-hidden rounded-sm bg-zinc-900 ${spanClass}`}
+                  className={`relative group group cursor-pointer overflow-hidden rounded-sm bg-zinc-900 ${spanClass}`}
                 >
                   {cat.bannerImage ? (
                     <Image
@@ -123,11 +89,11 @@ const CategorySection = ({ categories }: CategorySectionProps) => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent" />
 
                   <div className="absolute bottom-6 left-6 right-6 z-10">
-                    <h3 className="text-xl md:text-2xl font-medium text-white transition-colors duration-300 group-hover:text-[#FFBF3F]">
+                    <h3 className="text-xl md:text-2xl translate-y-10 group-hover:translate-y-0 transition-all duration-300 font-medium text-white group-hover:text-[#FFBF3F]">
                       {cat.name}
                     </h3>
                     {cat.description && (
-                      <p className="text-white/50 text-xs md:text-sm mt-2 font-inter line-clamp-2">
+                      <p className="text-white/50 translate-y-16 group-hover:translate-y-0 transition-all duration-300 text-xs md:text-sm mt-2 font-inter line-clamp-2">
                         {cat.description}
                       </p>
                     )}

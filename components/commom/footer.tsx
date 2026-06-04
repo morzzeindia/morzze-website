@@ -18,6 +18,7 @@ const companyLinks = [
   { name: "Media", href: "/media" },
   { name: "Careers", href: "/career" },
   { name: "Blogs", href: "/blog" },
+  { name: "Products", href: "/products" },
 ];
 
 const Footer = async () => {

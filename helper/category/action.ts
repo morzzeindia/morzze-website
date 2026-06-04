@@ -199,20 +199,28 @@ export async function deleteCategory(id: string) {
     };
   }
 }
-export async function getCategories() {
+export async function getCategories(type?: string) {
+  const filters = [];
+
+  if (type === "kitchen" || type === "bathroom") {
+    filters.push(eq(category.type, type));
+  }
+
+  const whereClause = filters.length ? and(...filters) : undefined;
   return unstable_cache(
     async () => {
       try {
         return await db
           .select()
           .from(category)
+          .where(whereClause)
       } catch (error) {
         console.error(error);
         return [];
       }
     },
-    [CACHE_TAGS.categories],
-    { revalidate: 3600, tags: [CACHE_TAGS.categories] }
+    [CACHE_TAGS.categories + type],
+    { revalidate: 3600, tags: [CACHE_TAGS.categories + type] }
   )();
 }
 
