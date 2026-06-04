@@ -174,6 +174,8 @@ export const product = pgTable("products", {
   rateing2Star: integer("rateing_2_star").default(0),
   rateing1Star: integer("rateing_1_star").default(0),
 
+  isHidden: boolean("is_hidden").default(false),
+
   size: varchar("size"),
   flowType: varchar("flow_type"),
 
@@ -181,6 +183,7 @@ export const product = pgTable("products", {
   updatedAt: timestamp("updated_at").defaultNow(),
 },
   (table) => [
+    index("hidden_idx").on(table.isHidden),
     index("name_idx").on(table.name),
     index("slug_idx").on(table.slug),
   ]

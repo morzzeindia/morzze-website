@@ -10,6 +10,7 @@ interface CategoryItem {
   slug: string;
   bannerImage: string | null;
   description: string | null;
+  type: string | null;
 }
 
 interface CategorySectionProps {
@@ -30,19 +31,42 @@ const SPAN_PATTERNS = [
 ];
 
 const CategorySection = ({ categories }: CategorySectionProps) => {
-  const searchP = useSearchParams();
-  const catType = searchP?.get("type");
-  const [filterCat, setFilterCat] = useState(categories);
-  useEffect(() => {
-    if (catType) {
-      const filtered = categories.filter(
-        (cat: any) => cat?.type?.toLowerCase() === catType.toLowerCase()
-      );
-      setFilterCat(filtered);
-    } else {
-      setFilterCat(categories);
-    }
-  }, [categories, catType]);
+  const searchParams = useSearchParams();
+  const catType = searchParams?.get("type");
+
+
+  const allowedCategoryNames = new Set([
+    "granite-sink",
+    "stainless-steel-sinks",
+    "kitchen-faucet",
+    "bathroom-faucet",
+    "wash-basin",
+    "towel-warmer",
+    "food-waste-disposers",
+    "floor-drainer",
+    "air-tap",
+  ]);
+
+  const restrictKitchenCat = new Set([
+    "hand-shower"
+  ]);
+
+  const filteredCategories = categories.filter((category) =>
+    catType ? category.type?.toLowerCase() === catType.toLowerCase() : allowedCategoryNames.has(category.slug)
+  );
+
+
+  // const [filterCat, setFilterCat] = useState(filteredCategories);
+  // useEffect(() => {
+  //   if (catType) {
+  //     const filtered = filteredCategories.filter(
+  //       (cat: any) => cat?.type?.toLowerCase() === catType.toLowerCase()
+  //     );
+  //     setFilterCat(filtered);
+  //   } else {
+  //     setFilterCat(filteredCategories);
+  //   }
+  // }, [filteredCategories, catType]);
   return (
     <section
       id="category-section"
@@ -68,13 +92,13 @@ const CategorySection = ({ categories }: CategorySectionProps) => {
           </h2>
         </div>
 
-        {filterCat.length === 0 ? (
+        {filteredCategories.length === 0 ? (
           <p className="text-white/50 text-center py-20 text-lg">
             No categories found.
           </p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 auto-rows-[300px]">
-            {filterCat.map((cat, index) => {
+            {filteredCategories.map((cat, index) => {
               const spanClass =
                 SPAN_PATTERNS[index % SPAN_PATTERNS.length] ??
                 "lg:col-span-3 md:col-span-6";
@@ -90,7 +114,7 @@ const CategorySection = ({ categories }: CategorySectionProps) => {
                       src={cat.bannerImage}
                       alt={cat.name}
                       width={900}
-                      height={600}
+                      height={900}
                       className="w-full h-full object-cover opacity-60 transition-transform duration-1000 ease-out group-hover:scale-110 group-hover:opacity-100"
                     />
                   ) : (

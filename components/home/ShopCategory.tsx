@@ -27,7 +27,7 @@ const SPAN_PATTERNS = [
 ];
 
 const ShopCategory = ({ categories = [] }: ShopCategoryProps) => {
-  const visibleCategories = categories.slice(0, 5);
+  const visibleCategories = categories
 
   return (
     <section className="bg-black text-white py-12 md:py-24 px-6 md:px-10 overflow-hidden font-montserrat">

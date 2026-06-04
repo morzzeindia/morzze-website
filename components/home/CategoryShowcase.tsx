@@ -29,7 +29,7 @@ const CategoryShowcase = ({ categories }: { categories: CategoryWithProducts[] }
 
   return (
     <section className="bg-black text-white py-8 md:py-24 px-6 md:px-10 overflow-hidden">
-      <div className=" lg:block hidden  max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-start">
+      <div className="hidden  max-w-screen-2xl mx-auto lg:grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-start">
         <div className="lg:col-span-4 space-y-6 pt-10">
           {categories.slice(0, 4).map((cat) => (
             <div key={cat.id} className="relative">

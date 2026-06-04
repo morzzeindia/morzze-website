@@ -2,8 +2,11 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 
 const CategoryBanner = () => {
+  const searchParams = useSearchParams();
+  const catType = searchParams?.get("type");
   return (
     <section className="relative w-full h-[50vh] md:h-[65vh] overflow-hidden font-montserrat">
 
@@ -31,7 +34,7 @@ const CategoryBanner = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-3xl md:text-5xl font-semibold text-white tracking-tight"
           >
-            Our Categories
+            Our {catType && catType.charAt(0).toUpperCase() + catType.slice(1)} Categories
           </motion.h1>
 
           {/* Animated Description */}
