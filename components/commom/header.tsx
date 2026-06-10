@@ -16,6 +16,7 @@ import {
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { isUserLoggedIn } from "@/helper/auth/action";
+import { LogIn } from "lucide-react";
 
 type SearchProduct = {
   id: string;
@@ -459,8 +460,8 @@ const Header = () => {
               </Link>
             ) : (
               <Link href={"/login"}>
-                <button className="text-sm px-3 py-2 border border-zinc-700 rounded-md hover:border-[#B88E2F] hover:text-[#B88E2F] transition-colors">
-                  Login
+                <button className="text-sm sm:px-3 py-2 sm:border border-zinc-700 rounded-md hover:border-[#B88E2F] hover:text-[#B88E2F] transition-colors">
+                  <LogIn className="block sm:hidden " /> <p className=" hidden sm:block">Login</p>
                 </button>
               </Link>
             )}

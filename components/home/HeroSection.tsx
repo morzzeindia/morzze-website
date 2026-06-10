@@ -1,24 +1,26 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { preload } from "react-dom";
 import { motion } from "framer-motion";
 
 const HeroSection = () => {
+  preload("https://d2icu6klh68l1z.cloudfront.net/hero-video.mp4", { as: "video" });
   return (
-    <section className="relative w-full md:py-8 py-18  flex items-center overflow-hidden">
+    <section className="relative min-h-screen w-full md:py-8 py-18  flex items-center overflow-hidden">
       <motion.div
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-0"
       >
-        <Image
-          src="/hero-bg.png"
-          alt="Luxury Bathroom Collection"
-          fill
-          className="object-cover object-center"
-          priority
+        <video
+          src="https://d2icu6klh68l1z.cloudfront.net/hero-video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="object-cover object-center w-full h-full"
         />
         <div className="absolute inset-0 bg-black/40 md:bg-black/20"></div>
       </motion.div>
@@ -27,7 +29,7 @@ const HeroSection = () => {
           initial="initial"
           whileInView="animate"
           viewport={{ once: false }}
-          className="max-w-2xl text-center md:text-left mt-20 md:mt-40"
+          className="max-w-2xl text-center md:text-left mt-6 md:mt-40"
         >
           <motion.span
             variants={{
@@ -59,9 +61,9 @@ const HeroSection = () => {
           >
             <Link
               href="/products"
-              className="group relative border border-[#CBA14D]/60 px-8 py-3 transition-all duration-300 hover:bg-[#CBA14D] overflow-hidden inline-block"
+              className="group relative border border-[#CBA14D]/60 px-8 py-3 transition-all duration-300 bg-[#CBA14D] overflow-hidden inline-block"
             >
-              <span className="relative z-10 font-inter text-[10px] md:text-xs font-bold text-[#CBA14D] group-hover:text-black uppercase tracking-widest">
+              <span className="relative z-10 font-inter text-[10px] md:text-xs font-bold text-black group-hover:text-black uppercase tracking-widest">
                 Explore Products
               </span>
             </Link>
