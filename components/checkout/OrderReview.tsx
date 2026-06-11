@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { ShoppingBag } from 'lucide-react'
 import { ContactLink } from '@/components/ContactLink'
 import Link from 'next/link'
+import { getImageURL } from "@/lib/getImageLin";
 import {
   clearCart as clearCartDB,
   setUserCartItemQuantity,
@@ -226,7 +227,7 @@ const OrderReview = ({ shippingData }: { shippingData?: ShippingData }) => {
               <div className="w-16 h-16 bg-zinc-900 rounded overflow-hidden shrink-0">
                 {item.image ? (
                   <Image
-                    src={item.image}
+                    src={getImageURL(item.image)}
                     alt={item.name ?? "Product"}
                     width={200}
                     height={200}

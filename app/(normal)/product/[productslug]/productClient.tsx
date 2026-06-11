@@ -29,6 +29,7 @@ import ReviewsTab from "@/components/product/ReviewsTab";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
+import { getImageURL } from "@/lib/getImageLin";
 
 const ProductClient = ({ product, slug, reviews }: any) => {
   const router = useRouter()
@@ -109,7 +110,7 @@ const ProductClient = ({ product, slug, reviews }: any) => {
               <AnimatePresence mode="wait">
                 <motion.img
                   key={`${selectedVariant}-${selectedImage}`}
-                  src={displayImages[selectedImage]}
+                  src={getImageURL(displayImages[selectedImage] || "")}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -159,7 +160,7 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                   )}
                 >
                   <Image
-                   src={img}
+                   src={getImageURL(img)}
                     // src={`${process.env.NEXT_PUBLIC_S3_BASE_URL}/${img}`}
                     alt={`${product.name ?? "Product"} thumbnail ${i + 1}`}
                     width={500}
@@ -250,7 +251,7 @@ const ProductClient = ({ product, slug, reviews }: any) => {
                       {variant.image && (
                         <div className="w-8 h-8 rounded overflow-hidden border border-white/10">
                           <Image
-                            src={variant.image}
+                            src={getImageURL(variant.image)}
                             alt={variant.name}
                             width={80}
                             height={80}

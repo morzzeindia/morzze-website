@@ -8,6 +8,7 @@ import ReviewModal, {
   type ExistingReviewSummary,
 } from "@/components/reviews/ReviewModal";
 import type { PurchaseForReview } from "@/helper/review/action";
+import { getImageURL } from "@/lib/getImageLin";
 
 export type ReviewByProduct = {
   rating: number | null;
@@ -141,7 +142,7 @@ const ReviewRatingClient = ({ purchases, reviewsByProductId }: Props) => {
                     <div className="w-24 h-24 bg-[#111] rounded-sm overflow-hidden border border-zinc-800 shrink-0">
                       {item.image ? (
                         <Image
-                          src={item.image}
+                          src={getImageURL(item.image)}
                           alt={item.productName}
                           width={300}
                           height={300}

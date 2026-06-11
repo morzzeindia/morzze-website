@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { getImageURL } from "@/lib/getImageLin";
 
 interface CategoryItem {
   id: string;
@@ -77,7 +78,7 @@ const CategorySection = ({ categories }: CategorySectionProps) => {
                 >
                   {cat.bannerImage ? (
                     <Image
-                      src={cat.bannerImage}
+                      src={getImageURL(cat.bannerImage)}
                       alt={cat.name}
                       width={900}
                       height={900}

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Mail, X } from "lucide-react";
 import { toast } from "sonner";
 import { IconBrandFacebook, IconBrandLinkedin } from "@tabler/icons-react";
-import { getImageUrl } from "@/helper/getimageUrl";
+import { getImageURL } from "@/lib/getImageLin";
 import Image from "next/image";
 
 export default function BlogDetailPage({
@@ -94,7 +94,7 @@ export default function BlogDetailPage({
             >
               {blog.image && (
                 <Image
-                  src={getImageUrl(blog.image)}
+                  src={getImageURL(blog.image)}
                   alt={blog.title}
                   height={700}
                   width={700}
@@ -178,7 +178,7 @@ export default function BlogDetailPage({
                 <div className="w-10 h-10 rounded-full bg-[#333333] overflow-hidden">
                   {blog.userImage && (
                     <Image
-                      src={blog.userImage}
+                      src={getImageURL(blog.userImage)}
                       alt={blog.userName || "Author"}
                       width={80}
                       height={80}
@@ -217,7 +217,7 @@ export default function BlogDetailPage({
                           <Image
                             height={200}
                             width={200}
-                            src={getImageUrl(item.image)}
+                            src={getImageURL(item.image)}
 
                             alt={item.title}
                             className="w-full h-full object-contain group-hover:scale-105 transition duration-500"

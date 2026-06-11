@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import Image from "next/image";
+import { getImageURL } from "@/lib/getImageLin";
 
 const CategoryProductsClient = ({
   products,
@@ -89,7 +90,7 @@ const CategoryProductsClient = ({
 
                 <Link href={`/product/${product.slug}`}>
                   <Image
-                    src={product.bannerImage}
+                    src={getImageURL(product.bannerImage || "")}
                     alt={product.name}
                     className="w-full h-auto object-contain cursor-pointer"
                     height={500}

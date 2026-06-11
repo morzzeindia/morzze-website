@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, HardDrive, CalendarDays, Download } from "lucide-react";
+import { getImageURL } from "@/lib/getImageLin";
 
 export type CatalogueGridItem = {
   id: string;
@@ -87,7 +88,7 @@ export default function CatalogueGridDownloads({ items }: Props) {
                 >
                   <div className="relative w-full h-[260px] overflow-hidden rounded-[2px] mb-4 bg-[#efefef]">
                     <Image
-                      src={item.image || PLACEHOLDER_IMG}
+                      src={item.image ? getImageURL(item.image) : PLACEHOLDER_IMG}
                       alt={item.title}
                       width={600}
                       height={800}

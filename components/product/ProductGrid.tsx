@@ -23,6 +23,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import Pagination from "../commom/Pagination";
 import FilterSidebar from "@/components/product/FilterSidebar";
+import { getImageURL } from "@/lib/getImageLin";
 
 type FilterOption = {
   label: string;
@@ -106,7 +107,7 @@ const ProductGrid = ({
 
               <Link href={`/product/${product.slug}`}>
                 <motion.img
-                  src={product.bannerImage}
+                  src={getImageURL(product.bannerImage || "")}
                   alt={product.name}
                   className="w-full h-full object-contain cursor-pointer"
                   whileHover={{ scale: 1.05 }}

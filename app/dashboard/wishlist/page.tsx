@@ -7,6 +7,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { getProductsBySlugList } from "@/helper/product/action";
 import Image from "next/image";
+import { getImageURL } from "@/lib/getImageLin";
 
 type WishlistProduct = {
   id: string;
@@ -110,7 +111,7 @@ const WishlistPage = () => {
                 <Link href={`/product/${item.slug}`}>
                   {item.bannerImage ? (
                     <Image
-                      src={item.bannerImage}
+                      src={getImageURL(item.bannerImage)}
                       alt={item.name ?? "Product"}
                       width={300}
                       height={300}

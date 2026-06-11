@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import ReturnRequestModal from "./ReturnRequestModal"
 import Link from "next/link"
 import { ContactLink } from "@/components/ContactLink"
+import { getImageURL } from "@/lib/getImageLin";
 
 export type OrderDetailLineItem = {
   id: string
@@ -200,7 +201,7 @@ export default function OrderDetails({ order }: { order: OrderDetailViewModel })
                   <div className="w-24 h-24 bg-[#181818] border border-zinc-800 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
                     {line.image ? (
                       <Image
-                        src={line.image}
+                        src={getImageURL(line.image)}
                         alt={line.name}
                         width={300}
                         height={300}

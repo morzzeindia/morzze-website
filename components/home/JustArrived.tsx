@@ -7,6 +7,7 @@ import { IconArrowRight, IconShoppingBag, IconHeart, IconHeartFilled } from "@ta
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { getImageURL } from "@/lib/getImageLin";
 
 interface NewArrivalProduct {
   id: string;
@@ -73,7 +74,7 @@ const JustArrived = ({ products }: { products: NewArrivalProduct[] }) => {
 
                 <Link href={`/product/${product.slug}`}>
                   <Image
-                    src={product.bannerImage || "/placeholder.png"}
+                    src={getImageURL(product.bannerImage || "")}
                     alt={product.name || "Product"}
                     fill
                     className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"

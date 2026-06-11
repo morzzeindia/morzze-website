@@ -16,6 +16,7 @@ import {
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { isUserLoggedIn } from "@/helper/auth/action";
+import { getImageURL } from "@/lib/getImageLin";
 import { LogIn } from "lucide-react";
 
 type SearchProduct = {
@@ -89,7 +90,7 @@ function SearchResults({
                     {cat.bannerImage ? (
                       <div className="w-8 h-8 rounded bg-zinc-900 overflow-hidden shrink-0">
                         <Image
-                          src={cat.bannerImage}
+                          src={getImageURL(cat.bannerImage)}
                           alt={cat.name}
                           width={80}
                           height={80}
@@ -135,7 +136,7 @@ function SearchResults({
                     {p.bannerImage ? (
                       <div className="w-10 h-10 rounded bg-zinc-900 overflow-hidden shrink-0">
                         <Image
-                          src={p.bannerImage}
+                          src={getImageURL(p.bannerImage)}
                           alt={p.name ?? "Product"}
                           width={100}
                           height={100}
@@ -553,7 +554,7 @@ const Header = () => {
                                   {cat.bannerImage ? (
                                     <div className="w-8 h-8 rounded bg-zinc-900 overflow-hidden shrink-0">
                                       <Image
-                                        src={cat.bannerImage}
+                                        src={getImageURL(cat.bannerImage)}
                                         alt={cat.name}
                                         width={80}
                                         height={80}
@@ -594,7 +595,7 @@ const Header = () => {
                                   {p.bannerImage ? (
                                     <div className="w-10 h-10 rounded bg-zinc-900 overflow-hidden shrink-0">
                                       <Image
-                                        src={p.bannerImage}
+                                        src={getImageURL(p.bannerImage)}
                                         alt={p.name ?? "Product"}
                                         width={100}
                                         height={100}

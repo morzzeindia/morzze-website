@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link"
 import React from "react"
+import { getImageURL } from "@/lib/getImageLin";
 
 export type RecentOrderItem = {
   id: string
@@ -56,7 +57,7 @@ export function RecentOrders({ orders = [] }: RecentOrdersProps) {
                 <div className="w-20 h-20 bg-zinc-900 rounded-lg overflow-hidden shrink-0 border border-zinc-800/50">
                   {order.image ? (
                     <Image
-                      src={order.image}
+                      src={getImageURL(order.image)}
                       alt=""
                       width={200}
                       height={200}

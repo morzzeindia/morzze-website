@@ -8,6 +8,7 @@ import { IconStarFilled, IconShoppingBag, IconHeart, IconHeartFilled } from "@ta
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { getImageURL } from "@/lib/getImageLin";
 
 const RelatedProducts = ({ slug }: { slug: string }) => {
   const [products, setProducts] = useState<any[]>([]);
@@ -67,7 +68,7 @@ const RelatedProducts = ({ slug }: { slug: string }) => {
                 {/* Image Container */}
                 <div className="relative aspect-square bg-[#1A1A1A] overflow-hidden mb-4">
                   <Image
-                    src={product.bannerImage || "/placeholder.png"}
+                    src={getImageURL(product.bannerImage || "")}
                     alt={product.name}
                     width={600}
                     height={600}

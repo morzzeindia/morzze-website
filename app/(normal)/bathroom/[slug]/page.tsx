@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllProductsByCategorySlug, getCategoryBySlug } from "@/helper/category/action";
 import Link from "next/link";
 import CategoryProductsClient from "../../category/[slug]/CategoryProductsClient";
+import { getImageURL } from "@/lib/getImageLin";
 
 export default async function CategoryPage({
     params,
@@ -26,7 +27,7 @@ export default async function CategoryPage({
             <section className="relative h-[340px] md:h-[420px] overflow-hidden">
                 {categoryData.bannerImage ? (
                     <Image
-                        src={categoryData.bannerImage}
+                        src={getImageURL(categoryData.bannerImage)}
                         alt={categoryData.name ?? "Category"}
                         width={1600}
                         height={700}

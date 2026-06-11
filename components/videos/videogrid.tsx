@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X } from "lucide-react";
 import Link from "next/link";
+import { getImageURL } from "@/lib/getImageLin";
 
 type VideoType = {
   id: string;
@@ -122,7 +123,7 @@ export default function VideoLibraryGrid() {
               >
                 <div className="relative w-full h-[150px] overflow-hidden rounded-[4px] mb-4">
                   <Image
-                      src={video.thumbnail || "/video.png"}
+                      src={video.thumbnail ? getImageURL(video.thumbnail) : "/video.png"}
                     alt={video.title}
                     fill
                     className="object-cover group-hover:scale-105 transition duration-700"

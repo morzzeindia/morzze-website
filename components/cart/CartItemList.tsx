@@ -4,6 +4,7 @@ import React from "react";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
+import { getImageURL } from "@/lib/getImageLin";
 
 const CartItemList = () => {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
@@ -52,7 +53,7 @@ const CartItemList = () => {
                 >
                   {item.image ? (
                     <Image
-                      src={item.image}
+                      src={getImageURL(item.image)}
                       alt={item.name ?? "Product"}
                       width={300}
                       height={300}
@@ -134,7 +135,7 @@ const CartItemList = () => {
               >
                 {item.image ? (
                   <Image
-                    src={item.image}
+                    src={getImageURL(item.image)}
                     alt={item.name ?? "Product"}
                     width={300}
                     height={300}

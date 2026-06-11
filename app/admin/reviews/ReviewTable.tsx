@@ -38,6 +38,7 @@ import { TableHeader } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { deleteReview, toggleApproveReview } from "@/helper";
+import { getImageURL } from "@/lib/getImageLin";
 
 interface ReviewTableProps {
   page: number;
@@ -137,7 +138,7 @@ const ReviewTable = ({ page, reviews }: ReviewTableProps) => {
                       {review.productImage ? (
                         <div className="w-9 h-9 rounded-md overflow-hidden shrink-0 border border-muted">
                           <Image
-                            src={review.productImage}
+                            src={getImageURL(review.productImage)}
                             alt={review.productName ?? ""}
                             width={80}
                             height={80}

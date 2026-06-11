@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 import { motion } from "framer-motion";
+import { getImageURL } from "@/lib/getImageLin";
 
 const ReviewsTab = ({ reviews = [] }: any) => {
   // Calculate average rating
@@ -148,7 +149,7 @@ const ReviewsTab = ({ reviews = [] }: any) => {
                           className="relative w-20 h-20 rounded border border-zinc-800 overflow-hidden hover:border-zinc-700 transition cursor-pointer"
                         >
                           <Image
-                            src={media.mediaURL}
+                            src={getImageURL(media.mediaURL)}
                             alt={`Review media ${i}`}
                             width={200}
                             height={200}

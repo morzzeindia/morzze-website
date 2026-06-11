@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
 import { getBlogs } from "@/helper/blog/action";
-import { getImageUrl } from "@/helper/getimageUrl";
+import { getImageURL } from "@/lib/getImageLin";
 
 // const tabs = [
 //   "All",
@@ -87,7 +87,7 @@ export default function BlogGridTabs() {
                   <div className="relative w-full h-[210px] md:h-[230px] overflow-hidden rounded-[6px] mb-5 bg-[#141414]">
                     {blog.image && (
                       <Image
-                        src={getImageUrl(blog.image)}
+                        src={getImageURL(blog.image)}
                         alt={blog.title || "Blog image"}
                         width={800}
                         height={500}
@@ -112,7 +112,7 @@ export default function BlogGridTabs() {
                     <div className="relative w-7 h-7 rounded-full bg-[#222222] overflow-hidden">
                       {blog.userImage && (
                         <Image
-                          src={blog.userImage}
+                          src={getImageURL(blog.userImage)}
                           alt={blog.userName || "Author"}
                           width={80}
                           height={80}
