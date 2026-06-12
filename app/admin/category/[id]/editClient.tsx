@@ -27,11 +27,13 @@ import { toast } from "sonner";
 // Naya ImageUpload component import karein
 import ImageUpload from "@/components/ImageUpload";
 import { useFileUpload } from "@/helper";
+import { getImageURL } from "@/lib/getImageLin";
 
 export default function EditCategory({ categoryInfo }: any) {
   const router = useRouter();
   const { upload, uploading } = useFileUpload();
   const bannerRef = useRef<HTMLInputElement>(null);
+  const horizontalBannerRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     name: categoryInfo.name,
@@ -48,6 +50,10 @@ export default function EditCategory({ categoryInfo }: any) {
   // Existing image ko preview mein set kar rahe hain
   const [preview, setPreview] = useState<string | null>(
     categoryInfo.bannerImage ?? null,
+  );
+
+  const [horizontalPreview, setHorizontalPreview] = useState<string | null>(
+    categoryInfo.horizontalBannerImage ?? null,
   );
 
   useEffect(() => {
@@ -67,6 +73,7 @@ export default function EditCategory({ categoryInfo }: any) {
       description: form.description,
       // type: form.type,
       bannerImage: preview, // Naya upload kiya hua URL ya purana URL
+      horizontalBannerImage: horizontalPreview,
     };
     console.log(categoryData)
     const response = await updateCategory(categoryData);
@@ -93,6 +100,20 @@ export default function EditCategory({ categoryInfo }: any) {
       }));
 
       toast.success("Image uploaded");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleHorizontalBanner = async (file?: File) => {
+    if (!file) return;
+
+    try {
+      const { fileUrl } = await upload(file, "category");
+
+      setHorizontalPreview(fileUrl as any); // UI ke liye
+
+      toast.success("Horizontal Image uploaded");
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -189,7 +210,7 @@ export default function EditCategory({ categoryInfo }: any) {
                       <p>Click to upload category image</p>
                     ) : (
                       <Image
-                        src={preview}
+                        src={getImageURL(preview)}
                         alt="Category banner preview"
                         width={800}
                         height={400}
@@ -215,6 +236,49 @@ export default function EditCategory({ categoryInfo }: any) {
                   {preview && !preview.startsWith("http") && (
                     <p className="text-xs text-blue-600 mt-1 italic">
                       Note: New image selected. Click Update to save.
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-1.5 mt-6">
+                  <Label className="text-slate-600 font-medium">
+                    Horizontal Category Image
+                  </Label>
+
+                  <div
+                    onClick={() => horizontalBannerRef.current?.click()}
+                    className="border-2 border-dashed rounded-xl h-48 flex items-center justify-center cursor-pointer relative overflow-hidden"
+                  >
+                    {!horizontalPreview ? (
+                      <p>Click to upload horizontal category image</p>
+                    ) : (
+                      <Image
+                        src={getImageURL(horizontalPreview)}
+                        alt="Horizontal Category banner preview"
+                        width={800}
+                        height={400}
+                        className="w-full h-full object-contain"
+                      />
+                    )}
+
+                    {uploading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                        Uploading...
+                      </div>
+                    )}
+                  </div>
+
+                  <input
+                    ref={horizontalBannerRef}
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => handleHorizontalBanner(e.target.files?.[0])}
+                  />
+
+                  {horizontalPreview && !horizontalPreview.startsWith("http") && (
+                    <p className="text-xs text-blue-600 mt-1 italic">
+                      Note: New horizontal image selected. Click Update to save.
                     </p>
                   )}
                 </div>
