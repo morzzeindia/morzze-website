@@ -136,7 +136,6 @@ export const category = pgTable("categories", {
   name: varchar("name").notNull(),
   slug: varchar("slug").unique().notNull(),
   bannerImage: varchar("banner_image"),
-  horizontalBannerImage: varchar("horizontal_banner_image"),
   description: varchar("description"),
   type: categoryType("type"),
   updatedAt: timestamp("updated_at").defaultNow(),

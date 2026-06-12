@@ -21,6 +21,8 @@ import {
 import GallerySection from "../GallerySection";
 import AttributeSection from "../AttributeSection";
 import { validateImage } from "@/lib/validateImage";
+import { getImageURL } from "@/lib/getImageLin";
+import { getStoredImageKey } from "@/lib/imagePath";
 import { useFileUpload } from "@/helper";
 import { apiFetch } from "@/lib/apiFetch";
 import ProductFilters from "../productFilter";
@@ -353,11 +355,13 @@ export default function AddProductForm() {
     const payload = {
       ...variants,
       brand,
-      bannerImage: variants.banner?.preview,
+      bannerImage: getStoredImageKey(
+        variants.banner?.key || variants.banner?.preview
+      ),
       media: [
         ...variants.gallery.map((g: any) => ({
           mediaType: "image",
-          mediaURL: g.preview,
+          mediaURL: getStoredImageKey(g.key || g.preview),
         })),
         ...variants.documents.map((d: any) => ({
           mediaType: "pdf",
@@ -397,7 +401,12 @@ export default function AddProductForm() {
           type: "allergies_or_sensitivities",
         })),
       ],
-      VarientBoxes: varientBox ? variantBoxes : [],
+      VarientBoxes: varientBox
+        ? variantBoxes.map((item: any) => ({
+            ...item,
+            image: getStoredImageKey(item.image),
+          }))
+        : [],
       hasVarientBox: varientBox,
     };
 
@@ -663,7 +672,7 @@ export default function AddProductForm() {
                       <p>Click to upload banner</p>
                     ) : (
                       <Image
-                        src={variants.banner.preview}
+                        src={getImageURL(variants.banner.preview)}
                         width={800}
                         height={400}
                         className="w-full h-full object-contain"
@@ -682,7 +691,7 @@ export default function AddProductForm() {
 
                   {variants.banner && (
                     <Image
-                      src={variants.banner.preview}
+                      src={getImageURL(variants.banner.preview)}
                       width={300}
                       height={400}
                       className="h-32 w-24 object-cover rounded-md border mt-2"
@@ -758,7 +767,7 @@ export default function AddProductForm() {
                         >
                           {item.image ? (
                             <Image
-                              src={item.image}
+                              src={getImageURL(item.image)}
                               width={200}
                               height={200}
                               className="h-full w-full object-cover"

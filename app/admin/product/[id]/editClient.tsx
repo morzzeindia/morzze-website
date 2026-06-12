@@ -20,6 +20,7 @@ import {
 } from "@/helper/product/action";
 import { validateImage } from "@/lib/validateImage";
 import { getImageURL } from "@/lib/getImageLin";
+import { getStoredImageKey } from "@/lib/imagePath";
 import { useFileUpload } from "@/helper";
 import {
   productAttributeType,
@@ -381,12 +382,12 @@ export default function EditProduct({ productDetails }: any) {
         ratio: 1,
       });
 
-      const { fileUrl } = await upload(file, "product");
+      const { fileKey, fileUrl } = await upload(file, "product");
 
       setVariants((prev: any) => ({
         ...prev,
         banner: {
-          key: fileUrl,
+          key: fileKey,
           preview: fileUrl as any,
         },
       }));
@@ -489,15 +490,17 @@ export default function EditProduct({ productDetails }: any) {
       ...variants,
       id: variants.isExisting ? variants.id : undefined,
       brand,
-      bannerImage: variants.banner?.preview,
+      bannerImage: getStoredImageKey(
+        variants.banner?.key || variants.banner?.preview
+      ),
       media: [
         ...variants.gallery.map((g: any) => ({
           mediaType: "image",
-          mediaURL: g.preview,
+          mediaURL: getStoredImageKey(g.key || g.preview),
         })),
         ...variants.documents.map((d: any) => ({
           mediaType: "pdf",
-          mediaURL: d.url,
+          mediaURL: d.key,
         })),
       ],
       highlights: variants.highlights.filter(
@@ -518,11 +521,16 @@ export default function EditProduct({ productDetails }: any) {
         ...buildFilterItems(getSelectedValues("size"), "size"),
         ...buildFilterItems(getSelectedValues("material"), "material"),
       ],
-      VarientBoxes: varientBox ? variantBoxes : [],
+      VarientBoxes: varientBox
+        ? variantBoxes.map((item: any) => ({
+            ...item,
+            image: getStoredImageKey(item.image),
+          }))
+        : [],
       hasVarientBox: varientBox,
       isHidden: variants.isHide,
     };
-
+   console.log("sending this payload",payload)
     formData.set("variants", JSON.stringify(payload));
 
     try {

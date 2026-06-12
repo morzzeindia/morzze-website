@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { deleteCategory } from "@/helper";
+import { getImageURL } from "@/lib/getImageLin";
+import Image from "next/image";
 
 
 interface CategoryTableProps {
@@ -59,6 +61,7 @@ const CategoryTable = ({ page, categories }: CategoryTableProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>S.No</TableHead>
+            <TableHead>Image</TableHead>
             <TableHead>Category Name</TableHead>
             <TableHead>Slug Name</TableHead>
             <TableHead>Description</TableHead>
@@ -77,6 +80,20 @@ const CategoryTable = ({ page, categories }: CategoryTableProps) => {
                   <div className="flex items-center gap-2">
                     <p>{rowNumber}</p>
                   </div>
+                </TableCell>
+
+                <TableCell>
+                  {category.bannerImage ? (
+                    <Image
+                      src={getImageURL(category.bannerImage)}
+                      alt={category.name || "Category image"}
+                      width={56}
+                      height={56}
+                      className="h-14 w-14 rounded-md border object-cover"
+                    />
+                  ) : (
+                    <div className="h-14 w-14 rounded-md border bg-muted" />
+                  )}
                 </TableCell>
 
                 <TableCell>{category.name}</TableCell>
