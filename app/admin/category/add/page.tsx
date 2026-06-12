@@ -33,11 +33,13 @@ export default function AddCategoryForm() {
   const router = useRouter();
   const { upload, uploading } = useFileUpload();
   const bannerRef = useRef<HTMLInputElement>(null);
+  const horizontalBannerRef = useRef<HTMLInputElement>(null);
 
   const [parentId, setParentId] = useState("");
   // 'preview' ki jagah hum 'bannerUrl' use karenge jo ImageKit se aayega
   const [bannerUrl, setBannerUrl] = useState<string>("");
   const [bannerKey, setBannerKey] = useState<string>("");
+  const [horizontalBannerUrl, setHorizontalBannerUrl] = useState<string>("");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
@@ -53,6 +55,8 @@ export default function AddCategoryForm() {
       parentId: parentId,
       description: e.target.description?.value,
       bannerImage: getStoredImageKey(bannerKey || bannerUrl),
+      bannerImage: bannerUrl, // ImageKit ka URL yahan bhej rahe hain,
+      horizontalBannerImage: horizontalBannerUrl,
       type: e.target.type.value
     };
     const response = await createCategory(categoryData);
@@ -80,6 +84,20 @@ export default function AddCategoryForm() {
       // }));
 
       toast.success("Image uploaded");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleHorizontalBanner = async (file?: File) => {
+    if (!file) return;
+
+    try {
+      const { fileUrl } = await upload(file, "category");
+
+      setHorizontalBannerUrl(fileUrl as any); // UI ke liye
+
+      toast.success("Horizontal image uploaded");
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -184,6 +202,47 @@ export default function AddCategoryForm() {
                   {bannerUrl && (
                     <p className="text-xs text-green-600 font-medium mt-2">
                       ✓ Image uploaded successfully
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-3 mt-6">
+                  <Label className="text-slate-600 font-medium">Horizontal Category Image</Label>
+
+                  <div
+                    onClick={() => horizontalBannerRef.current?.click()}
+                    className="border-2 border-dashed rounded-xl h-48 flex items-center justify-center cursor-pointer relative overflow-hidden"
+                  >
+                    {!horizontalBannerUrl ? (
+                      <p>Click to upload horizontal category image</p>
+                    ) : (
+                      <Image
+                        src={horizontalBannerUrl}
+                        alt="Horizontal category banner preview"
+                        width={800}
+                        height={400}
+                        className="w-full h-full object-contain"
+                      />
+                    )}
+
+                    {uploading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                        Uploading...
+                      </div>
+                    )}
+                  </div>
+
+                  <input
+                    ref={horizontalBannerRef}
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => handleHorizontalBanner(e.target.files?.[0])}
+                  />
+
+                  {horizontalBannerUrl && (
+                    <p className="text-xs text-green-600 font-medium mt-2">
+                      ✓ Horizontal image uploaded successfully
                     </p>
                   )}
                 </div>

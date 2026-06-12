@@ -1,0 +1,1 @@
+ALTER TABLE "categories" ADD COLUMN "horizontal_banner_image" varchar;
